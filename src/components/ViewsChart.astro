@@ -1,0 +1,294 @@
+---
+// Balkendiagramm: Aufrufe der erfolgreichsten Videos. Das stärkste Video ist hervorgehoben,
+// alle anderen bleiben zurückgenommen (Emphasis statt Farbkategorien).
+import type { Video } from '../data/gemuesegruss';
+
+interface Props {
+  videos: Video[];
+}
+
+const { videos } = Astro.props;
+const MAX = 1_250_000;
+const ticks = [0, 250_000, 500_000, 750_000, 1_000_000, 1_250_000];
+const top = Math.max(...videos.map((v) => v.views));
+const de = new Intl.NumberFormat('de-DE');
+const tickLabel = (n: number) => (n === 0 ? '0' : n >= 1_000_000 ? `${de.format(n / 1_000_000)} Mio.` : `${n / 1000} Tsd.`);
+const viewLabel = (v: Video) => (v.rounded ? `${de.format(v.views / 1_000_000)} Mio.` : de.format(v.views));
+---
+
+<figure class="chart">
+  <div class="axis mono" aria-hidden="true">
+    <span></span>
+    <div class="ticks">
+      {ticks.map((t) => <span style={`left: ${(t / MAX) * 100}%`}>{tickLabel(t)}</span>)}
+    </div>
+    <span></span>
+  </div>
+  <ol class="rows">
+    {
+      videos.map((video, i) => (
+        <li
+          class:list={['row', { top: video.views === top }]}
+          tabindex="0"
+          data-platform={video.platform}
+          data-title={video.title}
+          data-date={video.date ?? ''}
+          data-views={viewLabel(video)}
+          data-likes={video.likes ? de.format(video.likes) : ''}
+          data-comments={video.comments ? de.format(video.comments) : ''}
+          data-shares={video.shares ? de.format(video.shares) : ''}
+        >
+          <span class="what">
+            <span class="title">{video.title}</span>
+            <span class="mono meta">
+              {video.platform.toLowerCase()}
+              {video.date && ` · ${video.date}`}
+            </span>
+          </span>
+          <span class="track" aria-hidden="true">
+            <span class="bar" style={`--w: ${(video.views / MAX) * 100}%; --i: ${i}`} />
+          </span>
+          <span class="value">{viewLabel(video)}</span>
+        </li>
+      ))
+    }
+  </ol>
+  <div class="tip" role="status" hidden>
+    <p class="tip-value"></p>
+    <p class="tip-title"></p>
+    <p class="tip-meta mono"></p>
+  </div>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.chart').forEach((chart) => {
+    const tip = chart.querySelector<HTMLElement>('.tip');
+    if (!tip) return;
+    const value = tip.querySelector('.tip-value')!;
+    const title = tip.querySelector('.tip-title')!;
+    const meta = tip.querySelector('.tip-meta')!;
+
+    const show = (row: HTMLElement, x?: number) => {
+      const d = row.dataset;
+      value.textContent = `${d.views} Aufrufe`;
+      title.textContent = d.title ?? '';
+      const parts = [d.platform, d.date].filter(Boolean);
+      if (d.likes) parts.push(`${d.likes} Likes`, `${d.comments} Kommentare`, `${d.shares} Shares`);
+      meta.textContent = parts.join(' · ');
+      tip.hidden = false;
+      const box = chart.getBoundingClientRect();
+      const r = row.getBoundingClientRect();
+      const left = Math.min(Math.max((x ?? r.left + r.width / 2) - box.left, 120), box.width - 120);
+      tip.style.left = `${left}px`;
+      tip.style.top = `${r.top - box.top}px`;
+      chart.querySelectorAll('.row.hover').forEach((el) => el.classList.remove('hover'));
+      row.classList.add('hover');
+    };
+    const hide = () => {
+      tip.hidden = true;
+      chart.querySelectorAll('.row.hover').forEach((el) => el.classList.remove('hover'));
+    };
+
+    chart.querySelectorAll<HTMLElement>('.row').forEach((row) => {
+      row.addEventListener('pointermove', (event) => show(row, event.clientX));
+      row.addEventListener('focus', () => show(row));
+      row.addEventListener('blur', hide);
+    });
+    chart.addEventListener('pointerleave', hide);
+  });
+</script>
+
+<style>
+  .chart {
+    --bar: #77746e;
+    position: relative;
+    margin: 0;
+  }
+
+  .axis,
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr) 6.5rem;
+    gap: 0 1.25rem;
+    align-items: center;
+  }
+
+  .axis {
+    padding-bottom: 0.6rem;
+    color: var(--ink-3);
+    font-size: 0.72rem;
+  }
+
+  .ticks {
+    position: relative;
+    height: 1.1em;
+  }
+
+  .ticks span {
+    position: absolute;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ticks span:first-child {
+    transform: none;
+  }
+
+  .ticks span:last-child {
+    transform: translateX(-100%);
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    position: relative;
+    min-height: 3.6rem;
+    border-top: 1px solid var(--line);
+    outline-offset: -2px;
+    cursor: default;
+  }
+
+  .row:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .what {
+    display: grid;
+    padding-block: 0.55rem;
+    min-width: 0;
+  }
+
+  .title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .meta {
+    color: var(--ink-3);
+    font-size: 0.72rem;
+  }
+
+  /* Hilfslinien bei 250 Tsd.-Schritten (20 % der Skala) */
+  .track {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    background-image: linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 20% 100%;
+  }
+
+  .bar {
+    display: block;
+    width: var(--w);
+    height: 14px;
+    border-radius: 0 4px 4px 0;
+    background: var(--bar);
+    transform-origin: left;
+    transition:
+      transform 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.2s ease;
+    transition-delay: calc(0.15s + var(--i) * 70ms), 0s;
+  }
+
+  .top .bar {
+    background: var(--accent);
+  }
+
+  :global(.js) :global([data-reveal]:not(.is-visible)) .bar {
+    transform: scaleX(0);
+  }
+
+  .row.hover .bar,
+  .row:focus-visible .bar {
+    filter: brightness(1.25);
+  }
+
+  .value {
+    text-align: right;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .top .value,
+  .top .title {
+    color: var(--ink);
+  }
+
+  .row:not(.top) .value {
+    color: var(--ink-2);
+  }
+
+  .tip {
+    position: absolute;
+    z-index: 5;
+    min-width: 200px;
+    max-width: 260px;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-2);
+    box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.6);
+    transform: translate(-50%, calc(-100% - 6px));
+    pointer-events: none;
+  }
+
+  .tip-value {
+    font-weight: 700;
+  }
+
+  .tip-title {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+  }
+
+  .tip-meta {
+    margin-top: 0.25rem;
+    color: var(--ink-3);
+    font-size: 0.72rem;
+  }
+
+  @media (max-width: 760px) {
+    .axis,
+    .row {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .axis > span:first-child,
+    .axis > span:last-child {
+      display: none;
+    }
+
+    .axis .ticks {
+      grid-column: 1 / -1;
+    }
+
+    .what {
+      grid-column: 1;
+      padding-bottom: 0.2rem;
+    }
+
+    .value {
+      grid-column: 2;
+      grid-row: 1;
+      align-self: end;
+      padding-bottom: 0.2rem;
+    }
+
+    .track {
+      grid-column: 1 / -1;
+      height: 1.6rem;
+      padding-bottom: 0.4rem;
+    }
+
+    .ticks span:nth-child(even) {
+      display: none;
+    }
+  }
+</style>

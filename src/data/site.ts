@@ -1,5 +1,5 @@
 import type { ImageMetadata } from 'astro';
-import gemuesegrussImage from '../assets/projects/gemuesegruss.webp';
+import gemuesegrussImage from '../assets/gemuesegruss/website-16x10.jpg';
 import mindfulscreenImage from '../assets/projects/mindfulscreen.webp';
 import sembanImage from '../assets/projects/semban.webp';
 
@@ -66,6 +66,8 @@ export type Project = {
   tags: string[];
   href?: string;
   links?: { label: string; href: string }[];
+  // Pfad zu einer ausführlichen Case Study auf dieser Website
+  caseStudy?: string;
   // Vorschaubild im Seitenverhältnis 16:10, liegt in src/assets/projects/.
   image: ImageMetadata;
   imageAlt: string;
@@ -99,15 +101,17 @@ export const projects: Project[] = [
     description:
       'E-Commerce, der eigentlich ein Meme ist – aber funktioniert: personalisierte Kartoffeln mit Grußbotschaft. Gebaut auf Shopify, gewachsen durch virales Marketing und UGC-Kampagnen.',
     metric: { value: '1.000+', label: 'Bestellungen' },
+    period: '2024 – 2025',
     experiment: {
       hypothesis: 'Menschen zahlen für einen Gruß, der so absurd ist, dass man ihn weitererzählt.',
-      test: 'Shopify-Shop für personalisierte Kartoffeln mit Grußbotschaft, Reichweite über virales Marketing und UGC-Kampagnen.',
-      result: 'Über 1.000 Bestellungen.',
+      test: 'Shopify-Shop für handbeschriftete Kartoffeln, Reichweite über Kurzvideos auf TikTok und Instagram.',
+      result: 'Über 1.000 Bestellungen und mehr als 2,8 Mio. Aufrufe.',
       learning: 'Wenn das Produkt selbst die Geschichte ist, erzählen Kund:innen sie weiter.',
     },
-    tags: ['Shopify', 'Marketing', 'UGC', 'Logistik'],
+    tags: ['Shopify', 'TikTok', 'Instagram', 'Logistik'],
+    caseStudy: '/projekte/gemuesegruss/',
     image: gemuesegrussImage,
-    imageAlt: 'Geöffneter Versandkarton mit einer Kartoffel, auf der „Alles Gute!“ steht, daneben eine Grußkarte',
+    imageAlt: 'Laptop mit der Website von GemüseGruß: „Der witzigste Gruß – auf einer Kartoffel!“ über beschrifteten Kartoffeln',
   },
   {
     name: 'Mindfulscreen OS',

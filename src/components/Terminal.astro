@@ -11,7 +11,7 @@ const data = {
     status: p.status,
     category: p.category,
     metric: `${p.metric.value} ${p.metric.label}`,
-    href: p.href ?? '',
+    href: p.href ?? p.caseStudy ?? '',
   })),
   career: [...career.experience, ...career.education, ...career.engagement].map((e) => ({
     period: e.period,

@@ -7,7 +7,7 @@ import { about, career, earlier, languages, projects, site, toolbox } from '../d
 const updated = new Date().toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
 
 const facts = [
-  { value: '1.000+', label: 'Bestellungen mit dem eigenen Shop GemüseGruß' },
+  { value: '1.000+', label: 'Bestellungen mit GemüseGruß, 2,8 Mio.+ Aufrufe auf Social Media' },
   { value: 'SemBan', label: 'eigene Lern-App, gerade gestartet (iPhone & Web)' },
   { value: 'Würth IT', label: 'Werkstudent, davor Praktikum im Team Modern Work' },
   { value: 'C1', label: 'Englisch, Auslandssemester in Schweden' },
@@ -118,6 +118,8 @@ const sections = [
                       <a href={project.href} target="_blank" rel="noopener">
                         {project.name} ↗
                       </a>
+                    ) : project.caseStudy ? (
+                      <a href={project.caseStudy}>{project.name} – case study →</a>
                     ) : (
                       project.name
                     )}
