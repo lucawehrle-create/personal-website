@@ -104,7 +104,7 @@ export const caseStudy = {
   claim: 'Der witzigste Gruß – auf einer Kartoffel.',
   intro:
     'Ein Onlineshop für handbeschriftete Kartoffeln: Kund:innen schreiben ihre Botschaft, ich beschrifte die Kartoffel von Hand, verpacke sie in Heu und verschicke sie – auf Wunsch anonym. Was als Meme begann, wurde ein echtes Geschäft mit Shop, Logistik und viralem Marketing – ohne einen Euro Werbebudget.',
-  period: '2024 – 2026',
+  period: 'Dez 2024 – Ende 2025',
   roles: ['Idee & Marke', 'Shopify-Shop', 'Content & Social Media', 'Produktion & Versand'],
   kpis: [
     { display: '2,8 Mio.+', label: 'Aufrufe auf TikTok und Instagram' },

@@ -41,7 +41,7 @@ export const hero = {
     { label: 'tldr', text: 'Business Student. Product Builder. Creator of many Side Projects.' },
     {
       label: 'studium & praxis',
-      text: 'B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute in Trier, Werkstudent bei Würth IT.',
+      text: 'B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute Master in Trier und Werkstudent bei Würth IT.',
     },
     {
       label: 'nebenbei',
@@ -106,7 +106,7 @@ export const projects: Project[] = [
     description:
       'E-Commerce, der eigentlich ein Meme ist – aber funktioniert: personalisierte Kartoffeln mit Grußbotschaft. Gebaut auf Shopify, gewachsen durch virales Marketing und UGC-Kampagnen.',
     metric: { value: '1.000+', label: 'Bestellungen' },
-    period: '2024 – 2026',
+    period: 'Dez 2024 – Ende 2025',
     experiment: {
       hypothesis: 'Menschen zahlen für einen Gruß, der so absurd ist, dass man ihn weitererzählt.',
       test: 'Shopify-Shop für handbeschriftete Kartoffeln, Reichweite über Kurzvideos auf TikTok und Instagram – und die Conversion im Shop durch ständiges Testen verbessert.',
@@ -126,7 +126,7 @@ export const projects: Project[] = [
     description:
       'Eine Marke gegen Handysucht, vor allem für Schüler:innen: Instagram-Reels und Karussell-Posts, ein 21-Tage-Programm und das eigene Buch „Handy aus, Leben an“ – bis heute auf Amazon erhältlich.',
     metric: { value: '749', label: 'Follower auf Instagram' },
-    period: '2023 – 2024',
+    period: 'Ende 2022 – 2024',
     experiment: {
       hypothesis: 'Schüler:innen wollen weniger Zeit am Handy verbringen – sie brauchen nur jemanden, der zeigt, wie es geht.',
       test: 'Erst an mir selbst, dann für andere: Reels und Posts auf Instagram, ein 21-Tage-Programm und ein eigenes Buch.',
@@ -175,10 +175,10 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       role: 'Werkstudent',
       org: 'Würth IT',
       short: 'Werkstudent · Würth IT',
-      period: '2026 – heute',
+      period: 'Mai 2026 – heute',
     },
     {
-      role: 'Gründer & Macher',
+      role: 'Gründer',
       org: 'SemBan',
       period: '2026 – heute',
       points: [
@@ -198,10 +198,20 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       ],
     },
     {
-      role: 'Startup-Gründung',
+      role: 'Gründer',
+      org: 'GemüseGruß',
+      period: 'Dez 2024 – Ende 2025',
+      points: [
+        'Onlineshop für handbeschriftete Kartoffeln mit Grußbotschaft, gebaut auf Shopify',
+        'Über 1.000 Bestellungen und 2,8 Mio.+ Aufrufe auf TikTok und Instagram – ohne Werbebudget',
+        'Conversion im Shop durch ständiges Testen verbessert',
+      ],
+    },
+    {
+      role: 'Gründer',
       org: 'Mindfulscreen',
       place: 'Mannheim',
-      period: '2023 – 2024',
+      period: 'Ende 2022 – 2024',
       points: [
         'Entwicklung von Strategien und digitalen Lösungen für reduzierte Handynutzung',
         'Instagram-Reels und Karussell-Posts, vor allem für Schüler:innen',
@@ -218,6 +228,13 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
   ],
   education: [
     {
+      role: 'Masterstudium',
+      org: 'Universität Trier',
+      short: 'Master · Uni Trier',
+      place: 'Trier',
+      period: 'Okt 2026 – heute',
+    },
+    {
       role: 'Auslandssemester',
       org: 'Jönköping University',
       short: 'Auslandssemester · Jönköping',
@@ -230,7 +247,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       org: 'Universität Mannheim',
       short: 'B.Sc. BWL · Uni Mannheim',
       place: 'Mannheim',
-      period: '2022 – 2025',
+      period: 'Sep 2022 – 2025',
       points: ['Bachelorarbeit: Electronic Bond Trading', '79 ECTS in englischer Sprache'],
     },
     {
@@ -238,7 +255,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       org: 'Berufsschulzentrum Stockach',
       short: 'Abitur · Wirtschaftsgymnasium',
       place: 'Stockach',
-      period: '2019 – 2022',
+      period: '2019 – Mitte 2022',
       points: ['Jahrgangspreis für Ökonomische Studien und Informatik'],
     },
   ],

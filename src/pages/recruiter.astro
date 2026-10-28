@@ -19,7 +19,8 @@ const facts = [
   { value: 'C1', label: 'Englisch, Auslandssemester in Schweden' },
 ];
 
-const current = career.experience.filter((entry) => entry.period.includes('heute'));
+// Was gerade läuft: Studium und Jobs mit „heute“
+const current = [...career.education, ...career.experience].filter((entry) => entry.period.includes('heute'));
 const openTo = ['Product', 'BizOps', 'Founder Associate'];
 
 // Zeitstrahl: Gründungen stehen bei den Projekten, nicht doppelt bei der Praxis.
@@ -37,12 +38,6 @@ const timeline = [
     rows: projects.flatMap((p) => (p.period ? [{ label: p.name, period: p.period }] : [])),
   },
   { title: 'engagement', rows: career.engagement.map((e) => ({ label: e.short ?? e.role, period: e.period })) },
-];
-
-const sections = [
-  { title: 'erfahrung', entries: career.experience },
-  { title: 'bildung', entries: career.education },
-  { title: 'engagement', entries: career.engagement },
 ];
 
 const thumbs = { semban: maskottchen, gemuesegruss: produktfoto, mindfulscreen: logoMark };
@@ -78,7 +73,7 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
             <h1>{site.name}</h1>
           </div>
         </div>
-        <p class="role">Product Builder · B.Sc. Betriebswirtschaftslehre, Universität Mannheim</p>
+        <p class="role">Product Builder · Master in Trier · B.Sc. BWL, Universität Mannheim</p>
         <dl class="quick">
           <div>
             <dt class="mono">aktuell</dt>
@@ -131,16 +126,90 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
         <ul class="legend mono">
           <li><span class="swatch now"></span>läuft gerade</li>
           <li><span class="swatch"></span>abgeschlossen</li>
+          <li><span class="swatch fuzzy"></span>monat offen</li>
         </ul>
       </div>
       <Timeline groups={timeline} />
-      <p class="note mono">Jahresangaben ohne Monat sind als ganze Jahre eingezeichnet. Details stehen darunter.</p>
     </section>
 
     <div class="columns">
       <div class="col">
+        <section class="card" aria-labelledby="erfahrung-title">
+          <div class="card-head">
+            <h2 id="erfahrung-title" class="label">erfahrung</h2>
+            <span class="mono count">{pad(career.experience.length)}</span>
+          </div>
+          <ol class="entries">
+            {
+              career.experience.map((entry) => {
+                const project = projects.find((p) => p.name === entry.org);
+                const thumb = project && (project.collage ? thumbs[project.collage] : project.image);
+                const links = project
+                  ? [
+                      ...(project.caseStudy ? [{ label: 'case study →', href: project.caseStudy, external: false }] : []),
+                      ...(project.href ? [{ label: `${hostname(project.href)} ↗`, href: project.href, external: true }] : []),
+                      ...(project.links ?? []).map((l) => ({ label: `${l.label.toLowerCase()} ↗`, href: l.href, external: true })),
+                    ]
+                  : [];
+                return (
+                  <li class:list={{ venture: project }}>
+                    <p class="mono period">{entry.period}</p>
+                    <div>
+                      <p class="entry-role">
+                        {entry.role}
+                        {project && <span class:list={['pill', project.status]}>{project.status}</span>}
+                      </p>
+                      <p class="entry-org">
+                        {entry.org}
+                        {entry.place && ` · ${entry.place}`}
+                      </p>
+                      {entry.points && (
+                        <ul class="points">
+                          {entry.points.map((point) => (
+                            <li>{point}</li>
+                          ))}
+                        </ul>
+                      )}
+                      {links.length > 0 && (
+                        <p class="p-links mono">
+                          {links.map((link) => (
+                            <a href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noopener' : undefined}>
+                              {link.label}
+                            </a>
+                          ))}
+                        </p>
+                      )}
+                    </div>
+                    {thumb && (
+                      <span class:list={['thumb', project.collage]}>
+                        <Image src={thumb} alt="" width={128} height={128} />
+                      </span>
+                    )}
+                  </li>
+                );
+              })
+            }
+          </ol>
+          <h3 class="sub mono">frühere stationen</h3>
+          <ul class="entries compact">
+            {
+              earlier.map((item) => (
+                <li>
+                  <p class="mono period">{item.period}</p>
+                  <p>{item.text}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+
+      <div class="col">
         {
-          sections.map((section) => (
+          [
+            { title: 'bildung', entries: career.education },
+            { title: 'engagement', entries: career.engagement },
+          ].map((section) => (
             <section class="card">
               <div class="card-head">
                 <h2 class="label">{section.title}</h2>
@@ -170,72 +239,10 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
             </section>
           ))
         }
-        <section class="card">
-          <div class="card-head">
-            <h2 class="label">frühere stationen</h2>
-            <span class="mono count">{pad(earlier.length)}</span>
-          </div>
-          <ul class="entries compact">
-            {
-              earlier.map((item) => (
-                <li>
-                  <p class="mono period">{item.period}</p>
-                  <p>{item.text}</p>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
-      </div>
 
-      <div class="col">
-        <section class="card">
+        <section class="card" aria-labelledby="skills-title">
           <div class="card-head">
-            <h2 class="label">eigene projekte</h2>
-            <span class="mono count">{pad(projects.length)}</span>
-          </div>
-          <ul class="projects">
-            {
-              projects.map((project) => {
-                const thumb = project.collage ? thumbs[project.collage] : project.image;
-                const external = [
-                  ...(project.href ? [{ label: hostname(project.href), href: project.href }] : []),
-                  ...(project.links ?? []),
-                ];
-                return (
-                  <li>
-                    <span class:list={['thumb', project.collage]}>
-                      <Image src={thumb} alt="" width={128} height={128} />
-                    </span>
-                    <div>
-                      <p class="p-head">
-                        <span class="p-name">{project.name}</span>
-                        <span class:list={['pill', project.status]}>{project.status}</span>
-                      </p>
-                      <p class="mono p-meta">
-                        {project.category}
-                        {project.period && ` · ${project.period}`}
-                      </p>
-                      <p class="p-result">{project.experiment.result}</p>
-                      <p class="p-links mono">
-                        {project.caseStudy && <a href={project.caseStudy}>case study →</a>}
-                        {external.map((link) => (
-                          <a href={link.href} target="_blank" rel="noopener">
-                            {link.label.toLowerCase()} ↗
-                          </a>
-                        ))}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })
-            }
-          </ul>
-        </section>
-
-        <section class="card">
-          <div class="card-head">
-            <h2 class="label">skills</h2>
+            <h2 id="skills-title" class="label">skills &amp; sprachen</h2>
           </div>
           <dl class="skills">
             {
@@ -253,12 +260,7 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
               ))
             }
           </dl>
-        </section>
-
-        <section class="card">
-          <div class="card-head">
-            <h2 class="label">sprachen</h2>
-          </div>
+          <h3 class="sub mono">sprachen</h3>
           <ul class="langs">
             {
               languages.map((language) => (
@@ -274,12 +276,7 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
               ))
             }
           </ul>
-        </section>
-
-        <section class="card">
-          <div class="card-head">
-            <h2 class="label">interessen</h2>
-          </div>
+          <h3 class="sub mono">interessen</h3>
           <ul class="chips">{about.interests.map((item) => <li>{item}</li>)}</ul>
         </section>
       </div>
@@ -596,14 +593,12 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     background: var(--accent);
   }
 
-  .card :global(.timeline) {
-    margin-top: 1.25rem;
+  .swatch.fuzzy {
+    background: linear-gradient(to right, rgb(143 139 130 / 0.15), #8f8b82);
   }
 
-  .note {
-    margin-top: 0.75rem;
-    color: var(--ink-3);
-    font-size: 0.7rem;
+  .card :global(.timeline) {
+    margin-top: 1.25rem;
   }
 
   /* ---------- Details ---------- */
@@ -641,6 +636,36 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     border-bottom: 0;
   }
 
+  /* Eigene Gründungen: Vorschaubild rechts */
+  .entries > li.venture {
+    grid-template-columns: 9rem minmax(0, 1fr) 56px;
+  }
+
+  .entries .thumb {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+  }
+
+  .entry-role .pill {
+    margin-left: 0.5rem;
+    vertical-align: 0.15em;
+    font-weight: 400;
+  }
+
+  .sub {
+    margin: 1.75rem 0 0;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+
+  .langs + .sub {
+    margin-bottom: 1rem;
+  }
+
   .entries.compact > li {
     padding: 0.6rem 0;
     color: var(--ink-2);
@@ -670,27 +695,6 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     padding-left: 1.1rem;
     color: var(--ink-3);
     font-size: 0.93rem;
-  }
-
-  /* Projekte */
-  .projects {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .projects > li {
-    display: grid;
-    grid-template-columns: 64px minmax(0, 1fr);
-    gap: 1rem;
-    padding: 1.1rem 0;
-    border-bottom: 1px solid var(--line);
-    break-inside: avoid;
-  }
-
-  .projects > li:last-child {
-    padding-bottom: 0;
-    border-bottom: 0;
   }
 
   .thumb {
@@ -731,21 +735,6 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     object-fit: contain;
   }
 
-  .p-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .p-name {
-    font-family: var(--font-display);
-    font-stretch: 112%;
-    font-size: 1.3rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-  }
-
   .pill {
     padding: 0.1rem 0.5rem;
     border: 1px solid var(--line);
@@ -758,18 +747,6 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
   .pill.live {
     border-color: var(--accent);
     color: var(--accent);
-  }
-
-  .p-meta {
-    margin-top: 0.2rem;
-    font-size: 0.72rem;
-    color: var(--ink-3);
-  }
-
-  .p-result {
-    margin-top: 0.45rem;
-    font-size: 0.95rem;
-    color: var(--ink-2);
   }
 
   .p-links {
@@ -904,10 +881,6 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
       font-size: 0.85rem;
     }
 
-    .p-result {
-      font-size: 0.88rem;
-    }
-
     .chips li {
       padding: 0.2rem 0.6rem;
       font-size: 0.8rem;
@@ -965,8 +938,7 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     :global(.site-footer),
     :global(.skip-link),
     .toolbar,
-    .cta,
-    .note {
+    .cta {
       display: none !important;
     }
 

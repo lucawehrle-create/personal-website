@@ -16,7 +16,7 @@ export const caseStudy = {
   claim: 'In 21 Tagen weniger Handy.',
   intro:
     'Mindfulscreen war meine Marke gegen Handysucht, gerichtet vor allem an Schüler:innen: Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm, eine Website – und das Buch „Handy aus, Leben an“, das es bis heute auf Amazon gibt.',
-  period: '2023 – 2024',
+  period: 'Ende 2022 – 2024',
   roles: ['Marke & Website', '21-Tage-Programm', 'Content & Instagram', 'Autor'],
   hero,
   heroAlt: 'Das Buch „Handy aus, Leben an“, die Website mindfulscreen.com auf dem Smartphone und das Instagram-Profil von Mindfulscreen',
