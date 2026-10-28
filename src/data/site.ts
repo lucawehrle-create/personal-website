@@ -52,7 +52,7 @@ export const hero = {
 };
 
 export const statement =
-  'Ich baue digitale Produkte, optimiere Systeme und teste *kreative* Ideen. *Logik* trifft auf *Experimentierfreude* – von der ersten Idee bis zum *Launch.*';
+  'Ich baue digitale Produkte, optimiere Systeme und teste *kreative* Ideen. *Logik* trifft auf *Experimentierfreude* – vom ersten Prototyp bis zum *Launch.*';
 
 export type Project = {
   name: string;
@@ -125,12 +125,12 @@ export const projects: Project[] = [
     category: 'Digital Health · Content & Buch',
     description:
       'Eine Marke gegen Handysucht, vor allem für Schüler:innen: Instagram-Reels und Karussell-Posts, ein 21-Tage-Programm und das eigene Buch „Handy aus, Leben an“ – bis heute auf Amazon erhältlich.',
-    metric: { value: '5,0 ★', label: 'für das eigene Buch' },
+    metric: { value: '749', label: 'Follower auf Instagram' },
     period: '2023 – 2024',
     experiment: {
       hypothesis: 'Schüler:innen wollen weniger Zeit am Handy verbringen – sie brauchen nur jemanden, der zeigt, wie es geht.',
       test: 'Erst an mir selbst, dann für andere: Reels und Posts auf Instagram, ein 21-Tage-Programm und ein eigenes Buch.',
-      result: 'Bei mir 59 % weniger Bildschirmzeit, 749 Follower und ein Buch mit 5,0 Sternen auf Amazon.',
+      result: 'Bei mir 59 % weniger Bildschirmzeit, 749 Follower und ein eigenes Buch auf Amazon.',
       learning: 'Gewohnheiten ändern sich über einfache Routinen, nicht über Verbote.',
     },
     tags: ['Instagram', 'Reels', 'Notion', 'Buch'],
@@ -205,7 +205,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       points: [
         'Entwicklung von Strategien und digitalen Lösungen für reduzierte Handynutzung',
         'Instagram-Reels und Karussell-Posts, vor allem für Schüler:innen',
-        'Autor des Buchs „Handy aus, Leben an“ (Amazon, 5,0 Sterne)',
+        'Autor des Buchs „Handy aus, Leben an“ (Amazon)',
       ],
     },
     {

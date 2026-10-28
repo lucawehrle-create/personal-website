@@ -5,7 +5,7 @@ import cover from '../../assets/mindfulscreen/buch-cover.jpg';
 import mark from '../../assets/mindfulscreen/logo-mark.png';
 import instagram from '../../assets/mindfulscreen/instagram-profil.jpg';
 
-const areas = `"book book logo phone" "book book days phone" "post rating time time"`;
+const areas = `"book book logo phone" "book book days phone" "post follower time time"`;
 const mobileAreas = `"book book logo" "book book days"`;
 const days = Array.from({ length: 21 }, (_, i) => i);
 ---
@@ -40,11 +40,11 @@ const days = Array.from({ length: 21 }, (_, i) => i);
     </ol>
   </div>
 
-  <!-- Bewertung -->
-  <div class="tile t-dark pad rating m-hide" style="grid-area: rating; --i: 4">
-    <p class="t-label">amazon-bewertung</p>
-    <p class="t-big push">5,0</p>
-    <p class="stars" aria-hidden="true">★★★★★</p>
+  <!-- Reichweite auf Instagram -->
+  <div class="tile t-dark pad follower m-hide" style="grid-area: follower; --i: 4">
+    <p class="t-label">instagram</p>
+    <p class="t-big push">749</p>
+    <p class="t-text">Follower mit Reels und Karussell-Posts</p>
   </div>
 
   <!-- Karussell-Post (nachgebaut) -->
@@ -164,15 +164,13 @@ const days = Array.from({ length: 21 }, (_, i) => i);
     opacity: 0.15;
   }
 
-  .rating .t-big {
+  .follower .t-big {
     font-size: calc(var(--u) * 0.36);
   }
 
-  .stars {
-    margin-top: calc(var(--u) * 0.03);
-    color: #ff6a2b;
-    font-size: calc(var(--u) * 0.11);
-    letter-spacing: 0.08em;
+  .follower .t-text {
+    margin-top: calc(var(--u) * 0.04);
+    color: rgb(242 240 235 / 0.7);
   }
 
   /* Nachbau der Instagram-Karussell-Cover */

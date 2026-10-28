@@ -23,7 +23,7 @@ export const caseStudy = {
   kpis: [
     { display: '749', label: 'Follower auf Instagram' },
     { display: '21', label: 'Tage dauert das Programm' },
-    { display: '5,0 ★', label: 'Amazon-Bewertung für mein Buch' },
+    { display: '1', label: 'Buch, bis heute auf Amazon erhältlich' },
     { display: '−59 %', label: 'Bildschirmzeit – bei mir selbst, vorher vs. nachher' },
   ],
   // Zitat von mindfulscreen.com
@@ -59,8 +59,6 @@ export const caseStudy = {
     title: 'Handy aus, Leben an',
     subtitle: 'Schritt für Schritt zu weniger Bildschirmzeit und mehr Erfüllung im Alltag',
     tagline: 'Handysucht überwinden & Freiheit zurückgewinnen',
-    rating: '5,0',
-    ratings: 2,
     cover,
     coverAlt: 'Buchcover „Handy aus, Leben an – Handysucht überwinden & Freiheit zurückgewinnen“ von Luca Wehrle',
     href: 'https://www.amazon.de/dp/B0F5WK6PWT',
@@ -120,7 +118,7 @@ export const caseStudy = {
   experiment: {
     hypothesis: 'Schüler:innen wollen weniger Zeit am Handy verbringen – sie brauchen nur jemanden, der zeigt, wie es geht.',
     test: 'Erst an mir selbst, dann für andere: Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm, eine Website und ein eigenes Buch.',
-    result: 'Bei mir 59 % weniger Bildschirmzeit, 749 Follower und ein Buch mit 5,0 Sternen, das bis heute auf Amazon erhältlich ist.',
+    result: 'Bei mir 59 % weniger Bildschirmzeit, 749 Follower und ein Buch, das bis heute auf Amazon erhältlich ist.',
   },
   learnings: [
     {

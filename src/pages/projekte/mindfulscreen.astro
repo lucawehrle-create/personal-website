@@ -171,10 +171,6 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
         <p class="label">das buch</p>
         <h2 id="buch-title">{c.book.title}.</h2>
         <p class="book-sub">{c.book.subtitle}</p>
-        <p class="rating">
-          <span class="stars" aria-hidden="true">★★★★★</span>
-          <span><strong>{c.book.rating}</strong> von 5 Sternen · {c.book.ratings} Bewertungen auf Amazon</span>
-        </p>
         <p class="lead">
           Was ich in Reels, Posts und im 21-Tage-Programm über Handysucht gesammelt habe, steckt in diesem Buch. Von
           Mindfulscreen ist es das, was bleibt: als E-Book auf Amazon, bis heute erhältlich.
@@ -731,19 +727,6 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
     max-width: 40ch;
     font-size: clamp(1.1rem, 1.6vw, 1.3rem);
     color: var(--ink-2);
-  }
-
-  .rating {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.4rem 0.8rem;
-  }
-
-  .stars {
-    color: var(--accent);
-    font-size: 1.3rem;
-    letter-spacing: 0.1em;
   }
 
   /* Instagram-Cover */
