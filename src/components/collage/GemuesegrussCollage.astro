@@ -2,13 +2,15 @@
 import { Image } from 'astro:assets';
 import Bento from './Bento.astro';
 import produkt from '../../assets/gemuesegruss/produktfoto.jpg';
-import urlaubsgruss from '../../assets/gemuesegruss/tiktok-urlaubsgruss.jpg';
-import { caseStudy } from '../../data/gemuesegruss';
+import { caseStudy, months } from '../../data/gemuesegruss';
 import stift from '../../assets/gemuesegruss/tiktok-beschriften-stift.jpg';
 
-const areas = `"hero hero gruss views" "hero hero stift views" "orders orders best noad"`;
-const mobileAreas = `"hero hero gruss" "hero hero best"`;
+const areas = `"hero hero trend views" "hero hero stift views" "orders orders best noad"`;
+const mobileAreas = `"hero hero trend" "hero hero best"`;
 const bestDay = caseStudy.bestDay;
+// Mini-Verlauf der Shop-Bestellungen; der stärkste Monat ist orange.
+const maxOrders = Math.max(...months.map((month) => month.orders));
+const peak = months.find((month) => month.orders === maxOrders)!;
 ---
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
@@ -18,10 +20,13 @@ const bestDay = caseStudy.bestDay;
     <span class="chip">kartoffel mit botschaft</span>
   </div>
 
-  <!-- Ein echter Gruß aus einem Video -->
-  <div class="tile" style="grid-area: gruss; --i: 1">
-    <Image class="fill" src={urlaubsgruss} alt="" widths={[400]} sizes="(max-width: 960px) 30vw, 180px" />
-    <span class="chip">dein gruß</span>
+  <!-- Bestellungen pro Monat im Shop -->
+  <div class="tile t-cream pad trend" style="grid-area: trend; --i: 1">
+    <p class="t-label">bestellungen im shop</p>
+    <div class="cols push" aria-hidden="true">
+      {months.map((month, i) => <span class:list={{ peak: month === peak }} style={`--h: ${month.orders / maxOrders}; --d: ${i}`} />)}
+    </div>
+    <p class="trend-note"><strong>{peak.orders}</strong> im {peak.label}</p>
   </div>
 
   <!-- Reichweite -->
@@ -79,6 +84,42 @@ const bestDay = caseStudy.bestDay;
     margin-top: calc(var(--u) * 0.03);
     font-size: max(10px, calc(var(--u) * 0.075));
     font-weight: 600;
+  }
+
+  .cols {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 42%;
+    border-bottom: 1px solid #c9c5bc;
+  }
+
+  .cols span {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    border-radius: 2px 2px 0 0;
+    background: #77746e;
+    transform-origin: bottom;
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(0.4s + var(--d) * 35ms);
+  }
+
+  .cols .peak {
+    background: #e8470f;
+  }
+
+  :global(.js) :global([data-reveal]:not(.is-visible)) .cols span {
+    transform: scaleY(0);
+  }
+
+  .trend-note {
+    margin-top: calc(var(--u) * 0.05);
+    font-size: max(10px, calc(var(--u) * 0.068));
+    line-height: 1.25;
+  }
+
+  .trend-note strong {
+    font-weight: 800;
   }
 
   .play {
