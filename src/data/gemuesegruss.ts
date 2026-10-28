@@ -40,11 +40,14 @@ export type Month = {
   revenue: number;
   orders: number;
   conversion: number;
+  // Shop geschlossen (Umzug und Uni)
+  closed?: boolean;
 };
 
 // Shopify-Analytics-Report (Stand März 2026): Umsatz und Bestellungen pro Monat im Onlineshop.
 // Insgesamt waren es über 1.000 Bestellungen; 904 davon liefen über den Shopify-Shop.
 // März 2026 enthielt nur eine Rückerstattung und ist deshalb nicht dargestellt.
+// September und Oktober 2025 war der Shop geschlossen; ab September lief kaum noch Marketing.
 export const months: Month[] = [
   { label: 'Dezember 2024', short: 'Dez', revenue: 142.09, orders: 11, conversion: 2.08 },
   { label: 'Januar 2025', short: 'Jan', revenue: 4008.4, orders: 314, conversion: 2.16 },
@@ -55,8 +58,8 @@ export const months: Month[] = [
   { label: 'Juni 2025', short: 'Jun', revenue: 265, orders: 24, conversion: 1.68 },
   { label: 'Juli 2025', short: 'Jul', revenue: 426.52, orders: 33, conversion: 2.15 },
   { label: 'August 2025', short: 'Aug', revenue: 771.67, orders: 57, conversion: 1.4 },
-  { label: 'September 2025', short: 'Sep', revenue: 0, orders: 0, conversion: 0 },
-  { label: 'Oktober 2025', short: 'Okt', revenue: 0, orders: 4, conversion: 0.92 },
+  { label: 'September 2025', short: 'Sep', revenue: 0, orders: 0, conversion: 0, closed: true },
+  { label: 'Oktober 2025', short: 'Okt', revenue: 0, orders: 4, conversion: 0.92, closed: true },
   { label: 'November 2025', short: 'Nov', revenue: 125.01, orders: 10, conversion: 1.66 },
   { label: 'Dezember 2025', short: 'Dez', revenue: 178.97, orders: 13, conversion: 3.49 },
   { label: 'Januar 2026', short: 'Jan', revenue: 134.35, orders: 11, conversion: 3.17 },

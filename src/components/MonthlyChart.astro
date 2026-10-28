@@ -1,6 +1,6 @@
 ---
 // Säulendiagramm: Umsatz pro Monat. Der stärkste Monat ist hervorgehoben (Emphasis),
-// eine Anmerkung verbindet ihn mit dem viralen Reel.
+// eine Anmerkung verbindet ihn mit dem viralen Reel. Monate mit geschlossenem Shop sind schraffiert.
 import type { Month } from '../data/gemuesegruss';
 
 interface Props {
@@ -17,6 +17,13 @@ const de = new Intl.NumberFormat('de-DE');
 const euro = (n: number) => `${de.format(Math.round(n))} €`;
 const peak = months.reduce((a, b) => (b.revenue > a.revenue ? b : a));
 // Jahreszahl unter dem ersten Monat jedes Jahres
+// Länge eines Blocks geschlossener Monate, gezählt ab dessen erstem Monat (für die Beschriftung)
+const closedRun = months.map((m, i) => {
+  if (!m.closed || months[i - 1]?.closed) return 0;
+  let run = 0;
+  while (months[i + run]?.closed) run++;
+  return run;
+});
 const years = months.map((m, i) => {
   const year = m.label.slice(-4);
   return i === 0 || months[i - 1].label.slice(-4) !== year ? year : '';
@@ -36,13 +43,21 @@ const years = months.map((m, i) => {
             <li
               class:list={['col', { peak: m === peak }]}
               tabindex="0"
-              aria-label={`${m.label}: ${euro(m.revenue)} Umsatz, ${m.orders} Bestellungen`}
+              aria-label={`${m.label}: ${m.closed ? 'Shop geschlossen, ' : ''}${euro(m.revenue)} Umsatz, ${m.orders} Bestellungen`}
               data-label={m.label}
               data-revenue={euro(m.revenue)}
               data-orders={String(m.orders)}
               data-aov={m.orders && m.revenue ? `${de.format(Math.round((m.revenue / m.orders) * 100) / 100)} €` : ''}
               data-conversion={m.conversion ? `${de.format(m.conversion)} %` : ''}
+              data-closed={m.closed ? 'true' : undefined}
             >
+              {m.closed && <span class="closed" aria-hidden="true" />}
+              {closedRun[i] > 0 && (
+                <span class="closed-label mono" style={`--run: ${closedRun[i]}`} aria-hidden="true">
+                  <span class="note-long">shop geschlossen</span>
+                  <span class="note-short">zu</span>
+                </span>
+              )}
               <span class="bar" style={`--h: ${(m.revenue / MAX) * 100}%; --i: ${i}`}>
                 {m === peak && <span class="cap">{euro(m.revenue)}</span>}
               </span>
@@ -89,7 +104,8 @@ const years = months.map((m, i) => {
       const d = col.dataset;
       value.textContent = `${d.revenue} Umsatz`;
       title.textContent = d.label ?? '';
-      const parts = [`${d.orders} Bestellungen`];
+      const parts = d.closed ? ['Shop geschlossen (Umzug & Uni)'] : [];
+      parts.push(`${d.orders} Bestellungen`);
       if (d.aov) parts.push(`Ø ${d.aov}`);
       if (d.conversion) parts.push(`Conversion ${d.conversion}`);
       meta.textContent = parts.join(' · ');
@@ -186,6 +202,28 @@ const years = months.map((m, i) => {
   .col.hover,
   .col:focus-visible {
     background: rgb(255 255 255 / 0.04);
+  }
+
+  /* Shop geschlossen: schraffierte Fläche hinter den Monaten */
+  .closed {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 7px);
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .closed-label {
+    position: absolute;
+    top: 0.4rem;
+    left: 0;
+    z-index: 1;
+    width: calc(var(--run) * 100%);
+    color: var(--ink-3);
+    font-size: 0.68rem;
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
   }
 
   .bar {
