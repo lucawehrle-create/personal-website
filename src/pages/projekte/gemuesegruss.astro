@@ -196,12 +196,12 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
           {
             c.gallery.map((item, i) => (
               <figure data-reveal style={`--delay: ${i * 0.08}s`}>
-                <Image src={item.image} alt={item.alt} widths={[400]} sizes="(max-width: 760px) 100vw, 33vw" />
+                <Image src={item.image} alt={item.alt} widths={[400, 800]} sizes="(max-width: 760px) 100vw, 33vw" />
+                <figcaption class="mono">{item.caption}</figcaption>
               </figure>
             ))
           }
         </div>
-        <p class="gallery-note mono">Standbilder aus den Videos auf TikTok</p>
       </div>
     </section>
 
@@ -604,6 +604,7 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
   }
 
   .gallery figure {
+    position: relative;
     margin: 0;
     overflow: hidden;
     border-radius: 14px;
@@ -621,10 +622,16 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
     transform: scale(1.04);
   }
 
-  .gallery-note {
-    margin-top: 1rem;
-    color: var(--ink-3);
+  .gallery figcaption {
+    position: absolute;
+    left: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgb(17 17 18 / 0.75);
+    color: #f2f0eb;
     font-size: 0.72rem;
+    backdrop-filter: blur(6px);
   }
 
   .learnings {

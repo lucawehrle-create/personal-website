@@ -5,8 +5,8 @@ import cover from '../../assets/mindfulscreen/buch-cover.jpg';
 import mark from '../../assets/mindfulscreen/logo-mark.png';
 import instagram from '../../assets/mindfulscreen/instagram-profil.jpg';
 
-const areas = `"book book logo phone" "book book days phone" "rating post quote quote"`;
-const mobileAreas = `"book book" "logo days" "post rating"`;
+const areas = `"book book logo phone" "book book days phone" "post rating time time"`;
+const mobileAreas = `"book book" "logo days" "time time"`;
 const days = Array.from({ length: 21 }, (_, i) => i);
 ---
 
@@ -41,22 +41,26 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   </div>
 
   <!-- Bewertung -->
-  <div class="tile t-cream pad rating" style="grid-area: rating; --i: 4">
+  <div class="tile t-cream pad rating m-hide" style="grid-area: rating; --i: 4">
     <p class="t-label">amazon-bewertung</p>
     <p class="t-big push">5,0</p>
     <p class="stars" aria-hidden="true">★★★★★</p>
   </div>
 
   <!-- Karussell-Post (nachgebaut) -->
-  <div class="tile pad post" style="grid-area: post; --i: 5">
+  <div class="tile pad post m-hide" style="grid-area: post; --i: 5">
     <p class="post-brand">luca wehrle</p>
     <p class="post-title push">Wie dein Handy dich <span>kontrolliert!</span></p>
   </div>
 
-  <!-- Zitat -->
-  <div class="tile t-cream pad quote m-hide" style="grid-area: quote; --i: 6">
-    <p class="t-label">mindfulscreen · für schüler:innen</p>
-    <p class="t-big push">Handy aus,<br />Leben an.</p>
+  <!-- Bildschirmzeit vorher / nachher -->
+  <div class="tile t-dark pad time" style="grid-area: time; --i: 6">
+    <p class="t-label">meine bildschirmzeit · ø pro tag</p>
+    <p class="t-big">−59 %</p>
+    <div class="bars push">
+      <p class="row" style="--s: 1"><span>vorher</span><span class="bar"></span><span>6 h 19</span></p>
+      <p class="row now" style="--s: 0.41"><span>nachher</span><span class="bar"></span><span>2 h 36</span></p>
+    </div>
   </div>
 </Bento>
 
@@ -223,8 +227,47 @@ const days = Array.from({ length: 21 }, (_, i) => i);
     color: #8ed691;
   }
 
-  .quote .t-big {
-    font-size: calc(var(--u) * 0.27);
-    color: #295842;
+  .bars {
+    display: grid;
+    gap: calc(var(--u) * 0.05);
+    min-width: 0;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: calc(var(--u) * 0.36) minmax(0, 1fr) calc(var(--u) * 0.36);
+    align-items: center;
+    gap: calc(var(--u) * 0.04);
+    font-family: var(--font-mono);
+    font-size: calc(var(--u) * 0.058);
+    color: rgb(242 240 235 / 0.7);
+  }
+
+  .row .bar {
+    width: calc(var(--s) * 100%);
+    height: calc(var(--u) * 0.1);
+    border-radius: 4px;
+    background: #77746e;
+    transform-origin: left center;
+    transition: transform 1.2s cubic-bezier(0.6, 0, 0.2, 1) 0.5s;
+  }
+
+  .row.now {
+    color: #ff6a2b;
+  }
+
+  .row.now .bar {
+    background: #ff5b1f;
+    transition-delay: 0.75s;
+  }
+
+  :global(.js) :global([data-reveal]:not(.is-visible)) .row .bar {
+    transform: scaleX(0);
+  }
+
+  .time .t-big {
+    margin-top: calc(var(--u) * 0.05);
+    font-size: calc(var(--u) * 0.26);
+    color: #ff6a2b;
   }
 </style>

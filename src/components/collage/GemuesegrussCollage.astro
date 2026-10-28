@@ -1,27 +1,26 @@
 ---
-import '@fontsource/permanent-marker/latin-400.css';
 import { Image } from 'astro:assets';
 import Bento from './Bento.astro';
+import produkt from '../../assets/gemuesegruss/produktfoto.jpg';
 import kartons from '../../assets/collage/gemuesegruss-kartons.jpg';
 import label from '../../assets/collage/gemuesegruss-label.jpg';
 import stift from '../../assets/gemuesegruss/tiktok-beschriften-stift.jpg';
 
-const areas = `"boxes boxes label views" "boxes boxes stift views" "orders orders greet noad"`;
-const mobileAreas = `"boxes boxes" "orders orders" "label greet"`;
+const areas = `"hero hero boxes views" "hero hero stift views" "orders orders label noad"`;
+const mobileAreas = `"hero hero" "orders orders" "label stift"`;
 ---
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
-  <!-- Versandfertige Kartons -->
-  <div class="tile" style="grid-area: boxes; --i: 0">
-    <Image class="fill" src={kartons} alt="" widths={[480, 900]} sizes="(max-width: 960px) 90vw, 380px" />
-    <span class="chip">versandfertig · weihnachten</span>
+  <!-- Das Produkt -->
+  <div class="tile" style="grid-area: hero; --i: 0">
+    <Image class="fill produkt" src={produkt} alt="" widths={[480, 900]} sizes="(max-width: 960px) 90vw, 380px" />
+    <span class="chip">kartoffel mit botschaft</span>
   </div>
 
-  <!-- Logo: Etikett als Sticker -->
-  <div class="tile sticker-tile" style="grid-area: label; --i: 1">
-    <div class="sticker">
-      <Image src={label} alt="" widths={[300, 465]} sizes="(max-width: 960px) 40vw, 170px" />
-    </div>
+  <!-- Versandfertige Kartons -->
+  <div class="tile m-hide" style="grid-area: boxes; --i: 1">
+    <Image class="fill" src={kartons} alt="" widths={[400]} sizes="180px" />
+    <span class="chip">versandfertig</span>
   </div>
 
   <!-- Reichweite -->
@@ -37,8 +36,8 @@ const mobileAreas = `"boxes boxes" "orders orders" "label greet"`;
   </div>
 
   <!-- Handarbeit -->
-  <div class="tile m-hide" style="grid-area: stift; --i: 3">
-    <Image class="fill" src={stift} alt="" widths={[400]} sizes="180px" />
+  <div class="tile" style="grid-area: stift; --i: 3">
+    <Image class="fill" src={stift} alt="" widths={[400]} sizes="(max-width: 960px) 45vw, 180px" />
     <span class="chip">von hand beschriftet</span>
   </div>
 
@@ -56,9 +55,11 @@ const mobileAreas = `"boxes boxes" "orders orders" "label greet"`;
     </p>
   </div>
 
-  <!-- Die Kartoffel -->
-  <div class="tile greet" style="grid-area: greet; --i: 5">
-    <div class="potato"><span>Alles Gute!</span></div>
+  <!-- Logo: Etikett als Sticker -->
+  <div class="tile sticker-tile" style="grid-area: label; --i: 5">
+    <div class="sticker">
+      <Image src={label} alt="" widths={[300, 465]} sizes="(max-width: 960px) 40vw, 170px" />
+    </div>
   </div>
 
   <!-- Werbebudget -->
@@ -69,6 +70,11 @@ const mobileAreas = `"boxes boxes" "orders orders" "label greet"`;
 </Bento>
 
 <style>
+  /* Mobil ist die Kachel breit: Ausschnitt auf Kartoffel und Etikett */
+  .produkt {
+    object-position: 50% 72%;
+  }
+
   .sticker-tile {
     --t-bg: #f5bb00;
     background: var(--t-bg);
@@ -175,44 +181,6 @@ const mobileAreas = `"boxes boxes" "orders orders" "label greet"`;
 
   .bag svg {
     width: 60%;
-  }
-
-  .greet {
-    --t-bg: #2a2116;
-    background: radial-gradient(circle at 50% 40%, #3a2d1b, #1f1810);
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Eine Kartoffel aus CSS mit handschriftlichem Gruß */
-  .potato {
-    display: grid;
-    place-items: center;
-    width: 84%;
-    aspect-ratio: 1.35;
-    border-radius: 52% 46% 50% 48% / 56% 50% 52% 46%;
-    background:
-      radial-gradient(circle at 26% 30%, rgb(110 70 30 / 0.5) 0 2%, transparent 3%),
-      radial-gradient(circle at 70% 24%, rgb(110 70 30 / 0.45) 0 1.6%, transparent 2.6%),
-      radial-gradient(circle at 78% 70%, rgb(110 70 30 / 0.45) 0 1.8%, transparent 2.8%),
-      radial-gradient(circle at 34% 78%, rgb(110 70 30 / 0.4) 0 1.5%, transparent 2.5%),
-      radial-gradient(ellipse at 35% 30%, #f0cf98, #d29d58 55%, #a5733a 100%);
-    box-shadow:
-      inset calc(var(--u) * -0.03) calc(var(--u) * -0.04) calc(var(--u) * 0.08) rgb(80 45 10 / 0.45),
-      0 calc(var(--u) * 0.05) calc(var(--u) * 0.1) rgb(0 0 0 / 0.5);
-    transform: rotate(-8deg);
-    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  .greet:hover .potato {
-    transform: rotate(4deg) scale(1.04);
-  }
-
-  .potato span {
-    font-family: 'Permanent Marker', 'Comic Sans MS', cursive;
-    font-size: calc(var(--u) * 0.13);
-    color: #2a1a0a;
-    transform: rotate(-4deg);
   }
 
   .noad .t-big {

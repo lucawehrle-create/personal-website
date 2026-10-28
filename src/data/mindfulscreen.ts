@@ -1,5 +1,11 @@
 // Case Study Mindfulscreen: Marke gegen Handysucht mit Website, 21-Tage-Programm, Instagram und Buch.
 import hero from '../assets/projects/mindfulscreen.webp';
+import bildschirmzeit from '../assets/mindfulscreen/bildschirmzeit.png';
+import blattZiel from '../assets/mindfulscreen/masterclass/3-ziel.jpg';
+import blattTrigger from '../assets/mindfulscreen/masterclass/4-trigger.jpg';
+import blattGewohnheit from '../assets/mindfulscreen/masterclass/5-gewohnheit.jpg';
+import blattAlternativen from '../assets/mindfulscreen/masterclass/6-alternativen.jpg';
+import blattFortschritt from '../assets/mindfulscreen/masterclass/7-fortschritt.jpg';
 import website from '../assets/mindfulscreen/website.jpg';
 import instagram from '../assets/mindfulscreen/instagram-profil.jpg';
 import cover from '../assets/mindfulscreen/buch-cover.jpg';
@@ -18,7 +24,7 @@ export const caseStudy = {
     { display: '749', label: 'Follower auf Instagram' },
     { display: '21', label: 'Tage dauert das Programm' },
     { display: '5,0 ★', label: 'Amazon-Bewertung für mein Buch' },
-    { display: '1', label: 'Buch, bis heute auf Amazon erhältlich' },
+    { display: '−59 %', label: 'Bildschirmzeit – bei mir selbst, vorher vs. nachher' },
   ],
   // Zitat von mindfulscreen.com
   quote: [
@@ -35,7 +41,7 @@ export const caseStudy = {
     },
     {
       title: '21-Tage-Programm',
-      text: 'In 21 Tagen Handysucht loswerden: Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker in Notion.',
+      text: 'Die Masterclass „Habit Change“: vier Schritte in vier Wochen, Erklärungsvideos, fünf Arbeitsblätter und ein Journal.',
       status: 'eingestellt',
     },
     {
@@ -68,10 +74,53 @@ export const caseStudy = {
     { title: '3 Wege, um *glücklicher* zu sein.', sub: 'Die du direkt umsetzen kannst :)' },
   ],
   logoMark,
+  // Bildschirmzeit aus iOS (Wochenansicht): Tagesschnitt und Wochensumme, vorher und nachher
+  screenTime: {
+    image: bildschirmzeit,
+    alt: 'iOS-Bildschirmzeit vorher und nachher: 6 h 19 min statt 2 h 36 min im Tagesschnitt, 44 h 19 min statt 18 h 17 min pro Woche',
+    before: { minutes: 379, display: '6 h 19 min' },
+    after: { minutes: 156, display: '2 h 36 min' },
+    change: '−59 %',
+    gains: [
+      { value: '3 h 43 min', label: 'mehr Zeit, jeden Tag' },
+      { value: '26 h', label: 'pro Woche: 44 h 19 min → 18 h 17 min' },
+      { value: '−62 %', label: 'soziale Netze: 17 h → 6 h 24 min pro Woche' },
+    ],
+  },
+  // Masterclass „Habit Change“: das 21-Tage-Programm
+  program: {
+    title: 'Masterclass: Habit Change',
+    steps: [
+      {
+        title: 'Klare Absichten setzen',
+        text: 'Das eigene Handyverhalten analysieren und mit bewusster Veränderung gesündere digitale Gewohnheiten aufbauen.',
+      },
+      {
+        title: 'Umfeld verändern',
+        text: 'Physisches und digitales Umfeld so gestalten, dass Ablenkungen seltener und schnelle Dopamin-Apps schwerer erreichbar sind.',
+      },
+      {
+        title: 'Aufmerksamkeit stärken',
+        text: 'Die Aufmerksamkeitsspanne trainieren, um die Fähigkeit zur Konzentration zurückzugewinnen.',
+      },
+      {
+        title: 'Persönlicher Ansatz',
+        text: 'Jeder ist anders: den eigenen Weg finden, der wirklich in den Alltag passt.',
+      },
+    ],
+    // Arbeitsblätter aus der Masterclass (Originale auf Englisch)
+    sheets: [
+      { image: blattZiel, title: 'Zieldefinition', original: 'My Clear Goal', alt: 'Arbeitsblatt „My Clear Goal“ mit Ist-Zustand, Motivation, SMART-Ziel, Visualisierung und Selbstverpflichtung' },
+      { image: blattTrigger, title: 'Trigger-Analyse', original: 'Understanding My Triggers', alt: 'Arbeitsblatt „Understanding My Triggers“ mit 7-Tage-Protokoll und Wochenauswertung' },
+      { image: blattGewohnheit, title: 'Gewohnheit umbauen', original: 'The Four Elements of Change', alt: 'Arbeitsblatt „The Four Elements of Change“: Auslöser, Verlangen, Reaktion und Belohnung' },
+      { image: blattAlternativen, title: 'Ersatzhandlungen', original: 'My New Positive Habits', alt: 'Arbeitsblatt „My New Positive Habits“ mit Ersatzhandlungen je Bedürfnis und Wenn-dann-Plänen' },
+      { image: blattFortschritt, title: 'Erfolgsjournal', original: 'My Success Journal', alt: 'Arbeitsblatt „My Success Journal“ zur Dokumentation und Reflexion über vier Wochen' },
+    ],
+  },
   experiment: {
     hypothesis: 'Schüler:innen wollen weniger Zeit am Handy verbringen – sie brauchen nur jemanden, der zeigt, wie es geht.',
-    test: 'Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm, eine Website und ein eigenes Buch.',
-    result: '749 Follower und ein Buch mit 5,0 Sternen, das bis heute auf Amazon erhältlich ist.',
+    test: 'Erst an mir selbst, dann für andere: Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm, eine Website und ein eigenes Buch.',
+    result: 'Bei mir 59 % weniger Bildschirmzeit, 749 Follower und ein Buch mit 5,0 Sternen, das bis heute auf Amazon erhältlich ist.',
   },
   learnings: [
     {

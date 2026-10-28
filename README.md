@@ -29,7 +29,7 @@ Alle Texte stehen in **`src/data/site.ts`**: Hero, Intro, Projekte, Über mich, 
 
 ### Unterschrift austauschen
 
-Die Unterschrift ist aktuell aus der Schrift „Herr Von Muellerhoff“ erzeugt (`src/data/signature.ts`). Eine echte Unterschrift lässt sich als SVG-Pfade im selben Format einsetzen (viewBox + Liste von Pfaden).
+Die Unterschrift ist ein Scan der echten Unterschrift, nachgezeichnet als ein einziger SVG-Pfad (`src/data/signature.ts`: `viewBox` + `d`). Für eine neue Version den Scan vektorisieren (z. B. potrace oder Inkscape „Bitmap nachzeichnen“) und `viewBox` und Pfad dort ersetzen. Gefüllt wird mit der Akzentfarbe, beim Hereinscrollen „schreibt“ sie sich von links nach rechts.
 
 ### Vor dem Livegang
 

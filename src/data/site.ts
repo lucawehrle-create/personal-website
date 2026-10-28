@@ -129,8 +129,8 @@ export const projects: Project[] = [
     period: '2023 – 2024',
     experiment: {
       hypothesis: 'Schüler:innen wollen weniger Zeit am Handy verbringen – sie brauchen nur jemanden, der zeigt, wie es geht.',
-      test: 'Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm und ein eigenes Buch.',
-      result: '749 Follower und ein Buch mit 5,0 Sternen auf Amazon.',
+      test: 'Erst an mir selbst, dann für andere: Reels und Posts auf Instagram, ein 21-Tage-Programm und ein eigenes Buch.',
+      result: 'Bei mir 59 % weniger Bildschirmzeit, 749 Follower und ein Buch mit 5,0 Sternen auf Amazon.',
       learning: 'Gewohnheiten ändern sich über einfache Routinen, nicht über Verbote.',
     },
     tags: ['Instagram', 'Reels', 'Notion', 'Buch'],

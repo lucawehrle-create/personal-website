@@ -1,7 +1,7 @@
 // Case Study GemüseGruß: Zahlen aus Instagram-, TikTok- und Shopify-Screenshots.
 import website from '../assets/gemuesegruss/website.jpg';
 import tiktokUrlaubsgruss from '../assets/gemuesegruss/tiktok-urlaubsgruss.jpg';
-import tiktokBox from '../assets/gemuesegruss/tiktok-beschriften-box.jpg';
+import produktfoto from '../assets/gemuesegruss/produktfoto.jpg';
 import tiktokStift from '../assets/gemuesegruss/tiktok-beschriften-stift.jpg';
 import belegShopifyTag from '../assets/gemuesegruss/beleg-shopify-tag.jpg';
 import belegBestellungen from '../assets/gemuesegruss/beleg-bestellungen.jpg';
@@ -162,9 +162,17 @@ export const caseStudy = {
     caption: 'Versandfertig: GemüseGrüße im Weihnachtsdesign',
   },
   gallery: [
-    { image: tiktokUrlaubsgruss, alt: 'Beschriftete Kartoffel mit langem Urlaubsgruß, gebettet in Heu im Versandkarton' },
-    { image: tiktokBox, alt: 'Hand hält eine beschriftete Kartoffel im Karton mit Heu' },
-    { image: tiktokStift, alt: 'Eine Kartoffel wird mit einem Stift von Hand beschriftet' },
+    {
+      image: produktfoto,
+      alt: 'Geöffnete GemüseGruß-Box mit Logo-Etikett, darin auf Heu eine Kartoffel mit der Aufschrift „Für dich“',
+      caption: 'Produktfoto',
+    },
+    {
+      image: tiktokUrlaubsgruss,
+      alt: 'Beschriftete Kartoffel mit langem Urlaubsgruß, gebettet in Heu im Versandkarton',
+      caption: 'TikTok',
+    },
+    { image: tiktokStift, alt: 'Eine Kartoffel wird mit einem Stift von Hand beschriftet', caption: 'TikTok' },
   ],
   evidence: [
     { image: belegShopifyTag, alt: 'Shopify-Dashboard eines Tages: 602,56 € Umsatz, 44 Bestellungen, 1,84 % Conversion', caption: 'Shopify · der stärkste Tag' },

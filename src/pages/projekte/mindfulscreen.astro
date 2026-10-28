@@ -4,6 +4,8 @@ import CaseStudy from '../../layouts/CaseStudy.astro';
 import { caseStudy } from '../../data/mindfulscreen';
 
 const c = caseStudy;
+const st = c.screenTime;
+const prog = c.program;
 const pad = (n: number) => String(n).padStart(2, '0');
 // *Sternchen* markieren die grün hervorgehobenen Wörter der Instagram-Cover.
 const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 === 1 }));
@@ -38,6 +40,52 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
     </div>
   </section>
 
+  <section class="section screen" aria-labelledby="screen-title">
+    <div class="container">
+      <div class="split-head" data-reveal>
+        <p class="label">vorher / nachher</p>
+        <h2 id="screen-title">Minus 59 Prozent Bildschirmzeit.</h2>
+        <p class="lead">
+          Bevor ich anderen gezeigt habe, wie es geht, habe ich es an mir selbst ausprobiert: Mit den Schritten, aus denen
+          später das Programm wurde, sank meine Bildschirmzeit von über sechs auf gut zweieinhalb Stunden am Tag.
+        </p>
+      </div>
+      <figure class="compare" data-reveal>
+        {
+          [
+            { key: 'before', label: 'vorher', ...st.before },
+            { key: 'after', label: 'nachher', ...st.after },
+          ].map((row) => (
+            <div class:list={['bar-row', row.key]} style={`--share: ${row.minutes / st.before.minutes}`}>
+              <span class="bar-label mono">{row.label}</span>
+              <span class="bar-track">
+                <span class="bar" />
+                <strong class="bar-value">{row.display}</strong>
+              </span>
+            </div>
+          ))
+        }
+        <figcaption class="mono">ø bildschirmzeit pro tag · {st.change}</figcaption>
+      </figure>
+      <ul class="gains">
+        {
+          st.gains.map((gain, i) => (
+            <li data-reveal style={`--delay: ${i * 0.08}s`}>
+              <strong>{gain.value}</strong>
+              <span>{gain.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <figure class="screenshot" data-reveal>
+        <div class="img-scroll">
+          <Image src={st.image} alt={st.alt} widths={[800, 1600]} sizes="(max-width: 760px) 720px, (max-width: 1440px) 100vw, 1360px" />
+        </div>
+        <figcaption class="mono">Original aus der iOS-Bildschirmzeit, Wochenansicht</figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section class="section channels-wrap" aria-labelledby="kanaele-title">
     <div class="container">
       <div class="split-head" data-reveal>
@@ -58,6 +106,57 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
           ))
         }
       </ol>
+    </div>
+  </section>
+
+  <section class="section program" aria-labelledby="programm-title">
+    <div class="container">
+      <div class="split-head" data-reveal>
+        <p class="label">das 21-tage-programm</p>
+        <h2 id="programm-title">Vier Wochen, vier Schritte.</h2>
+        <p class="lead">
+          Herzstück war die „{prog.title}“: ein Schritt pro Woche, Erklärungsvideos, ein Journal und fünf Arbeitsblätter, von
+          der klaren Absicht bis zum Erfolgsjournal.
+        </p>
+      </div>
+      <ol class="stairs">
+        {
+          prog.steps.map((step, i) => (
+            <li data-reveal style={`--i: ${i}; --delay: ${i * 0.1}s`}>
+              <span class="mono">woche {i + 1}</span>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="sheets">
+        <div class="sheets-text" data-reveal>
+          <p class="label">{prog.sheets.length} arbeitsblätter</p>
+          <ol class="sheet-list">
+            {
+              prog.sheets.map((sheet, i) => (
+                <li data-n={i}>
+                  <span class="mono">{pad(i + 1)}</span>
+                  <span>
+                    <strong>{sheet.title}</strong>
+                    <em class="mono">„{sheet.original}“</em>
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+        </div>
+        <div class="deck" data-reveal style="--delay: 0.1s">
+          {
+            prog.sheets.map((sheet, i) => (
+              <figure class="sheet" data-n={i} style={`--n: ${i}`}>
+                <Image src={sheet.image} alt={sheet.alt} widths={[500, 1000]} sizes="(max-width: 900px) 70vw, 460px" />
+              </figure>
+            ))
+          }
+        </div>
+      </div>
     </div>
   </section>
 
@@ -171,7 +270,9 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
 
 <style>
   .why,
+  .screen,
   .channels-wrap,
+  .program,
   .experiment-wrap,
   .learnings-wrap {
     border-top: 1px solid var(--line);
@@ -285,6 +386,282 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
   .channels p,
   .learnings p {
     color: var(--ink-2);
+  }
+
+  /* Bildschirmzeit vorher / nachher */
+  .compare {
+    display: grid;
+    gap: clamp(0.75rem, 1.5vw, 1.1rem);
+    margin: 0;
+    padding: clamp(1.25rem, 3vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--bg-2);
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: 5rem minmax(0, 1fr);
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .bar-label {
+    color: var(--ink-3);
+  }
+
+  .bar-track {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+  }
+
+  .bar {
+    flex: none;
+    width: calc((100% - clamp(7.5rem, 14vw, 11rem)) * var(--share));
+    height: clamp(2rem, 4.5vw, 3.5rem);
+    border-radius: 4px;
+    background: #77746e;
+    transform-origin: left center;
+    transition: transform 1.3s cubic-bezier(0.6, 0, 0.2, 1) 0.3s;
+  }
+
+  .after .bar {
+    background: var(--accent);
+    transition-delay: 0.55s;
+  }
+
+  .bar-value {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(1.15rem, 2.6vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    white-space: nowrap;
+    color: var(--ink-2);
+    transition: opacity 0.5s ease 1.2s;
+  }
+
+  .after .bar-value {
+    color: var(--accent);
+  }
+
+  :global(.js) .compare:not(:global(.is-visible)) .bar {
+    transform: scaleX(0);
+  }
+
+  :global(.js) .compare:not(:global(.is-visible)) .bar-value {
+    opacity: 0;
+  }
+
+  .compare figcaption {
+    margin-top: 0.5rem;
+    padding-left: 6rem;
+    color: var(--ink-3);
+  }
+
+  .gains {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem clamp(1.25rem, 2.5vw, 2.5rem);
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .gains li {
+    display: grid;
+    gap: 0.5rem;
+    align-content: start;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--ink);
+  }
+
+  .gains strong {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .gains li:first-child strong {
+    color: var(--accent);
+  }
+
+  .gains span {
+    color: var(--ink-2);
+  }
+
+  .screenshot {
+    margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: #000;
+  }
+
+  .screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .screenshot figcaption {
+    padding: 0.8rem 1rem;
+    border-top: 1px solid var(--line);
+    background: var(--bg-2);
+    color: var(--ink-3);
+  }
+
+  /* Programm: vier Schritte als Treppe in den Farben der Masterclass */
+  .stairs {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .stairs li {
+    --c: #0148b0;
+    --fg: #fff;
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 15rem) minmax(0, 1fr);
+    gap: 0.4rem 2rem;
+    align-items: baseline;
+    margin-left: calc(var(--i) * min(6vw, 5.5rem));
+    padding: clamp(1.1rem, 2vw, 1.5rem) clamp(1.25rem, 2.5vw, 2rem);
+    border-radius: 14px;
+    background: var(--c);
+    color: var(--fg);
+  }
+
+  .stairs li:nth-child(2) {
+    --c: #3d5afe;
+  }
+
+  .stairs li:nth-child(3) {
+    --c: #38b6ff;
+    --fg: #06243f;
+  }
+
+  .stairs li:nth-child(4) {
+    --c: #d9d9d9;
+    --fg: #111112;
+  }
+
+  .stairs .mono {
+    opacity: 0.8;
+  }
+
+  .stairs h3 {
+    margin: 0;
+    font-stretch: 112%;
+    font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+
+  .stairs p {
+    margin: 0;
+  }
+
+  .sheets {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: 3rem clamp(3rem, 6vw, 6rem);
+    align-items: center;
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+  }
+
+  .sheet-list {
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .sheet-list li {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .sheet-list li > .mono {
+    color: var(--accent);
+  }
+
+  .sheet-list strong {
+    display: block;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+  }
+
+  .sheet-list em {
+    font-style: normal;
+    font-size: 0.75rem;
+    color: var(--ink-3);
+  }
+
+  .sheet-list li:hover strong {
+    color: var(--accent);
+  }
+
+  /* Arbeitsblätter als aufgefächerter Stapel */
+  .deck {
+    position: relative;
+    aspect-ratio: 16 / 11;
+  }
+
+  .sheet {
+    --x: calc(var(--n) * 11%);
+    --y: calc(var(--n) * -4.5%);
+    --r: calc(var(--n) * 1.6deg - 2deg);
+    position: absolute;
+    top: 24%;
+    left: 3%;
+    z-index: calc(5 - var(--n));
+    width: 66%;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow:
+      0 18px 40px -12px rgb(0 0 0 / 0.7),
+      0 0 0 1px rgb(0 0 0 / 0.06);
+    transform: translateX(var(--x)) translateY(var(--y)) rotate(var(--r));
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sheet img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  :global(.js) .deck:not(:global(.is-visible)) .sheet {
+    transform: none;
+  }
+
+  :global(.js) .deck:global(.is-visible) .sheet {
+    transition-delay: calc(0.25s + var(--n) * 60ms);
+  }
+
+  .sheet:hover,
+  .sheets:has(li[data-n='0']:hover) .sheet[data-n='0'],
+  .sheets:has(li[data-n='1']:hover) .sheet[data-n='1'],
+  .sheets:has(li[data-n='2']:hover) .sheet[data-n='2'],
+  .sheets:has(li[data-n='3']:hover) .sheet[data-n='3'],
+  .sheets:has(li[data-n='4']:hover) .sheet[data-n='4'] {
+    z-index: 10;
+    transform: translateX(var(--x)) translateY(calc(var(--y) - 8%)) rotate(0deg) scale(1.04);
+    transition-delay: 0s;
   }
 
   /* Buch */
@@ -499,11 +876,20 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
     .channels {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
+    .stairs li {
+      grid-template-columns: 5rem minmax(0, 1fr);
+    }
+
+    .stairs p {
+      grid-column: 2;
+    }
   }
 
   @media (max-width: 900px) {
     .why-grid,
     .content-grid,
+    .sheets,
     .book-grid,
     .experiment,
     .learnings {
@@ -519,6 +905,46 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
       padding-left: 0;
       border-left: 0;
       border-top: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 760px) {
+    .gains {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .bar-row {
+      grid-template-columns: 1fr;
+      gap: 0.4rem;
+    }
+
+    .compare figcaption {
+      padding-left: 0;
+    }
+
+    .screenshot .img-scroll {
+      overflow-x: auto;
+    }
+
+    .screenshot img {
+      width: 720px;
+      max-width: none;
+    }
+
+    .stairs li {
+      grid-template-columns: 1fr;
+      margin-left: calc(var(--i) * 4vw);
+    }
+
+    .stairs p {
+      grid-column: auto;
+    }
+
+    .sheet {
+      left: 2%;
+      width: 72%;
+      --x: calc(var(--n) * 8.5%);
     }
   }
 
