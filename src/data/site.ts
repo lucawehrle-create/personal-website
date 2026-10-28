@@ -52,7 +52,7 @@ export const hero = {
 };
 
 export const statement =
-  'Ich baue digitale Produkte, optimiere Systeme und teste *merkwürdig* *kreative* Geschäftsideen. *Logik* trifft auf *Experimentierfreude* – und manchmal auf *Kartoffeln.*';
+  'Ich baue digitale Produkte, optimiere Systeme und teste *kreative* Geschäftsideen. *Logik* trifft auf *Experimentierfreude* – von der ersten Idee bis zum *Launch.*';
 
 export type Project = {
   name: string;
