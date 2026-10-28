@@ -14,7 +14,7 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
 
 <CaseStudy
   title="GemüseGruß – Case Study"
-  description="Wie aus einem Meme ein Onlineshop wurde: GemüseGruß erzielte 11.700 € Umsatz mit 904 Bestellungen und über 2,8 Mio. Aufrufen auf TikTok und Instagram – ohne Werbebudget."
+  description="Wie aus einem Meme ein Onlineshop wurde: GemüseGruß verschickte über 1.000 handbeschriftete Kartoffeln, erzielte 11.700 € Umsatz im Onlineshop und über 2,8 Mio. Aufrufe auf TikTok und Instagram – ohne Werbebudget."
   name="gemüsegruß"
   label={`case study · abgeschlossen · ${c.period}`}
   claim={c.claim}
@@ -51,9 +51,9 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
           <p class="label">umsatz pro monat</p>
           <h2 id="umsatz-title">Ein Reel, ein Rekordmonat.</h2>
           <p class="lead">
-            Im Januar 2025 ging das Reel mit 1,1 Millionen Aufrufen online. Im selben Monat kamen 314 Bestellungen und über
-            4.000 € Umsatz zusammen – mehr als ein Drittel des gesamten Umsatzes. Januar und Februar zusammen stehen für über
-            60 Prozent.
+            Im Januar 2025 ging das Reel mit 1,1 Millionen Aufrufen online. Im selben Monat kamen im Shop 314 Bestellungen und
+            über 4.000 € Umsatz zusammen – mehr als ein Drittel des gesamten Shop-Umsatzes. Januar und Februar zusammen stehen
+            für über 60 Prozent.
           </p>
         </div>
         <div data-reveal>
@@ -63,7 +63,8 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
             noteShort="Reel mit 1,1 Mio. Aufrufen"
           />
           <p class="source mono">
-            Quelle: Shopify Analytics, Dezember 2024 bis Februar 2026. Im Oktober 2025 wurden alle vier Bestellungen erstattet.
+            Quelle: Shopify Analytics, Dezember 2024 bis Februar 2026 – 904 der insgesamt über 1.000 Bestellungen liefen über den
+            Onlineshop. Im Oktober 2025 wurden alle vier Bestellungen erstattet.
           </p>
         </div>
       </div>
@@ -187,6 +188,10 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
             ))
           }
         </ol>
+        <figure class="shipping" data-reveal>
+          <Image src={c.shipping.image} alt={c.shipping.alt} widths={[800, 1500]} sizes="(max-width: 1440px) 100vw, 1360px" />
+          <figcaption class="mono">{c.shipping.caption}</figcaption>
+        </figure>
         <div class="gallery">
           {
             c.gallery.map((item, i) => (
@@ -565,11 +570,37 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
     color: var(--ink-2);
   }
 
+  .shipping {
+    position: relative;
+    margin: clamp(3rem, 6vw, 4.5rem) 0 0;
+    overflow: hidden;
+    border-radius: 18px;
+    aspect-ratio: 2 / 1;
+    max-width: 100%;
+  }
+
+  .shipping img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .shipping figcaption {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    background: rgb(17 17 18 / 0.75);
+    color: #f2f0eb;
+    backdrop-filter: blur(6px);
+  }
+
   .gallery {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(0.75rem, 1.5vw, 1.25rem);
-    margin-top: clamp(3rem, 6vw, 4.5rem);
+    margin-top: clamp(0.75rem, 1.5vw, 1.25rem);
   }
 
   .gallery figure {
@@ -674,6 +705,10 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
     .gallery figure:first-child {
       grid-column: 1 / -1;
       aspect-ratio: 16 / 10;
+    }
+
+    .shipping {
+      aspect-ratio: 4 / 3;
     }
   }
 

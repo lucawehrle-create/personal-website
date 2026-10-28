@@ -6,6 +6,7 @@ import tiktokStift from '../assets/gemuesegruss/tiktok-beschriften-stift.jpg';
 import belegShopifyTag from '../assets/gemuesegruss/beleg-shopify-tag.jpg';
 import belegBestellungen from '../assets/gemuesegruss/beleg-bestellungen.jpg';
 import belegInstagram from '../assets/gemuesegruss/beleg-instagram.jpg';
+import versandKartons from '../assets/gemuesegruss/versand-kartons.jpg';
 
 export type Video = {
   platform: 'TikTok' | 'Instagram';
@@ -41,7 +42,8 @@ export type Month = {
   conversion: number;
 };
 
-// Shopify-Analytics-Report (Stand März 2026): Umsatz und Bestellungen pro Monat.
+// Shopify-Analytics-Report (Stand März 2026): Umsatz und Bestellungen pro Monat im Onlineshop.
+// Insgesamt waren es über 1.000 Bestellungen; 904 davon liefen über den Shopify-Shop.
 // März 2026 enthielt nur eine Rückerstattung und ist deshalb nicht dargestellt.
 export const months: Month[] = [
   { label: 'Dezember 2024', short: 'Dez', revenue: 142.09, orders: 11, conversion: 2.08 },
@@ -62,6 +64,7 @@ export const months: Month[] = [
 ];
 
 export const shop = {
+  totalOrders: '1.000+',
   revenue: 11_719.56,
   orders: 904,
   sessions: 31_708,
@@ -102,8 +105,8 @@ export const caseStudy = {
   roles: ['Idee & Marke', 'Shopify-Shop', 'Content & Social Media', 'Produktion & Versand'],
   kpis: [
     { display: '2,8 Mio.+', label: 'Aufrufe auf TikTok und Instagram' },
-    { display: '11.700 €', label: 'Umsatz insgesamt' },
-    { display: '904', label: 'Bestellungen' },
+    { display: '1.000+', label: 'Bestellungen insgesamt' },
+    { display: '11.700 €', label: 'Umsatz im Onlineshop' },
     { display: '0 €', label: 'Werbebudget – alles organisch' },
   ],
   bestDay: {
@@ -144,15 +147,20 @@ export const caseStudy = {
     },
     {
       title: 'Ein Video kann alles verändern.',
-      text: 'Im Monat des Reels mit 1,1 Mio. Aufrufen kamen 314 Bestellungen zusammen – über ein Drittel des gesamten Umsatzes. Reichweite kommt in Wellen, nicht linear.',
+      text: 'Im Monat des Reels mit 1,1 Mio. Aufrufen kamen im Shop 314 Bestellungen zusammen – über ein Drittel des Shop-Umsatzes. Reichweite kommt in Wellen, nicht linear.',
     },
     {
       title: 'Viral heißt: Handarbeit skalieren.',
-      text: 'Jede Bestellung bedeutet Beschriften, Verpacken, Versenden. An einem Tag warteten über 50 Bestellungen auf den Versand – da schlagen Prozesse jede Improvisation.',
+      text: 'Über 1.000 Kartoffeln heißt: über 1.000-mal beschriften, verpacken, versenden. An einem Tag warteten über 50 Bestellungen auf den Versand – da schlagen Prozesse jede Improvisation.',
     },
   ],
   hero: website,
   heroAlt: 'Laptop mit der Startseite von GemüseGruß: „Der witzigste Gruß – auf einer Kartoffel!“ über beschrifteten Kartoffeln',
+  shipping: {
+    image: versandKartons,
+    alt: 'Ein Stapel versandfertiger GemüseGruß-Kartons mit Weihnachtsetikett: Kartoffel mit Weihnachtsmütze und Möhre',
+    caption: 'Versandfertig: GemüseGrüße im Weihnachtsdesign',
+  },
   gallery: [
     { image: tiktokUrlaubsgruss, alt: 'Beschriftete Kartoffel mit langem Urlaubsgruß, gebettet in Heu im Versandkarton' },
     { image: tiktokBox, alt: 'Hand hält eine beschriftete Kartoffel im Karton mit Heu' },

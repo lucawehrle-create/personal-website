@@ -102,12 +102,12 @@ export const projects: Project[] = [
     category: 'E-Commerce · Viral',
     description:
       'E-Commerce, der eigentlich ein Meme ist – aber funktioniert: personalisierte Kartoffeln mit Grußbotschaft. Gebaut auf Shopify, gewachsen durch virales Marketing und UGC-Kampagnen.',
-    metric: { value: '11.700 €', label: 'Umsatz' },
+    metric: { value: '1.000+', label: 'Bestellungen' },
     period: '2024 – 2026',
     experiment: {
       hypothesis: 'Menschen zahlen für einen Gruß, der so absurd ist, dass man ihn weitererzählt.',
       test: 'Shopify-Shop für handbeschriftete Kartoffeln, Reichweite über Kurzvideos auf TikTok und Instagram.',
-      result: '904 Bestellungen, 11.700 € Umsatz und über 2,8 Mio. Aufrufe – ohne Werbebudget.',
+      result: 'Über 1.000 Bestellungen, 11.700 € Umsatz im Onlineshop und über 2,8 Mio. Aufrufe – ohne Werbebudget.',
       learning: 'Wenn das Produkt selbst die Geschichte ist, erzählen Kund:innen sie weiter.',
     },
     tags: ['Shopify', 'TikTok', 'Instagram', 'Logistik'],
@@ -154,7 +154,7 @@ export const about = {
     {
       label: 'strange venture',
       title: 'Potato-as-a-Service',
-      text: 'Skalierbarer E-Commerce für beschriftete Kartoffeln. Über 900 Bestellungen. Ernsthaft.',
+      text: 'Skalierbarer E-Commerce für beschriftete Kartoffeln. Über 1.000 Stück verschickt. Ernsthaft.',
     },
     {
       label: 'co-founders',
