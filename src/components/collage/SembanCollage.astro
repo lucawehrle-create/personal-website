@@ -1,38 +1,38 @@
 ---
 import { Image } from 'astro:assets';
 import Bento from './Bento.astro';
-import feed from '../../assets/collage/semban-feed.jpg';
+import screenStart from '../../assets/collage/semban-start.webp';
+import screenStatistik from '../../assets/collage/semban-web-statistik.webp';
+import screenWeb from '../../assets/collage/semban-web-gruppen.webp';
 import maskottchen from '../../assets/collage/semban-maskottchen.webp';
+import icon from '../../assets/logos/semban.svg';
 
-const areas = `"feed feed logo head" "feed feed timer head" "photo store claim claim"`;
+// Echte App-Screenshots von semban.de
+const areas = `"feed feed logo head" "feed feed timer head" "photo store web web"`;
 const mobileAreas = `"feed feed logo" "feed feed photo"`;
 ---
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
-  <!-- App-Feed (echter Screenshot von semban.de) -->
+  <!-- iPad mit Statistik, davor das iPhone mit dem Lern-Feed -->
   <div class="tile feed" style="grid-area: feed; --i: 0">
     <p class="t-label pad">app · iphone, ipad & web</p>
-    <div class="screen">
-      <Image src={feed} alt="" widths={[360, 720]} sizes="(max-width: 960px) 45vw, 260px" />
+    <div class="tablet">
+      <Image src={screenStatistik} alt="" widths={[480, 960]} sizes="(max-width: 960px) 70vw, 340px" />
+    </div>
+    <div class="phone">
+      <Image src={screenStart} alt="" widths={[300, 600]} sizes="(max-width: 960px) 40vw, 200px" />
     </div>
   </div>
 
   <!-- Logo -->
   <div class="tile t-paper pad logo" style="grid-area: logo; --i: 1">
-    <svg class="mark" viewBox="0 0 72 72" aria-hidden="true">
-      <rect x="4" y="4" width="64" height="64" rx="15" fill="#fc5200"></rect>
-      <rect x="18.5" y="31" width="7" height="20" rx="3.5" fill="#fff"></rect>
-      <rect x="31" y="23.5" width="7" height="27.5" rx="3.5" fill="#fff"></rect>
-      <rect x="43.5" y="38.5" width="7" height="12.5" rx="3.5" fill="#fff"></rect>
-      <rect x="43.5" y="26.5" width="7" height="7.5" rx="1.8" fill="#fff"></rect>
-      <path d="M45.6 28.6l2.8 3.3m0-3.3-2.8 3.3" stroke="#fc5200" stroke-width="1.2" stroke-linecap="round"></path>
-    </svg>
+    <img class="mark" src={icon.src} alt="" width="72" height="72" />
     <p class="name">SemBan</p>
   </div>
 
   <!-- Claim -->
   <div class="tile t-dark pad head m-hide" style="grid-area: head; --i: 2">
-    <p class="t-label">your social study companion</p>
+    <p class="t-label">strava fürs lernen · kostenlos & werbefrei</p>
     <p class="t-big push">Lernen ist besser mit <span>Freunden.</span></p>
   </div>
 
@@ -58,11 +58,13 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     <p class="t-big push">App Store <span aria-hidden="true">↗</span></p>
   </div>
 
-  <!-- Positionierung -->
-  <div class="tile t-cream pad claim m-hide" style="grid-area: claim; --i: 6">
-    <p class="t-label">kostenlos · werbefrei</p>
-    <p class="t-big push">Strava fürs Lernen.</p>
-    <p class="applause" aria-hidden="true"><span>👏</span> 7 haben applaudiert</p>
+  <!-- Web-App: Lerngruppen mit Wochenziel und Bestenliste -->
+  <div class="tile web m-hide" style="grid-area: web; --i: 6">
+    <p class="t-label pad">web · lerngruppen & bestenliste</p>
+    <div class="browser">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <Image src={screenWeb} alt="" widths={[480, 960]} sizes="(max-width: 960px) 60vw, 380px" />
+    </div>
   </div>
 </Bento>
 
@@ -77,28 +79,54 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     opacity: 0.9;
   }
 
-  .screen {
+  /* iPad hinten links, iPhone vorne rechts – beide unten angeschnitten */
+  .tablet {
     position: absolute;
-    left: 50%;
-    top: 22%;
-    width: 56%;
-    transform: translateX(-50%) rotate(-3deg);
-    border-radius: calc(var(--u) * 0.07);
-    overflow: hidden;
-    box-shadow:
-      0 calc(var(--u) * 0.1) calc(var(--u) * 0.25) rgb(120 30 0 / 0.45),
-      0 0 0 calc(var(--u) * 0.02) rgb(255 255 255 / 0.9);
+    left: -6%;
+    top: 26%;
+    width: 84%;
+    padding: calc(var(--u) * 0.025);
+    border-radius: calc(var(--u) * 0.06);
+    background: #111112;
+    box-shadow: 0 calc(var(--u) * 0.08) calc(var(--u) * 0.22) rgb(120 30 0 / 0.4);
+    transform: rotate(-5deg);
     transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .screen img {
+  .tablet img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--u) * 0.035);
+  }
+
+  .phone {
+    position: absolute;
+    right: 6%;
+    top: 34%;
+    width: 40%;
+    border-radius: calc(var(--u) * 0.07);
+    overflow: hidden;
+    background: #fff;
+    box-shadow:
+      0 calc(var(--u) * 0.1) calc(var(--u) * 0.25) rgb(120 30 0 / 0.5),
+      0 0 0 calc(var(--u) * 0.018) #111112;
+    transform: rotate(4deg);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .phone img {
     display: block;
     width: 100%;
     height: auto;
   }
 
-  .feed:hover .screen {
-    transform: translateX(-50%) rotate(0deg) translateY(-3%);
+  .feed:hover .tablet {
+    transform: rotate(-7deg) translate(-3%, -3%);
+  }
+
+  .feed:hover .phone {
+    transform: rotate(6deg) translate(2%, -6%);
   }
 
   .logo {
@@ -109,6 +137,7 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
 
   .mark {
     width: 52%;
+    height: auto;
     transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -180,26 +209,45 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     font-size: calc(var(--u) * 0.2);
   }
 
-  .claim .t-big {
-    font-size: calc(var(--u) * 0.25);
+  /* Web-App im Browserfenster, unten angeschnitten */
+  .web {
+    --t-bg: linear-gradient(160deg, #2a2a2d, #19191b);
+    background: var(--t-bg);
   }
 
-  .applause {
+  .browser {
     position: absolute;
-    right: var(--pad);
-    top: var(--pad);
-    display: flex;
-    align-items: center;
-    gap: calc(var(--u) * 0.04);
-    padding: calc(var(--u) * 0.03) calc(var(--u) * 0.07) calc(var(--u) * 0.03) calc(var(--u) * 0.04);
-    border-radius: 999px;
-    background: #fff;
-    box-shadow: 0 4px 14px rgb(0 0 0 / 0.08);
-    font-size: calc(var(--u) * 0.06);
-    font-weight: 600;
+    left: 7%;
+    right: 7%;
+    top: 30%;
+    border-radius: calc(var(--u) * 0.05) calc(var(--u) * 0.05) 0 0;
+    overflow: hidden;
+    background: #efede8;
+    box-shadow: 0 calc(var(--u) * 0.08) calc(var(--u) * 0.2) rgb(0 0 0 / 0.5);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .applause span {
-    font-size: 1.3em;
+  .dots {
+    display: flex;
+    gap: calc(var(--u) * 0.02);
+    padding: calc(var(--u) * 0.03) calc(var(--u) * 0.04);
+    background: #e3e0d8;
+  }
+
+  .dots i {
+    width: calc(var(--u) * 0.028);
+    height: calc(var(--u) * 0.028);
+    border-radius: 50%;
+    background: #c9c5bc;
+  }
+
+  .browser img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .web:hover .browser {
+    transform: translateY(-5%);
   }
 </style>
