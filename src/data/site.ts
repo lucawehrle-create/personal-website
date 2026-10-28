@@ -154,20 +154,6 @@ export const about = {
     { better: 'Machen', over: 'Reden', text: 'Ein getesteter Prototyp sagt mehr als jedes Konzeptpapier.' },
     { better: 'Qualität', over: 'Speed', text: 'Schnell lernen, aber nur ausliefern, wohinter ich stehe.' },
   ],
-  // Die „System Anomalies“ aus der alten Seite, jetzt als Terminal-Ausgabe.
-  anomalies: [
-    {
-      label: 'strange venture',
-      title: 'Potato-as-a-Service',
-      text: 'Skalierbarer E-Commerce für beschriftete Kartoffeln. Über 1.000 Stück verschickt. Ernsthaft.',
-    },
-    {
-      label: 'co-founders',
-      title: 'Synthetic Sparring',
-      text: 'Mein Beirat besteht aus KI-Modellen. Wir diskutieren täglich Strategie – harte Sparringspartner, die keine Anteile wollen.',
-    },
-  ],
-  status: ['debug_mode: true', 'humor_module: 85%'],
   interests: ['Laufen', 'Kraftsport', 'Kochen', 'Reisen', 'Segeln', 'Unternehmertum', 'Digitale Innovation', 'KI'],
 };
 
