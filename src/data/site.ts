@@ -38,7 +38,7 @@ export const hero = {
     { label: 'tldr', text: 'Business Student. Product Builder. Creator of Unusual Side Projects.' },
     {
       label: 'studium & praxis',
-      text: 'BWL an der Universität Mannheim mit Fokus Finance & Digital. Modern Work Systems bei der Würth Group.',
+      text: 'B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute Werkstudent bei Würth IT.',
     },
     {
       label: 'nebenbei',
@@ -56,6 +56,7 @@ export type Project = {
   category: string;
   description: string;
   metric: { value: string; label: string };
+  period?: string;
   tags: string[];
   href: string;
   // Vorschaubild im Seitenverhältnis 16:10, liegt in src/assets/projects/.
@@ -81,6 +82,7 @@ export const projects: Project[] = [
     description:
       'Digital-Detox- und Deep-Work-System für Gründer und High-Performer: 21-Tage-Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker – komplett in Notion.',
     metric: { value: '21', label: 'Tage Programm' },
+    period: '2023 – 2024',
     tags: ['Notion', 'UX', 'AI-Integration', 'Content'],
     href: 'https://mindfulscreen.com/',
     image: mindfulscreenImage,
@@ -114,15 +116,116 @@ export const about = {
     },
   ],
   status: ['debug_mode: true', 'humor_module: 85%'],
+  interests: ['Laufen', 'Kraftsport', 'Kochen', 'Reisen', 'Segeln', 'Unternehmertum', 'Digitale Innovation', 'KI'],
 };
 
-export const career = [
-  { kind: 'erfahrung', title: 'Modern Work Systems', org: 'Würth Group', detail: 'Tech Strategy' },
-  { kind: 'studium', title: 'Betriebswirtschaftslehre', org: 'Universität Mannheim', detail: 'Schwerpunkt Finance & Digital' },
-  { kind: 'gründerszene', title: 'Entrepreneurship', org: 'thinc', detail: '' },
+export type CareerEntry = {
+  role: string;
+  org: string;
+  place?: string;
+  period: string;
+  points?: string[];
+};
+
+// Werdegang laut Lebenslauf (Stand: April 2026), neueste Station zuerst.
+export const career: { experience: CareerEntry[]; education: CareerEntry[]; engagement: CareerEntry[] } = {
+  experience: [
+    {
+      role: 'Werkstudent',
+      org: 'Würth IT',
+      period: '2026 – heute',
+    },
+    {
+      role: 'Freiwilliges Praktikum, Team Modern Work',
+      org: 'Würth Deutschland',
+      place: 'Künzelsau',
+      period: 'Okt 2025 – März 2026',
+      points: [
+        'Unterstützung der digitalen Transformation im Bereich Hardware und Software',
+        'Mitwirkung bei der Einführung eines Assetmanagement- und Wissensmanagement-Systems',
+      ],
+    },
+    {
+      role: 'Startup-Gründung',
+      org: 'Mindfulscreen',
+      place: 'Mannheim',
+      period: '2023 – 2024',
+      points: ['Entwicklung von Strategien und digitalen Lösungen für reduzierte Handynutzung'],
+    },
+    {
+      role: 'Studentische Hilfskraft, Nutzerbetreuung',
+      org: 'Computerpool der Fakultät BWL',
+      place: 'Mannheim',
+      period: '2022 – 2024',
+    },
+  ],
+  education: [
+    {
+      role: 'Auslandssemester',
+      org: 'Jönköping University',
+      place: 'Schweden',
+      period: 'Aug – Dez 2024',
+      points: ['Entrepreneurship, Business Digitalization, Service Marketing, Swedish Language'],
+    },
+    {
+      role: 'B.Sc. Betriebswirtschaftslehre',
+      org: 'Universität Mannheim',
+      place: 'Mannheim',
+      period: '2022 – 2025',
+      points: ['Bachelorarbeit: Electronic Bond Trading', '79 ECTS in englischer Sprache'],
+    },
+    {
+      role: 'Allgemeine Hochschulreife, Internationales Wirtschaftsgymnasium',
+      org: 'Berufsschulzentrum Stockach',
+      place: 'Stockach',
+      period: '2019 – 2022',
+      points: ['Jahrgangspreis für Ökonomische Studien und Informatik'],
+    },
+  ],
+  engagement: [
+    {
+      role: 'Growth Team',
+      org: 'thinc! e.V.',
+      place: 'Mannheim',
+      period: '2022 – 2024',
+      points: [
+        'Die Startup-Initiative der Uni Mannheim',
+        'Verantwortlich für das Wachstum eines zweiwöchigen Startup-Inkubatorprogramms',
+      ],
+    },
+  ],
+};
+
+// Frühere Stationen, kompakt dargestellt.
+export const earlier = [
+  { period: '2020 – 2022', text: 'Aushilfe, EDEKA Sulger, Stockach' },
+  { period: '2020', text: 'Praktikum Lager & Versand, Aptar Radolfzell' },
+  { period: '2019', text: 'Praktikum Personalabteilung, Aptar Radolfzell' },
+  { period: '2017', text: 'Praktikum Mediengestaltung, Kieweg und Freiermuth, Konstanz' },
 ];
 
-export const toolbox = ['MVP Building', 'No-Code', 'Notion', 'n8n', 'Shopify', 'Higgsfield', 'Midjourney', 'Canva'];
+export const toolbox = [
+  'MVP Building',
+  'No-Code',
+  'Generative KI',
+  'Notion',
+  'n8n',
+  'Shopify',
+  'SAP HCM',
+  'MS Office',
+  'Adobe Creative Suite',
+  'Canva',
+  'Midjourney',
+  'Higgsfield',
+];
+
+export const languages = [
+  { name: 'Deutsch', level: 'Muttersprache' },
+  { name: 'Englisch', level: 'C1' },
+  { name: 'Französisch', level: 'A1' },
+  { name: 'Italienisch', level: 'Grundkenntnisse' },
+  { name: 'Schwedisch', level: 'Grundkenntnisse' },
+];
 
 export const contact = {
   heading: 'let’s talk.',

@@ -35,6 +35,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
                     <span class="metric">{project.metric.value}</span> {project.metric.label}
                   </dd>
                 </div>
+                {project.period && (
+                  <div>
+                    <dt class="mono">zeitraum</dt>
+                    <dd>{project.period}</dd>
+                  </div>
+                )}
                 <div>
                   <dt class="mono">stack</dt>
                   <dd>{project.tags.join(' · ')}</dd>

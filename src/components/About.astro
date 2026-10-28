@@ -13,6 +13,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </div>
       <div class="text" data-reveal style="--delay: 0.1s">
         {about.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        <div class="interests">
+          <p class="label">abseits vom laptop</p>
+          <ul>
+            {about.interests.map((interest) => <li>{interest}</li>)}
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -94,8 +100,30 @@ const pad = (n: number) => String(n).padStart(2, '0');
     color: var(--ink-2);
   }
 
-  .text p:first-child {
+  .text > p:first-child {
     color: var(--ink);
+  }
+
+  .interests {
+    margin-top: 0.75rem;
+  }
+
+  .interests ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .interests li {
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-2);
   }
 
   .principles-wrap {

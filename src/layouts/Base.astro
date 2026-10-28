@@ -29,7 +29,11 @@ const personSchema = {
   jobTitle: 'Product Builder',
   description: site.description,
   address: { '@type': 'PostalAddress', addressLocality: site.location, addressCountry: 'DE' },
-  affiliation: { '@type': 'CollegeOrUniversity', name: 'Universität Mannheim' },
+  alumniOf: [
+    { '@type': 'CollegeOrUniversity', name: 'Universität Mannheim' },
+    { '@type': 'CollegeOrUniversity', name: 'Jönköping University' },
+  ],
+  worksFor: { '@type': 'Organization', name: 'Würth IT' },
   sameAs: [site.linkedin],
 };
 ---

@@ -1,9 +1,14 @@
 ---
 import DotField from './DotField.astro';
 import RiseText from './RiseText.astro';
-import { career, toolbox } from '../data/site';
+import { career, earlier, languages, toolbox } from '../data/site';
 
 const pad = (n: number) => String(n).padStart(2, '0');
+const groups = [
+  { title: 'erfahrung', entries: career.experience },
+  { title: 'bildung', entries: career.education },
+  { title: 'engagement', entries: career.engagement },
+];
 ---
 
 <section id="werdegang" class="section career" aria-labelledby="werdegang-title">
@@ -13,23 +18,55 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <h2 id="werdegang-title" class="display"><RiseText text="werdegang" /></h2>
     </div>
 
-    <ol class="rows">
-      {
-        career.map((item, i) => (
-          <li class="row" data-reveal style={`--delay: ${i * 0.08}s`}>
-            <span class="mono num">{pad(i + 1)}</span>
-            <div class="what">
-              <h3>{item.title}</h3>
-              <p class="org">
-                {item.org}
-                {item.detail && <span class="detail"> · {item.detail}</span>}
-              </p>
-            </div>
-            <span class="mono kind">{item.kind}</span>
-          </li>
-        ))
-      }
-    </ol>
+    {
+      groups.map((group) => (
+        <div class="group">
+          <h3 class="group-title" data-reveal>
+            <span class="label">{group.title}</span>
+            <span class="mono count">{pad(group.entries.length)}</span>
+          </h3>
+          <ol class="rows">
+            {group.entries.map((entry, i) => (
+              <li class="row" data-reveal style={`--delay: ${i * 0.06}s`}>
+                <span class="mono num">{pad(i + 1)}</span>
+                <div class="what">
+                  <p class="role">{entry.role}</p>
+                  <p class="org">
+                    {entry.org}
+                    {entry.place && <span class="place"> · {entry.place}</span>}
+                  </p>
+                  {entry.points && (
+                    <ul class="points">
+                      {entry.points.map((point) => (
+                        <li>{point}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                <p class="mono period">{entry.period}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))
+    }
+
+    <div class="group" data-reveal>
+      <h3 class="group-title">
+        <span class="label">frühere stationen</span>
+        <span class="mono count">{pad(earlier.length)}</span>
+      </h3>
+      <ul class="earlier">
+        {
+          earlier.map((item) => (
+            <li>
+              <span class="mono period">{item.period}</span>
+              <span>{item.text}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 
   <div class="toolbox">
@@ -49,6 +86,20 @@ const pad = (n: number) => String(n).padStart(2, '0');
           ))
         }
       </ol>
+
+      <div class="toolbox-head" data-reveal>
+        <p class="label">sprachen</p>
+      </div>
+      <ul class="languages">
+        {
+          languages.map((language) => (
+            <li data-reveal>
+              <span>{language.name}</span>
+              <span class="mono">{language.level}</span>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </div>
 </section>
@@ -58,32 +109,49 @@ const pad = (n: number) => String(n).padStart(2, '0');
     padding-bottom: 0;
   }
 
+  .group + .group {
+    margin-top: clamp(3.5rem, 7vw, 6rem);
+  }
+
+  .group-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--ink);
+    font: inherit;
+    letter-spacing: normal;
+  }
+
+  .count {
+    color: var(--ink-3);
+  }
+
   .rows {
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid var(--line);
   }
 
   .row {
     position: relative;
     display: grid;
-    grid-template-columns: 4rem minmax(0, 1fr) auto;
-    gap: 1rem 2rem;
-    align-items: center;
-    padding: clamp(1.5rem, 3vw, 2.5rem) 0.25rem;
+    grid-template-columns: 4rem minmax(0, 1fr) minmax(9rem, auto);
+    gap: 0.75rem 2rem;
+    align-items: start;
+    padding: clamp(1.5rem, 2.8vw, 2.25rem) 0.25rem;
     border-bottom: 1px solid var(--line);
     isolation: isolate;
   }
 
-  /* Akzentfläche, die beim Hover von links hereinläuft */
+  /* Fläche, die beim Hover von links hereinläuft */
   .row::before {
     content: '';
     position: absolute;
     inset: 0 -0.75rem;
     z-index: -1;
     border-radius: 12px;
-    background: var(--accent);
+    background: var(--bg-2);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
@@ -93,39 +161,81 @@ const pad = (n: number) => String(n).padStart(2, '0');
     transform: scaleX(1);
   }
 
-  .row:hover,
-  .row:hover .num,
-  .row:hover .org,
-  .row:hover .detail,
-  .row:hover .kind {
-    color: var(--on-accent);
-  }
-
-  .num,
-  .kind {
+  .num {
+    padding-top: 0.6rem;
     color: var(--ink-3);
     transition: color 0.3s ease;
   }
 
-  .kind {
+  .row:hover .num {
     color: var(--accent);
   }
 
-  h3 {
+  .role {
+    font-family: var(--font-display);
     font-stretch: 112%;
-    font-size: clamp(1.5rem, 3.6vw, 3.2rem);
-    hyphens: auto;
+    font-size: clamp(1.45rem, 2.9vw, 2.5rem);
     font-weight: 800;
+    line-height: 1.05;
     letter-spacing: -0.04em;
+    hyphens: auto;
   }
 
   .org {
     margin-top: 0.5rem;
     color: var(--ink-2);
-    transition: color 0.3s ease;
   }
 
-  .detail {
+  .place {
+    color: var(--ink-3);
+  }
+
+  .points {
+    display: grid;
+    gap: 0.35rem;
+    max-width: 62ch;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-3);
+    font-size: 0.98rem;
+  }
+
+  .points li {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+  }
+
+  .points li::before {
+    content: '—';
+    color: var(--accent);
+  }
+
+  .period {
+    padding-top: 0.6rem;
+    color: var(--accent);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .earlier {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .earlier li {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: 1rem;
+    padding: 0.9rem 0.25rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+
+  .earlier .period {
+    padding-top: 0.15rem;
+    text-align: left;
     color: var(--ink-3);
   }
 
@@ -156,7 +266,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     letter-spacing: -0.03em;
   }
 
-  .tools {
+  .tools,
+  .languages {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: clamp(1.5rem, 4vw, 3.5rem);
@@ -165,7 +276,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
     list-style: none;
   }
 
-  .tools li {
+  .tools li,
+  .languages li {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -173,14 +285,16 @@ const pad = (n: number) => String(n).padStart(2, '0');
     padding: 1rem 0;
     border-bottom: 1px solid var(--line);
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+    font-size: clamp(1.25rem, 2.1vw, 1.8rem);
     font-weight: 600;
     letter-spacing: -0.02em;
   }
 
-  .tools .mono {
+  .tools .mono,
+  .languages .mono {
     color: var(--ink-3);
     font-weight: 400;
+    text-align: right;
   }
 
   @media (max-width: 860px) {
@@ -188,8 +302,21 @@ const pad = (n: number) => String(n).padStart(2, '0');
       grid-template-columns: 2.5rem minmax(0, 1fr);
     }
 
-    .kind {
+    .row .num {
+      grid-column: 1;
+      grid-row: 1 / span 2;
+    }
+
+    .row .period {
       grid-column: 2;
+      grid-row: 1;
+      padding-top: 0;
+      text-align: left;
+    }
+
+    .row .what {
+      grid-column: 2;
+      grid-row: 2;
     }
 
     .toolbox-inner {
@@ -197,9 +324,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
     }
   }
 
-  @media (max-width: 520px) {
-    .tools {
+  @media (max-width: 560px) {
+    .tools,
+    .languages {
       grid-template-columns: 1fr;
+    }
+
+    .earlier li {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
     }
   }
 </style>
