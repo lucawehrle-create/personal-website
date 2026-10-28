@@ -94,7 +94,7 @@ export const projects: Project[] = [
 export const about = {
   heading: 'Systematisch denken. Kreativ handeln.',
   paragraphs: [
-    'Ich bin analytisch, eher introvertiert und strukturiert – und liebe Logik, Qualität und Effizienz. Was mich antreibt, ist die kognitive Herausforderung und echter wirtschaftlicher Nutzen.',
+    'Ich bin analytisch und strukturiert – und liebe Logik, Qualität und Effizienz. Was mich antreibt, ist die kognitive Herausforderung und echter wirtschaftlicher Nutzen.',
     'Im Umgang diplomatisch und ruhig, in der Umsetzung kreativ-experimentell, wenn es darauf ankommt. Deshalb baue ich neben dem Studium Produkte – manche ganz seriös, andere verschicken Kartoffeln.',
   ],
   principles: [
