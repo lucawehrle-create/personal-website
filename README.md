@@ -11,8 +11,8 @@ Persönliche Website von Luca Wehrle: komplett neu aufgebaut als schnelle, stati
 
 Alle Texte stehen in **`src/data/site.ts`**: Hero, Über mich, Projekte, Werdegang, Toolbox und Kontakt. Einfach dort anpassen. Die Komponenten musst du dafür nicht anfassen.
 
-- Neues Projekt: einen Eintrag in `projects` ergänzen. Als `visual` gibt es aktuell `'potato'` und `'focus'`. Neue Illustrationen kommen nach `src/components/ProjectVisual.astro`.
-- Nicht mehr auf Jobsuche: `openForWork: false` setzen. Dann verschwinden die „Verfügbar“-Badges.
+- Neues Projekt: einen Eintrag in `projects` ergänzen und das Vorschaubild (16:10, z. B. 1600 × 1000 px) nach `src/assets/projects/` legen. Astro erzeugt daraus automatisch optimierte Größen.
+- Echte Fotos oder Screenshots: einfach die Dateien in `src/assets/projects/` ersetzen (gleicher Dateiname) oder den Import in `site.ts` anpassen.
 
 ### Vor dem Livegang
 

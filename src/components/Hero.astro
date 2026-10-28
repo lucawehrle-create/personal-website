@@ -9,14 +9,6 @@ const [before, highlight, after] = hero.headline.split('*');
   <div class="grid-bg" aria-hidden="true"></div>
   <div class="container">
     <p class="eyebrow mono" data-reveal>
-      {
-        site.openForWork && (
-          <span class="status">
-            <span class="status-dot" aria-hidden="true" />
-            Verfügbar
-          </span>
-        )
-      }
       {hero.eyebrow.map((item) => <span class="crumb">{item}</span>)}
     </p>
 
@@ -121,17 +113,6 @@ const [before, highlight, after] = hero.headline.split('*');
     margin-right: 1.1rem;
     color: var(--ink-3);
     opacity: 0.5;
-  }
-
-  .status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.32rem 0.7rem 0.32rem 0.6rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--bg-elev);
-    color: var(--ink);
   }
 
   .headline {

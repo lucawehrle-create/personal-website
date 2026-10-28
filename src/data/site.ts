@@ -1,3 +1,7 @@
+import type { ImageMetadata } from 'astro';
+import gemuesegrussImage from '../assets/projects/gemuesegruss.webp';
+import mindfulscreenImage from '../assets/projects/mindfulscreen.webp';
+
 /**
  * Alle Inhalte der Website an einem Ort.
  * Texte, Projekte, Werdegang und Kontaktdaten werden hier gepflegt –
@@ -15,8 +19,6 @@ export const site = {
   email: 'luca.wehrle@gmail.com',
   location: 'Mannheim',
   linkedin: 'https://www.linkedin.com/in/luca-wehrle-8112b8184/',
-  // Auf false setzen, wenn du gerade nicht nach neuen Rollen suchst.
-  openForWork: true,
   roles: ['Product', 'BizOps', 'Founder Associate'],
 };
 
@@ -71,7 +73,9 @@ export type Project = {
   metric: { value: string; label: string };
   tags: string[];
   href: string;
-  visual: 'potato' | 'focus';
+  // Vorschaubild im Seitenverhältnis 16:10, liegt in src/assets/projects/.
+  image: ImageMetadata;
+  imageAlt: string;
 };
 
 export const projects: Project[] = [
@@ -83,7 +87,8 @@ export const projects: Project[] = [
     metric: { value: '1.000+', label: 'Bestellungen' },
     tags: ['Shopify', 'Marketing', 'UGC', 'Logistik'],
     href: 'https://www.gemuesegruss.de/',
-    visual: 'potato',
+    image: gemuesegrussImage,
+    imageAlt: 'Geöffneter Versandkarton mit einer Kartoffel, auf der „Alles Gute!“ steht, daneben eine Grußkarte',
   },
   {
     name: 'Mindfulscreen OS',
@@ -93,7 +98,8 @@ export const projects: Project[] = [
     metric: { value: '21', label: 'Tage Programm' },
     tags: ['Notion', 'UX', 'AI-Integration', 'Content'],
     href: 'https://mindfulscreen.com/',
-    visual: 'focus',
+    image: mindfulscreenImage,
+    imageAlt: 'Mindfulscreen-OS-Dashboard mit 21-Tage-Fortschritt, Pomodoro-Timer und Fokus-Tracker, daneben ein Smartphone im Fokus-Modus',
   },
 ];
 

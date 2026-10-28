@@ -1,6 +1,6 @@
 ---
+import { Image } from 'astro:assets';
 import SectionHeading from './SectionHeading.astro';
-import ProjectVisual from './ProjectVisual.astro';
 import { projects, lab } from '../data/site';
 
 const hostname = (href: string) => new URL(href).hostname.replace(/^www\./, '');
@@ -14,8 +14,14 @@ const hostname = (href: string) => new URL(href).hostname.replace(/^www\./, '');
       {
         projects.map((project, i) => (
           <article class="card" data-reveal style={`--delay: ${i * 0.1}s`}>
-            <div class={`visual-wrap ${project.visual}`}>
-              <ProjectVisual type={project.visual} />
+            <div class="visual-wrap">
+              <Image
+                src={project.image}
+                alt={project.imageAlt}
+                widths={[640, 960, 1280, 1600]}
+                sizes="(max-width: 860px) calc(100vw - 2rem), 610px"
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
             </div>
             <div class="body">
               <div class="meta">
@@ -96,29 +102,20 @@ const hostname = (href: string) => new URL(href).hostname.replace(/^www\./, '');
 
   .visual-wrap {
     aspect-ratio: 16 / 10;
-    padding: clamp(0.75rem, 2vw, 1.5rem);
     border-bottom: 1px solid var(--line);
     overflow: hidden;
+    background: var(--line);
   }
 
-  .visual-wrap.potato {
-    background: var(--potato-bg);
-  }
-
-  .visual-wrap.focus {
-    background: var(--focus-bg);
-  }
-
-  .visual-wrap :global(svg) {
+  .visual-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
-  .card:hover .visual-wrap :global(svg) {
-    transform: scale(1.035);
-  }
-
-  .card:hover .visual-wrap.potato :global(.spud) {
-    transform: rotate(-3deg);
+  .card:hover .visual-wrap img {
+    transform: scale(1.03);
   }
 
   .body {

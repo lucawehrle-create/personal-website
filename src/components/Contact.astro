@@ -6,14 +6,6 @@ import { contact, site } from '../data/site';
   <div class="container">
     <p class="mono label" data-reveal>
       <span class="section-index">04</span>Kontakt
-      {
-        site.openForWork && (
-          <span class="open">
-            <span class="status-dot" aria-hidden="true" />
-            Offen für neue Rollen
-          </span>
-        )
-      }
     </p>
 
     <h2 id="kontakt-title" data-reveal>{contact.heading}</h2>
@@ -96,14 +88,6 @@ import { contact, site } from '../data/site';
     color: var(--ink-3);
   }
 
-  .open {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    margin-left: auto;
-    color: var(--ink);
-  }
-
   h2 {
     font-size: clamp(3rem, 11vw, 9rem);
     line-height: 0.92;
@@ -169,12 +153,5 @@ import { contact, site } from '../data/site';
 
   .copy[hidden] {
     display: none;
-  }
-
-  @media (max-width: 560px) {
-    .open {
-      margin-left: 0;
-      width: 100%;
-    }
   }
 </style>
