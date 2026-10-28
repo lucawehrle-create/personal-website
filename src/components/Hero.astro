@@ -49,9 +49,9 @@ const lines = [letters(first), letters(last)];
 
     <div class="bottom-row mono">
       <span>{hero.tagline}</span>
+      <!-- Terminal nur am Desktop (mit Tastatur); mobil ausgeblendet -->
       <button class="term-hint mono" type="button" data-terminal-open>
-        <span class="desk-only">drück <kbd>/</kbd> für das terminal</span>
-        <span class="mob-only">terminal öffnen &gt;_</span>
+        drück <kbd>/</kbd> für das terminal
       </button>
       <a class="scroll" href="#projekte">
         scroll
@@ -194,7 +194,6 @@ const lines = [letters(first), letters(last)];
     color: var(--accent);
   }
 
-  .mob-only,
   .mode-mobile {
     display: none;
   }
@@ -255,7 +254,7 @@ const lines = [letters(first), letters(last)];
       flex-basis: 100%;
     }
 
-    .desk-only,
+    .term-hint,
     .where {
       display: none;
     }
@@ -267,10 +266,6 @@ const lines = [letters(first), letters(last)];
       border-radius: 999px;
       color: var(--ink-2);
       text-decoration: none;
-    }
-
-    .mob-only {
-      display: inline;
     }
 
     .portrait-slot.mob {
