@@ -122,7 +122,7 @@ const personSchema = {
         document.documentElement.style.setProperty('--grain', `url(${noise.toDataURL()})`);
       }
 
-      // Lokale Uhrzeit in Mannheim, überall wo [data-clock] steht.
+      // Lokale Uhrzeit am aktuellen Ort (site.location), überall wo [data-clock] steht.
       const clocks = document.querySelectorAll<HTMLElement>('[data-clock]');
       if (clocks.length) {
         const format = new Intl.DateTimeFormat('de-DE', {

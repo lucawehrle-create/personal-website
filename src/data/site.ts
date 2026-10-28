@@ -18,9 +18,9 @@ export const site = {
   url: 'https://lucawehrle.de',
   title: 'Luca Wehrle – Product Builder & Creator',
   description:
-    'Business Student in Mannheim, Product Builder und Creator ungewöhnlicher Side Projects. Ich baue digitale Produkte, optimiere Systeme und teste merkwürdig kreative Geschäftsideen.',
+    'Business Student in Trier, Product Builder und Creator ungewöhnlicher Side Projects. Ich baue digitale Produkte, optimiere Systeme und teste merkwürdig kreative Geschäftsideen.',
   email: 'luca.wehrle@gmail.com',
-  location: 'Mannheim',
+  location: 'Trier',
   timeZone: 'Europe/Berlin',
   linkedin: 'https://www.linkedin.com/in/luca-wehrle-8112b8184/',
   instagram: 'https://www.instagram.com/luca.weh/',

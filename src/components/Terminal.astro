@@ -123,7 +123,7 @@ const data = {
         help: 'wer ist luca?',
         run: () =>
           print(
-            'Luca Wehrle – Product Builder &amp; Creator aus Mannheim.<br>B.Sc. BWL, Werkstudent bei Würth IT, baut gerade SemBan – Strava fürs Lernen.',
+            'Luca Wehrle – Product Builder &amp; Creator, aktuell in Trier.<br>B.Sc. BWL, Werkstudent bei Würth IT, baut gerade SemBan – Strava fürs Lernen.',
           ),
       },
       projekte: {
@@ -167,7 +167,7 @@ const data = {
         },
       },
       uhrzeit: {
-        help: 'ortszeit in mannheim',
+        help: 'ortszeit in trier',
         run: () =>
           print(
             new Intl.DateTimeFormat('de-DE', { dateStyle: 'full', timeStyle: 'short', timeZone: data.timeZone }).format(new Date()),
