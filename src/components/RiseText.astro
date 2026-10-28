@@ -1,0 +1,53 @@
+---
+// Buchstaben steigen nacheinander aus einer Maske auf, sobald der Text ins Bild scrollt.
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+const words = text.split(' ').map((word) => [...word]);
+let index = 0;
+---
+
+<span class="rise" aria-label={text}>
+  {
+    words.map((chars) => (
+      <span class="word" aria-hidden="true">
+        {chars.map((ch) => (
+          <span class="ch" style={`--i: ${index++}`}>
+            {ch}
+          </span>
+        ))}
+      </span>
+    ))
+  }
+</span>
+
+<style>
+  .rise {
+    display: inline-flex;
+    flex-wrap: wrap;
+    column-gap: 0.25em;
+  }
+
+  .word {
+    display: inline-block;
+    overflow: hidden;
+    padding-block: 0.08em 0.06em;
+    margin-block: -0.08em -0.06em;
+  }
+
+  .ch {
+    display: inline-block;
+  }
+
+  :global(.js) :global([data-reveal]) .ch {
+    transform: translateY(105%);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i) * 32ms);
+  }
+
+  :global(.js) :global([data-reveal].is-visible) .ch {
+    transform: none;
+  }
+</style>

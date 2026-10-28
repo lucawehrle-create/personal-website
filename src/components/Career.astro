@@ -1,0 +1,205 @@
+---
+import DotField from './DotField.astro';
+import RiseText from './RiseText.astro';
+import { career, toolbox } from '../data/site';
+
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section id="werdegang" class="section career" aria-labelledby="werdegang-title">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <p class="label">studium, praxis, gründerszene</p>
+      <h2 id="werdegang-title" class="display"><RiseText text="werdegang" /></h2>
+    </div>
+
+    <ol class="rows">
+      {
+        career.map((item, i) => (
+          <li class="row" data-reveal style={`--delay: ${i * 0.08}s`}>
+            <span class="mono num">{pad(i + 1)}</span>
+            <div class="what">
+              <h3>{item.title}</h3>
+              <p class="org">
+                {item.org}
+                {item.detail && <span class="detail"> · {item.detail}</span>}
+              </p>
+            </div>
+            <span class="mono kind">{item.kind}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+
+  <div class="toolbox">
+    <DotField />
+    <div class="container toolbox-inner">
+      <div class="toolbox-head" data-reveal>
+        <p class="label">toolbox</p>
+        <p class="toolbox-title">Werkzeuge, mit denen ich Ideen schnell testbar mache.</p>
+      </div>
+      <ol class="tools">
+        {
+          toolbox.map((tool, i) => (
+            <li data-reveal style={`--delay: ${(i % 2) * 0.06}s`}>
+              <span>{tool}</span>
+              <span class="mono">{pad(i + 1)}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .career {
+    padding-bottom: 0;
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+
+  .row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4rem minmax(0, 1fr) auto;
+    gap: 1rem 2rem;
+    align-items: center;
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0.25rem;
+    border-bottom: 1px solid var(--line);
+    isolation: isolate;
+  }
+
+  /* Akzentfläche, die beim Hover von links hereinläuft */
+  .row::before {
+    content: '';
+    position: absolute;
+    inset: 0 -0.75rem;
+    z-index: -1;
+    border-radius: 12px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .row:hover::before {
+    transform: scaleX(1);
+  }
+
+  .row:hover,
+  .row:hover .num,
+  .row:hover .org,
+  .row:hover .detail,
+  .row:hover .kind {
+    color: var(--on-accent);
+  }
+
+  .num,
+  .kind {
+    color: var(--ink-3);
+    transition: color 0.3s ease;
+  }
+
+  .kind {
+    color: var(--accent);
+  }
+
+  h3 {
+    font-stretch: 112%;
+    font-size: clamp(1.5rem, 3.6vw, 3.2rem);
+    hyphens: auto;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  .org {
+    margin-top: 0.5rem;
+    color: var(--ink-2);
+    transition: color 0.3s ease;
+  }
+
+  .detail {
+    color: var(--ink-3);
+  }
+
+  .toolbox {
+    position: relative;
+    margin-top: clamp(5rem, 11vw, 9rem);
+    padding-block: clamp(5rem, 11vw, 9rem);
+    border-top: 1px solid var(--line);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .toolbox-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  }
+
+  .toolbox-title {
+    margin-top: 1.25rem;
+    max-width: 18ch;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+  }
+
+  .tools {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(1.5rem, 4vw, 3.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tools li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 2.2vw, 1.9rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .tools .mono {
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  @media (max-width: 860px) {
+    .row {
+      grid-template-columns: 2.5rem minmax(0, 1fr);
+    }
+
+    .kind {
+      grid-column: 2;
+    }
+
+    .toolbox-inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .tools {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

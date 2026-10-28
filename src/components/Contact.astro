@@ -1,50 +1,40 @@
 ---
+import RiseText from './RiseText.astro';
 import { contact, site } from '../data/site';
 ---
 
 <section id="kontakt" class="section contact" aria-labelledby="kontakt-title">
   <div class="container">
-    <p class="mono label" data-reveal>
-      <span class="section-index">04</span>Kontakt
-    </p>
+    <p class="label" data-reveal>kontakt</p>
+    <h2 id="kontakt-title" class="display giant" data-reveal>
+      <a href={`mailto:${site.email}`}><RiseText text={contact.heading} /></a>
+    </h2>
 
-    <h2 id="kontakt-title" data-reveal>{contact.heading}</h2>
-    <p class="text" data-reveal>{contact.text}</p>
-
-    <div class="mail-row" data-reveal>
-      <a class="mail" href={`mailto:${site.email}`}>
-        <span>{site.email}</span>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            d="M7 17 17 7M9 7h8v8"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"></path>
-        </svg>
-      </a>
+    <div class="grid">
+      <p class="text" data-reveal>{contact.text}</p>
+      <div class="actions" data-reveal style="--delay: 0.1s">
+        <p class="mono mail-label">e-mail</p>
+        <a class="mail" href={`mailto:${site.email}`}>{site.email}</a>
+        <div class="buttons">
+          <button class="btn btn-accent copy" type="button" data-email={site.email} hidden>
+            <span class="copy-text">e-mail kopieren</span>
+          </button>
+          <a class="btn" href={site.linkedin} target="_blank" rel="noopener">
+            linkedin
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M7 17 17 7M9 7h8v8"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"></path>
+            </svg>
+          </a>
+        </div>
+        <p class="visually-hidden" aria-live="polite" id="copy-status"></p>
+      </div>
     </div>
-
-    <div class="buttons" data-reveal>
-      <button class="btn btn-ghost copy" type="button" data-email={site.email} hidden>
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="8" y="8" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
-          <path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8" fill="none" stroke="currentColor" stroke-width="1.8"></path>
-        </svg>
-        <span class="copy-text">E-Mail kopieren</span>
-      </button>
-      <a class="btn btn-ghost" href={site.linkedin} target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path
-            fill="currentColor"
-            d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"
-          ></path>
-        </svg>
-        LinkedIn
-      </a>
-    </div>
-    <p class="visually-hidden" aria-live="polite" id="copy-status"></p>
   </div>
 </section>
 
@@ -60,98 +50,98 @@ import { contact, site } from '../data/site';
     button.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(button.dataset.email ?? '');
-        if (label) label.textContent = 'Kopiert!';
+        if (label) label.textContent = 'kopiert!';
         if (status) status.textContent = 'E-Mail-Adresse in die Zwischenablage kopiert.';
-        window.clearTimeout(timer);
-        timer = window.setTimeout(() => {
-          if (label) label.textContent = 'E-Mail kopieren';
-          if (status) status.textContent = '';
-        }, 2000);
       } catch {
-        window.location.href = `mailto:${button.dataset.email}`;
+        // Ohne Zwischenablage: Adresse markieren, damit sie sich von Hand kopieren lässt.
+        const mail = document.querySelector('.contact .mail');
+        if (mail) window.getSelection()?.selectAllChildren(mail);
+        if (label) label.textContent = 'adresse markiert';
       }
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        if (label) label.textContent = 'e-mail kopieren';
+        if (status) status.textContent = '';
+      }, 2000);
     });
   }
 </script>
 
 <style>
   .contact {
-    padding-bottom: clamp(5rem, 12vw, 9rem);
+    border-top: 1px solid var(--line);
   }
 
-  .label {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.9rem;
-    margin-bottom: 1.1rem;
-    color: var(--ink-3);
+  .giant {
+    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    font-size: clamp(3.4rem, 13.9vw, 12.75rem);
   }
 
-  h2 {
-    font-size: clamp(3rem, 11vw, 9rem);
-    line-height: 0.92;
-    letter-spacing: -0.045em;
+  .giant a {
+    display: inline-block;
+    text-decoration: none;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-size: 0% 0.06em;
+    background-position: 0 95%;
+    background-repeat: no-repeat;
+    transition:
+      background-size 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      color 0.3s ease;
+  }
+
+  .giant a:hover {
+    color: var(--accent);
+    background-size: 100% 0.06em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 2.5rem clamp(2rem, 6vw, 6rem);
+    margin-top: clamp(3rem, 6vw, 5rem);
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
   }
 
   .text {
-    max-width: 46ch;
-    margin-top: clamp(1.5rem, 3vw, 2.25rem);
-    font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+    max-width: 40ch;
+    font-size: clamp(1.1rem, 1.6vw, 1.3rem);
     color: var(--ink-2);
   }
 
-  .mail-row {
-    margin-top: clamp(2.5rem, 5vw, 3.5rem);
-    padding-block: 1.25rem;
-    border-block: 1px solid var(--line);
+  .mail-label {
+    color: var(--ink-3);
   }
 
   .mail {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    max-width: 100%;
+    display: inline-block;
+    margin-top: 0.4rem;
     font-family: var(--font-display);
-    font-size: clamp(1.35rem, 4.6vw, 3.25rem);
-    font-weight: 600;
+    font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+    font-weight: 700;
     letter-spacing: -0.03em;
-    line-height: 1.15;
     text-decoration: none;
     overflow-wrap: anywhere;
-    background-image: linear-gradient(var(--accent), var(--accent));
-    background-size: 0% 3px;
-    background-position: 0 100%;
-    background-repeat: no-repeat;
-    transition:
-      background-size 0.4s cubic-bezier(0.2, 0.7, 0.2, 1),
-      color 0.2s ease;
   }
 
   .mail:hover {
-    background-size: 100% 3px;
-  }
-
-  .mail svg {
-    flex: none;
-    width: 0.8em;
-    height: 0.8em;
     color: var(--accent);
-    transition: transform 0.25s ease;
-  }
-
-  .mail:hover svg {
-    transform: translate(3px, -3px);
   }
 
   .buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-top: 1.75rem;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
   }
 
   .copy[hidden] {
     display: none;
+  }
+
+  @media (max-width: 760px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

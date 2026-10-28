@@ -6,6 +6,8 @@ import mindfulscreenImage from '../assets/projects/mindfulscreen.webp';
  * Alle Inhalte der Website an einem Ort.
  * Texte, Projekte, Werdegang und Kontaktdaten werden hier gepflegt –
  * die Komponenten unter src/components lesen nur aus dieser Datei.
+ *
+ * *Sternchen* markieren in Fließtexten Wörter, die in der Akzentfarbe erscheinen.
  */
 
 export const site = {
@@ -18,53 +20,36 @@ export const site = {
     'Business Student in Mannheim, Product Builder und Creator ungewöhnlicher Side Projects. Ich baue digitale Produkte, optimiere Systeme und teste merkwürdig kreative Geschäftsideen.',
   email: 'luca.wehrle@gmail.com',
   location: 'Mannheim',
+  timeZone: 'Europe/Berlin',
   linkedin: 'https://www.linkedin.com/in/luca-wehrle-8112b8184/',
-  roles: ['Product', 'BizOps', 'Founder Associate'],
 };
+
+// Reihenfolge wie auf der Seite.
+export const nav = [
+  { href: '#projekte', label: 'projekte', short: 'projekte' },
+  { href: '#ueber', label: 'über mich', short: 'über' },
+  { href: '#werdegang', label: 'werdegang', short: 'werdegang' },
+  { href: '#kontakt', label: 'kontakt', short: 'kontakt' },
+];
 
 export const hero = {
-  eyebrow: ['Business Student', 'Product Builder', 'Mannheim'],
-  // Die Headline beginnt immer mit dem Namen; *Sternchen* markiert das
-  // Wort mit der handgezeichneten Unterstreichung.
-  headline: 'baut digitale Produkte, optimiert Systeme und testet *merkwürdig* kreative Geschäftsideen.',
-  intro: 'Logik trifft auf Experimentierfreude – und manchmal auf Kartoffeln.',
-  facts: [
-    { label: 'Status', value: 'Offen für Neues' },
-    { label: 'Fokus', value: 'Product · BizOps · Founder Associate' },
-    { label: 'Basis', value: 'Mannheim, DE' },
-    { label: 'Stack', value: 'No-Code, Notion, n8n, Shopify' },
+  label: 'portfolio 2026',
+  columns: [
+    { label: 'tldr', text: 'Business Student. Product Builder. Creator of Unusual Side Projects.' },
+    {
+      label: 'studium & praxis',
+      text: 'BWL an der Universität Mannheim mit Fokus Finance & Digital. Modern Work Systems bei der Würth Group.',
+    },
+    {
+      label: 'nebenbei',
+      text: 'Ich verschicke Kartoffeln mit Botschaft und baue Fokus-Systeme in Notion.',
+    },
   ],
-  stats: [
-    { value: '1.000+', label: 'verschickte Kartoffeln' },
-    { value: '2', label: 'Produkte live' },
-    { value: '21', label: 'Tage Digital-Detox-Programm' },
-  ],
+  tagline: 'Logik trifft auf Experimentierfreude.',
 };
 
-export const about = {
-  heading: 'Systematisch denken. Kreativ handeln.',
-  paragraphs: [
-    'Ich bin analytisch, eher introvertiert und strukturiert – und liebe Logik, Qualität und Effizienz. Was mich antreibt, ist die kognitive Herausforderung und echter wirtschaftlicher Nutzen.',
-    'Im Umgang diplomatisch und ruhig, in der Umsetzung kreativ-experimentell, wenn es darauf ankommt. Deshalb baue ich neben dem Studium Produkte – manche ganz seriös, andere verschicken Kartoffeln.',
-  ],
-  principles: [
-    { better: 'Systeme', over: 'Improvisation', text: 'Was zweimal passiert, wird dokumentiert oder automatisiert.' },
-    { better: 'Machen', over: 'Reden', text: 'Ein getesteter Prototyp sagt mehr als jedes Konzeptpapier.' },
-    { better: 'Qualität', over: 'Speed', text: 'Schnell lernen, aber nur ausliefern, wohinter ich stehe.' },
-  ],
-  funFacts: [
-    {
-      label: 'Strange Venture',
-      title: 'Potato-as-a-Service',
-      text: 'Skalierbarer E-Commerce für beschriftete Kartoffeln. Über 1.000 Stück verschickt. Ernsthaft.',
-    },
-    {
-      label: 'Co-Founders',
-      title: 'Synthetic Sparring',
-      text: 'Mein Beirat besteht aus KI-Modellen. Wir diskutieren täglich Strategie – harte Sparringspartner, die keine Anteile wollen.',
-    },
-  ],
-};
+export const statement =
+  'Ich baue digitale Produkte, optimiere Systeme und teste *merkwürdig* *kreative* Geschäftsideen. *Logik* trifft auf *Experimentierfreude* – und manchmal auf *Kartoffeln.*';
 
 export type Project = {
   name: string;
@@ -99,26 +84,48 @@ export const projects: Project[] = [
     tags: ['Notion', 'UX', 'AI-Integration', 'Content'],
     href: 'https://mindfulscreen.com/',
     image: mindfulscreenImage,
-    imageAlt: 'Mindfulscreen-OS-Dashboard mit 21-Tage-Fortschritt, Pomodoro-Timer und Fokus-Tracker, daneben ein Smartphone im Fokus-Modus',
+    imageAlt:
+      'Mindfulscreen-OS-Dashboard mit 21-Tage-Fortschritt, Pomodoro-Timer und Fokus-Tracker, daneben ein Smartphone im Fokus-Modus',
   },
 ];
 
-export const lab = {
-  title: 'The Lab',
-  text: 'Das nächste merkwürdige Projekt entsteht gerade. Mehr, sobald es den ersten Realitätscheck übersteht.',
+export const about = {
+  heading: 'Systematisch denken. Kreativ handeln.',
+  paragraphs: [
+    'Ich bin analytisch, eher introvertiert und strukturiert – und liebe Logik, Qualität und Effizienz. Was mich antreibt, ist die kognitive Herausforderung und echter wirtschaftlicher Nutzen.',
+    'Im Umgang diplomatisch und ruhig, in der Umsetzung kreativ-experimentell, wenn es darauf ankommt. Deshalb baue ich neben dem Studium Produkte – manche ganz seriös, andere verschicken Kartoffeln.',
+  ],
+  principles: [
+    { better: 'Systeme', over: 'Improvisation', text: 'Was zweimal passiert, wird dokumentiert oder automatisiert.' },
+    { better: 'Machen', over: 'Reden', text: 'Ein getesteter Prototyp sagt mehr als jedes Konzeptpapier.' },
+    { better: 'Qualität', over: 'Speed', text: 'Schnell lernen, aber nur ausliefern, wohinter ich stehe.' },
+  ],
+  // Die „System Anomalies“ aus der alten Seite, jetzt als Terminal-Ausgabe.
+  anomalies: [
+    {
+      label: 'strange venture',
+      title: 'Potato-as-a-Service',
+      text: 'Skalierbarer E-Commerce für beschriftete Kartoffeln. Über 1.000 Stück verschickt. Ernsthaft.',
+    },
+    {
+      label: 'co-founders',
+      title: 'Synthetic Sparring',
+      text: 'Mein Beirat besteht aus KI-Modellen. Wir diskutieren täglich Strategie – harte Sparringspartner, die keine Anteile wollen.',
+    },
+  ],
+  status: ['debug_mode: true', 'humor_module: 85%'],
 };
 
-export const experience = {
-  education: [
-    { org: 'Universität Mannheim', title: 'Betriebswirtschaftslehre', detail: 'Schwerpunkt Finance & Digital' },
-    { org: 'thinc', title: 'Entrepreneurship', detail: '' },
-  ],
-  work: [{ org: 'Würth Group', title: 'Modern Work Systems', detail: 'Tech Strategy' }],
-  toolbox: ['MVP Building', 'No-Code', 'Notion', 'n8n', 'Shopify', 'Higgsfield', 'Midjourney', 'Canva'],
-};
+export const career = [
+  { kind: 'erfahrung', title: 'Modern Work Systems', org: 'Würth Group', detail: 'Tech Strategy' },
+  { kind: 'studium', title: 'Betriebswirtschaftslehre', org: 'Universität Mannheim', detail: 'Schwerpunkt Finance & Digital' },
+  { kind: 'gründerszene', title: 'Entrepreneurship', org: 'thinc', detail: '' },
+];
+
+export const toolbox = ['MVP Building', 'No-Code', 'Notion', 'n8n', 'Shopify', 'Higgsfield', 'Midjourney', 'Canva'];
 
 export const contact = {
-  heading: 'Lass uns reden.',
+  heading: 'let’s talk.',
   text: 'Ich suche spannende Herausforderungen in Product, BizOps oder als Founder Associate. Oder du hast eine merkwürdige Idee, die getestet werden will – auch gut.',
 };
 

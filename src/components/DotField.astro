@@ -1,0 +1,134 @@
+---
+// Interaktives Punktraster (Canvas). Füllt das nächste positionierte Elternelement.
+---
+
+<canvas class="dotfield" data-dotfield aria-hidden="true"></canvas>
+
+<script>
+  const GAP = 14;
+  const RADIUS = 170;
+  const BASE = [242, 240, 235];
+  const ACCENT = [255, 91, 31];
+  const BUCKETS = 10;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLCanvasElement>('canvas[data-dotfield]').forEach((canvas) => {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let running = false;
+    let visible = false;
+    const pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = canvas.clientWidth;
+      height = canvas.clientHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (!running) draw(performance.now());
+    };
+
+    // Punkte nach Helligkeit gruppieren und pro Gruppe einmal füllen (schnell).
+    const base: number[][] = Array.from({ length: BUCKETS }, () => []);
+    const hot: number[][] = Array.from({ length: BUCKETS }, () => []);
+
+    const draw = (t: number) => {
+      ctx.clearRect(0, 0, width, height);
+      base.forEach((b) => (b.length = 0));
+      hot.forEach((b) => (b.length = 0));
+
+      pointer.x += (pointer.tx - pointer.x) * 0.14;
+      pointer.y += (pointer.ty - pointer.y) * 0.14;
+      const time = reduceMotion ? 0 : t;
+
+      for (let y = GAP / 2; y < height; y += GAP) {
+        for (let x = GAP / 2; x < width; x += GAP) {
+          const dx = x - pointer.x;
+          const dy = y - pointer.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < RADIUS) {
+            const f = 1 - dist / RADIUS;
+            const level = Math.min(BUCKETS - 1, Math.floor(f * f * BUCKETS));
+            hot[level].push(x, y);
+          } else {
+            const wave =
+              0.5 + 0.5 * Math.sin(x * 0.011 + time * 0.00055) * Math.sin(y * 0.013 - time * 0.0004 + x * 0.004);
+            base[Math.min(BUCKETS - 1, Math.floor(wave * BUCKETS))].push(x, y);
+          }
+        }
+      }
+
+      base.forEach((points, i) => {
+        if (!points.length) return;
+        ctx.fillStyle = `rgba(${BASE[0]},${BASE[1]},${BASE[2]},${0.04 + (i / BUCKETS) * 0.11})`;
+        ctx.beginPath();
+        for (let p = 0; p < points.length; p += 2) ctx.rect(points[p] - 0.8, points[p + 1] - 0.8, 1.6, 1.6);
+        ctx.fill();
+      });
+
+      hot.forEach((points, i) => {
+        if (!points.length) return;
+        const e = (i + 1) / BUCKETS;
+        const size = 1.6 + e * 3.4;
+        ctx.fillStyle = `rgba(${ACCENT[0]},${ACCENT[1]},${ACCENT[2]},${0.25 + e * 0.75})`;
+        ctx.beginPath();
+        for (let p = 0; p < points.length; p += 2) ctx.rect(points[p] - size / 2, points[p + 1] - size / 2, size, size);
+        ctx.fill();
+      });
+    };
+
+    const loop = (t: number) => {
+      if (!visible || document.hidden) {
+        running = false;
+        return;
+      }
+      draw(t);
+      requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+      if (running || reduceMotion) return;
+      running = true;
+      requestAnimationFrame(loop);
+    };
+
+    new ResizeObserver(resize).observe(canvas);
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) start();
+    }).observe(canvas);
+    document.addEventListener('visibilitychange', () => !document.hidden && visible && start());
+
+    if (!reduceMotion) {
+      const host = canvas.parentElement ?? canvas;
+      host.addEventListener('pointermove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        pointer.tx = event.clientX - rect.left;
+        pointer.ty = event.clientY - rect.top;
+        if (pointer.x < -1000) {
+          pointer.x = pointer.tx;
+          pointer.y = pointer.ty;
+        }
+      });
+      host.addEventListener('pointerleave', () => {
+        pointer.tx = pointer.ty = pointer.x = pointer.y = -9999;
+      });
+    }
+  });
+</script>
+
+<style>
+  .dotfield {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, #000 40%, transparent 100%);
+  }
+</style>

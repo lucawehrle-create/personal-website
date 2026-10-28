@@ -5,13 +5,16 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
-  <div class="container inner">
-    <p>© {year} {site.name} · {site.location}</p>
+  <div class="container inner mono">
+    <p>© {year} {site.name.toLowerCase()}</p>
+    <p>
+      {site.location.toLowerCase()}, de<span class="clock" data-clock={site.timeZone}></span>
+    </p>
     <nav aria-label="Rechtliches">
-      <a href="/impressum/">Impressum</a>
-      <a href="/datenschutz/">Datenschutz</a>
+      <a href="/impressum/">impressum</a>
+      <a href="/datenschutz/">datenschutz</a>
     </nav>
-    <p class="mono note">Ohne Cookies. Ohne Tracking.</p>
+    <p>ohne cookies · ohne tracking</p>
   </div>
 </footer>
 
@@ -19,16 +22,19 @@ const year = new Date().getFullYear();
   .site-footer {
     border-top: 1px solid var(--line);
     color: var(--ink-3);
-    font-size: 0.92rem;
   }
 
   .inner {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(4, auto);
     justify-content: space-between;
     gap: 1rem 2rem;
     padding-block: 1.75rem;
+  }
+
+  /* Trennstrich nur, wenn die Uhrzeit per JS gesetzt wurde */
+  .clock:not(:empty)::before {
+    content: ' — ';
   }
 
   nav {
@@ -37,17 +43,28 @@ const year = new Date().getFullYear();
   }
 
   a {
-    text-decoration: none;
     color: var(--ink-2);
+    text-decoration: none;
   }
 
   a:hover {
-    color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    color: var(--accent);
   }
 
-  .note {
-    font-size: 0.72rem;
+  @media (max-width: 860px) {
+    .inner {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 720px) {
+    /* Platz für die Navigationsleiste unten */
+    .site-footer {
+      padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 5rem);
+    }
+
+    .inner {
+      grid-template-columns: 1fr;
+    }
   }
 </style>

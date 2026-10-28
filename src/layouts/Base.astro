@@ -1,9 +1,8 @@
 ---
-import '@fontsource-variable/bricolage-grotesque/opsz.css';
-import '@fontsource-variable/inter/opsz.css';
+import '@fontsource-variable/archivo/wdth.css';
 import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
-import Header from '../components/Header.astro';
+import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site';
 
@@ -11,9 +10,11 @@ interface Props {
   title?: string;
   description?: string;
   noindex?: boolean;
+  // Unterseiten verlinken die Abschnitte der Startseite statt per Anker zu scrollen.
+  home?: boolean;
 }
 
-const { title, description = site.description, noindex = false } = Astro.props;
+const { title, description = site.description, noindex = false, home = false } = Astro.props;
 const pageTitle = title ? `${title} – ${site.name}` : site.title;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/og-image.png', Astro.site).href;
@@ -37,15 +38,14 @@ const personSchema = {
 <html lang="de">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <meta name="author" content={site.name} />
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, follow" />}
 
-    <meta name="theme-color" content="#f3f1ec" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0f0f0e" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#0d0d0e" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -66,28 +66,21 @@ const personSchema = {
     <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-
     <script is:inline>
-      // Gespeichertes Farbschema vor dem ersten Rendern setzen (kein Aufflackern).
-      (function () {
-        var root = document.documentElement;
-        root.classList.add('js');
-        try {
-          var theme = localStorage.getItem('theme');
-          if (theme === 'light' || theme === 'dark') root.dataset.theme = theme;
-        } catch (e) {}
-      })();
+      document.documentElement.classList.add('js');
     </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
-    <Header />
+    <Nav home={home} />
     <main id="main">
       <slot />
     </main>
     <Footer />
+    <div class="grain" aria-hidden="true"></div>
 
     <script>
+      // Scroll-Reveal
       const items = document.querySelectorAll<HTMLElement>('[data-reveal]');
       if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver(
@@ -99,11 +92,39 @@ const personSchema = {
               }
             }
           },
-          { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
+          { rootMargin: '0px 0px -10% 0px', threshold: 0.05 },
         );
         items.forEach((el) => observer.observe(el));
       } else {
         items.forEach((el) => el.classList.add('is-visible'));
+      }
+
+      // Filmkorn einmalig erzeugen (keine Bilddatei nötig).
+      const noise = document.createElement('canvas');
+      noise.width = noise.height = 128;
+      const ctx = noise.getContext('2d');
+      if (ctx) {
+        const data = ctx.createImageData(128, 128);
+        for (let i = 0; i < data.data.length; i += 4) {
+          const v = Math.random() * 255;
+          data.data[i] = data.data[i + 1] = data.data[i + 2] = v;
+          data.data[i + 3] = 255;
+        }
+        ctx.putImageData(data, 0, 0);
+        document.documentElement.style.setProperty('--grain', `url(${noise.toDataURL()})`);
+      }
+
+      // Lokale Uhrzeit in Mannheim, überall wo [data-clock] steht.
+      const clocks = document.querySelectorAll<HTMLElement>('[data-clock]');
+      if (clocks.length) {
+        const format = new Intl.DateTimeFormat('de-DE', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: clocks[0].dataset.clock,
+        });
+        const tick = () => clocks.forEach((el) => (el.textContent = format.format(new Date())));
+        tick();
+        setInterval(tick, 15_000);
       }
     </script>
   </body>
