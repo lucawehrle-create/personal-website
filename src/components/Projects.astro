@@ -5,6 +5,13 @@ import { projects } from '../data/site';
 
 const hostname = (href: string) => new URL(href).hostname.replace(/^www\./, '');
 const pad = (n: number) => String(n).padStart(2, '0');
+
+// Laufende Projekte zuerst, danach die abgeschlossenen Experimente (fortlaufend nummeriert).
+const numbered = projects.map((project, index) => ({ project, index }));
+const groups = [
+  { label: '', items: numbered.filter(({ project }) => project.status === 'live') },
+  { label: 'abgeschlossene experimente', items: numbered.filter(({ project }) => project.status === 'abgeschlossen') },
+].filter((group) => group.items.length);
 ---
 
 <section id="projekte" class="section projects" aria-labelledby="projekte-title">
@@ -14,73 +21,111 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <h2 id="projekte-title" class="display"><RiseText text="projekte" /></h2>
     </div>
 
-    <ol class="list">
-      {
-        projects.map((project, i) => (
-          <li class="project" data-reveal>
-            <div class="info">
-              <p class="num" aria-hidden="true">
-                {pad(i + 1)}
-              </p>
-              <h3 class="title">{project.name}</h3>
-              <p class="mono category">{project.category}</p>
-              <ol class="experiment" aria-label="Experiment">
-                <li>
-                  <span class="mono step">hypothese</span>
-                  <p>{project.experiment.hypothesis}</p>
-                </li>
-                <li>
-                  <span class="mono step">test</span>
-                  <p>{project.experiment.test}</p>
-                </li>
-                <li class="result">
-                  <span class="mono step">ergebnis</span>
-                  <p>{project.experiment.result}</p>
-                </li>
-                <li>
-                  <span class="mono step">learning</span>
-                  <p>{project.experiment.learning}</p>
-                </li>
-              </ol>
-              <dl class="meta">
-                {project.period && (
-                  <div>
-                    <dt class="mono">zeitraum</dt>
-                    <dd>{project.period}</dd>
+    {
+      groups.map((group) => (
+        <div class="group">
+          {group.label && (
+            <p class="label group-label" data-reveal>
+              {group.label}
+            </p>
+          )}
+          <ol class="list">
+            {group.items.map(({ project, index }) => (
+              <li class:list={['project', { done: project.status === 'abgeschlossen' }]} data-reveal>
+                <div class="info">
+                  <p class="num" aria-hidden="true">
+                    {pad(index + 1)}
+                  </p>
+                  <h3 class="title">{project.name}</h3>
+                  <p class="mono category">
+                    <span class:list={['status', project.status]}>{project.status}</span>
+                    {project.category}
+                  </p>
+                  <ol class="experiment" aria-label="Experiment">
+                    <li>
+                      <span class="mono step">hypothese</span>
+                      <p>{project.experiment.hypothesis}</p>
+                    </li>
+                    <li>
+                      <span class="mono step">test</span>
+                      <p>{project.experiment.test}</p>
+                    </li>
+                    <li class="result">
+                      <span class="mono step">ergebnis</span>
+                      <p>{project.experiment.result}</p>
+                    </li>
+                    {project.experiment.learning && (
+                      <li>
+                        <span class="mono step">learning</span>
+                        <p>{project.experiment.learning}</p>
+                      </li>
+                    )}
+                    {project.experiment.next && (
+                      <li>
+                        <span class="mono step">nächster schritt</span>
+                        <p>{project.experiment.next}</p>
+                      </li>
+                    )}
+                  </ol>
+                  <dl class="meta">
+                    {project.period && (
+                      <div>
+                        <dt class="mono">zeitraum</dt>
+                        <dd>{project.period}</dd>
+                      </div>
+                    )}
+                    <div>
+                      <dt class="mono">stack</dt>
+                      <dd>{project.tags.join(' · ')}</dd>
+                    </div>
+                  </dl>
+                  {project.href && (
+                    <div class="links">
+                      {[{ label: hostname(project.href), href: project.href }, ...(project.links ?? [])].map((link) => (
+                        <a class="btn" href={link.href} target="_blank" rel="noopener">
+                          {link.label}
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                              d="M7 17 17 7M9 7h8v8"
+                              fill="none"
+                              stroke="currentColor"
+                              stroke-width="2"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                {project.href ? (
+                  <a class="media" href={project.href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+                    <Image
+                      src={project.image}
+                      alt={project.imageAlt}
+                      widths={[640, 960, 1280, 1600]}
+                      sizes="(max-width: 960px) calc(100vw - 2rem), 60vw"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                    />
+                  </a>
+                ) : (
+                  <div class="media">
+                    <Image
+                      src={project.image}
+                      alt={project.imageAlt}
+                      widths={[640, 960, 1280, 1600]}
+                      sizes="(max-width: 960px) calc(100vw - 2rem), 60vw"
+                      loading="lazy"
+                    />
                   </div>
                 )}
-                <div>
-                  <dt class="mono">stack</dt>
-                  <dd>{project.tags.join(' · ')}</dd>
-                </div>
-              </dl>
-              <a class="btn" href={project.href} target="_blank" rel="noopener">
-                {hostname(project.href)}
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M7 17 17 7M9 7h8v8"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              </a>
-            </div>
-            <a class="media" href={project.href} target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-              <Image
-                src={project.image}
-                alt={project.imageAlt}
-                widths={[640, 960, 1280, 1600]}
-                sizes="(max-width: 960px) calc(100vw - 2rem), 60vw"
-                loading={i === 0 ? 'eager' : 'lazy'}
-              />
-            </a>
-          </li>
-        ))
-      }
-    </ol>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))
+    }
   </div>
   <div class="cursor mono" aria-hidden="true">ansehen ↗</div>
 </section>
@@ -88,7 +133,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <script>
   // Label folgt dem Mauszeiger über den Projektbildern (nur bei echter Maus).
   const cursor = document.querySelector<HTMLElement>('.projects .cursor');
-  const media = document.querySelectorAll<HTMLElement>('.projects .media');
+  const media = document.querySelectorAll<HTMLElement>('.projects a.media');
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   if (cursor && finePointer) {
@@ -158,9 +203,53 @@ const pad = (n: number) => String(n).padStart(2, '0');
     letter-spacing: -0.04em;
   }
 
+  .group + .group {
+    margin-top: clamp(5rem, 10vw, 9rem);
+  }
+
+  .group-label {
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
   .category {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.8rem;
     margin-top: 0.9rem;
     color: var(--ink-3);
+  }
+
+  .status {
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-2);
+  }
+
+  .status.live {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  /* Abgeschlossene Projekte etwas zurückgenommen */
+  .done .media img {
+    filter: saturate(0.6);
+    transition:
+      filter 0.6s ease,
+      transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .done .media:hover img {
+    filter: none;
   }
 
   /* Experiment-Log: senkrechte Linie mit Markierungen */
@@ -273,12 +362,12 @@ const pad = (n: number) => String(n).padStart(2, '0');
     transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .media:hover img {
+  a.media:hover img {
     transform: scale(1.04);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .media {
+    a.media {
       cursor: none;
     }
   }

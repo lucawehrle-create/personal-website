@@ -1,6 +1,7 @@
 import type { ImageMetadata } from 'astro';
 import gemuesegrussImage from '../assets/projects/gemuesegruss.webp';
 import mindfulscreenImage from '../assets/projects/mindfulscreen.webp';
+import sembanImage from '../assets/projects/semban.webp';
 
 /**
  * Alle Inhalte der Website an einem Ort.
@@ -42,7 +43,7 @@ export const hero = {
     },
     {
       label: 'nebenbei',
-      text: 'Ich verschicke Kartoffeln mit Botschaft und baue Fokus-Systeme in Notion.',
+      text: 'Gerade baue ich SemBan, eine Lern-App für Studierende – Strava fürs Lernen. Davor: Kartoffeln mit Botschaft.',
     },
   ],
   tagline: 'Logik trifft auf Experimentierfreude.',
@@ -53,14 +54,18 @@ export const statement =
 
 export type Project = {
   name: string;
+  // live = läuft gerade, abgeschlossen = eingestellt (dann ohne Link)
+  status: 'live' | 'abgeschlossen';
   category: string;
   description: string;
   metric: { value: string; label: string };
   period?: string;
   // Projekt als Experiment erzählt: Was war die Annahme, wie wurde sie getestet, was kam raus?
-  experiment: { hypothesis: string; test: string; result: string; learning: string };
+  // Laufende Projekte haben statt eines Learnings einen nächsten Schritt.
+  experiment: { hypothesis: string; test: string; result: string; learning?: string; next?: string };
   tags: string[];
-  href: string;
+  href?: string;
+  links?: { label: string; href: string }[];
   // Vorschaubild im Seitenverhältnis 16:10, liegt in src/assets/projects/.
   image: ImageMetadata;
   imageAlt: string;
@@ -68,7 +73,28 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    name: 'SemBan',
+    status: 'live',
+    category: 'EdTech · Social App',
+    description:
+      'Your Social Study Companion – Strava fürs Lernen: Lerneinheiten landen im Feed deiner Freunde, dazu Lerngruppen mit gemeinsamem Wochenziel, Stundenplan aus dem Uni-Portal, Fristen, Noten und ECTS. Kostenlos und werbefrei, als iPhone-App und im Web.',
+    metric: { value: 'Live', label: 'im App Store und im Web' },
+    period: 'seit 2026',
+    experiment: {
+      hypothesis: 'Studierende bleiben besser dran, wenn andere sehen, dass sie lernen – und sich mit ihnen freuen.',
+      test: 'Eine soziale Lern-App: jede Lerneinheit wird eine Aktivität im Feed, mit Applaus, Kommentaren und gemeinsamem Wochenziel. Dazu Stundenplan, Fristen, Noten und Fokus-Timer.',
+      result: 'Gestartet im App Store und im Web – kostenlos und werbefrei.',
+      next: 'Die ersten Lerngruppen aufbauen und die Roadmap gemeinsam mit den Nutzer:innen abstimmen.',
+    },
+    tags: ['iOS', 'Web', 'Social', 'Produktentwicklung'],
+    href: 'https://semban.de/',
+    links: [{ label: 'App Store', href: 'https://apps.apple.com/app/id6820568096' }],
+    image: sembanImage,
+    imageAlt: 'Website von SemBan im Browser und auf dem Smartphone: „Lernen ist besser mit Freunden.“ mit Lern-Feed der App',
+  },
+  {
     name: 'GemüseGruß',
+    status: 'abgeschlossen',
     category: 'E-Commerce · Viral',
     description:
       'E-Commerce, der eigentlich ein Meme ist – aber funktioniert: personalisierte Kartoffeln mit Grußbotschaft. Gebaut auf Shopify, gewachsen durch virales Marketing und UGC-Kampagnen.',
@@ -80,12 +106,12 @@ export const projects: Project[] = [
       learning: 'Wenn das Produkt selbst die Geschichte ist, erzählen Kund:innen sie weiter.',
     },
     tags: ['Shopify', 'Marketing', 'UGC', 'Logistik'],
-    href: 'https://www.gemuesegruss.de/',
     image: gemuesegrussImage,
     imageAlt: 'Geöffneter Versandkarton mit einer Kartoffel, auf der „Alles Gute!“ steht, daneben eine Grußkarte',
   },
   {
     name: 'Mindfulscreen OS',
+    status: 'abgeschlossen',
     category: 'Digital Health · Productivity',
     description:
       'Digital-Detox- und Deep-Work-System für Gründer und High-Performer: 21-Tage-Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker – komplett in Notion.',
@@ -98,7 +124,6 @@ export const projects: Project[] = [
       learning: 'Gewohnheiten ändern sich über einfache Routinen, nicht über Verbote.',
     },
     tags: ['Notion', 'UX', 'AI-Integration', 'Content'],
-    href: 'https://mindfulscreen.com/',
     image: mindfulscreenImage,
     imageAlt:
       'Mindfulscreen-OS-Dashboard mit 21-Tage-Fortschritt, Pomodoro-Timer und Fokus-Tracker, daneben ein Smartphone im Fokus-Modus',
@@ -109,7 +134,7 @@ export const about = {
   heading: 'Systematisch denken. Kreativ handeln.',
   paragraphs: [
     'Ich bin analytisch und strukturiert – und liebe Logik, Qualität und Effizienz. Was mich antreibt, ist die kognitive Herausforderung und echter wirtschaftlicher Nutzen.',
-    'Im Umgang diplomatisch und ruhig, in der Umsetzung kreativ-experimentell, wenn es darauf ankommt. Deshalb baue ich neben dem Studium Produkte – manche ganz seriös, andere verschicken Kartoffeln.',
+    'Im Umgang diplomatisch und ruhig, in der Umsetzung kreativ-experimentell, wenn es darauf ankommt. Deshalb baue ich neben dem Studium Produkte – von einer Lern-App bis zu Kartoffeln mit Botschaft.',
   ],
   principles: [
     { better: 'Systeme', over: 'Improvisation', text: 'Was zweimal passiert, wird dokumentiert oder automatisiert.' },
@@ -148,6 +173,15 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       role: 'Werkstudent',
       org: 'Würth IT',
       period: '2026 – heute',
+    },
+    {
+      role: 'Gründer & Macher',
+      org: 'SemBan',
+      period: '2026 – heute',
+      points: [
+        'Soziale Lern-App für Studierende – „Strava fürs Lernen“, als iPhone-App und im Web',
+        'Idee, Produkt und Umsetzung in Eigenregie',
+      ],
     },
     {
       role: 'Freiwilliges Praktikum, Team Modern Work',

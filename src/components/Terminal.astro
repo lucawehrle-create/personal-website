@@ -8,9 +8,10 @@ const data = {
   timeZone: site.timeZone,
   projects: projects.map((p) => ({
     name: p.name,
+    status: p.status,
     category: p.category,
     metric: `${p.metric.value} ${p.metric.label}`,
-    href: p.href,
+    href: p.href ?? '',
   })),
   career: [...career.experience, ...career.education, ...career.engagement].map((e) => ({
     period: e.period,
@@ -48,7 +49,7 @@ const data = {
     email: string;
     linkedin: string;
     timeZone: string;
-    projects: { name: string; category: string; metric: string; href: string }[];
+    projects: { name: string; status: string; category: string; metric: string; href: string }[];
     career: { period: string; text: string }[];
     toolbox: string[];
     languages: string[];
@@ -118,7 +119,7 @@ const data = {
         help: 'wer ist luca?',
         run: () =>
           print(
-            'Luca Wehrle – Product Builder &amp; Creator aus Mannheim.<br>B.Sc. BWL, Werkstudent bei Würth IT, baut nebenbei merkwürdige Produkte.',
+            'Luca Wehrle – Product Builder &amp; Creator aus Mannheim.<br>B.Sc. BWL, Werkstudent bei Würth IT, baut gerade SemBan – Strava fürs Lernen.',
           ),
       },
       projekte: {
@@ -126,7 +127,10 @@ const data = {
         run: () =>
           print(
             data.projects
-              .map((p) => `${link(p.href, p.name)} <span class="dim">· ${escape(p.category)} ·</span> <span class="hl">${escape(p.metric)}</span>`)
+              .map(
+                (p) =>
+                  `${p.href ? link(p.href, p.name) : escape(p.name)} <span class="dim">[${escape(p.status)}] · ${escape(p.category)} ·</span> <span class="hl">${escape(p.metric)}</span>`,
+              )
               .join('<br>'),
           ),
       },

@@ -8,7 +8,7 @@ const updated = new Date().toLocaleDateString('de-DE', { month: 'long', year: 'n
 
 const facts = [
   { value: '1.000+', label: 'Bestellungen mit dem eigenen Shop GemüseGruß' },
-  { value: '2', label: 'eigene Produkte gegründet und gelauncht' },
+  { value: 'SemBan', label: 'eigene Lern-App, gerade gestartet (iPhone & Web)' },
   { value: 'Würth IT', label: 'Werkstudent, davor Praktikum im Team Modern Work' },
   { value: 'C1', label: 'Englisch, Auslandssemester in Schweden' },
 ];
@@ -114,12 +114,16 @@ const sections = [
               projects.map((project) => (
                 <li>
                   <p class="entry-role">
-                    <a href={project.href} target="_blank" rel="noopener">
-                      {project.name} ↗
-                    </a>
+                    {project.href ? (
+                      <a href={project.href} target="_blank" rel="noopener">
+                        {project.name} ↗
+                      </a>
+                    ) : (
+                      project.name
+                    )}
                   </p>
                   <p class="mono metric">
-                    {project.metric.value} {project.metric.label}
+                    {project.status} · {project.metric.value} {project.metric.label}
                     {project.period && ` · ${project.period}`}
                   </p>
                   <p class="desc">{project.description}</p>
