@@ -316,6 +316,6 @@ export const contact = {
 export const legal = {
   street: '',
   city: '',
-  // Name des Hosting-Anbieters inkl. Anschrift, z. B. "Netlify, Inc., 512 2nd Street, San Francisco, CA 94107, USA"
-  host: '',
+  // Hosting-Anbieter inkl. Anschrift (die Seite liegt auf GitHub Pages)
+  host: 'GitHub Pages, ein Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA',
 };
