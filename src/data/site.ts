@@ -41,7 +41,7 @@ export const hero = {
     { label: 'tldr', text: 'Business Student. Product Builder. Creator of many Side Projects.' },
     {
       label: 'studium & praxis',
-      text: 'B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute Werkstudent bei Würth IT.',
+      text: 'B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute in Trier, Werkstudent bei Würth IT.',
     },
     {
       label: 'nebenbei',
