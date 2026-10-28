@@ -1,27 +1,36 @@
 ---
 import { Image } from 'astro:assets';
 import Bento from './Bento.astro';
-import screenStart from '../../assets/collage/semban-start.webp';
-import screenStatistik from '../../assets/collage/semban-web-statistik.webp';
-import screenWeb from '../../assets/collage/semban-web-gruppen.webp';
+import appStart from '../../assets/collage/semban/app-start.webp';
+import appLernen from '../../assets/collage/semban/app-lernen.webp';
+import appPlan from '../../assets/collage/semban/app-plan.webp';
+import appStatistik from '../../assets/collage/semban/app-statistik.webp';
+import widgetPlan from '../../assets/collage/semban/widget-stundenplan.webp';
+import widgetStats from '../../assets/collage/semban/widget-statistik.webp';
 import maskottchen from '../../assets/collage/semban-maskottchen.webp';
 import icon from '../../assets/logos/semban.svg';
 
-// Echte App-Screenshots von semban.de
-const areas = `"feed feed logo head" "feed feed timer head" "photo store web web"`;
+// Echte Screenshots aus der SemBan-App (Namen anderer Nutzer:innen unkenntlich gemacht)
+const areas = `"feed feed logo head" "feed feed sched head" "photo store stats stats"`;
 const mobileAreas = `"feed feed logo" "feed feed photo"`;
+const phones = [
+  { src: appLernen, pos: 'left' },
+  { src: appPlan, pos: 'right' },
+  { src: appStart, pos: 'center' },
+];
 ---
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
-  <!-- iPad mit Statistik, davor das iPhone mit dem Lern-Feed -->
+  <!-- Drei iPhones: Bestenliste, Stundenplan und vorne der Lern-Feed -->
   <div class="tile feed" style="grid-area: feed; --i: 0">
     <p class="t-label pad">app · iphone, ipad & web</p>
-    <div class="tablet">
-      <Image src={screenStatistik} alt="" widths={[480, 960]} sizes="(max-width: 960px) 70vw, 340px" />
-    </div>
-    <div class="phone">
-      <Image src={screenStart} alt="" widths={[300, 600]} sizes="(max-width: 960px) 40vw, 200px" />
-    </div>
+    {
+      phones.map((phone) => (
+        <div class:list={['phone', phone.pos]}>
+          <Image src={phone.src} alt="" widths={[280, 560]} sizes="(max-width: 960px) 30vw, 170px" />
+        </div>
+      ))
+    }
   </div>
 
   <!-- Logo -->
@@ -30,20 +39,18 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     <p class="name">SemBan</p>
   </div>
 
-  <!-- Claim -->
+  <!-- Claim mit Statistik-Ansicht -->
   <div class="tile t-dark pad head m-hide" style="grid-area: head; --i: 2">
     <p class="t-label">strava fürs lernen · kostenlos & werbefrei</p>
-    <p class="t-big push">Lernen ist besser mit <span>Freunden.</span></p>
+    <p class="t-big">Lernen ist besser mit <span>Freunden.</span></p>
+    <div class="phone tall">
+      <Image src={appStatistik} alt="" widths={[280, 560]} sizes="(max-width: 960px) 30vw, 150px" />
+    </div>
   </div>
 
-  <!-- Fokus-Timer -->
-  <div class="tile t-cream pad timer m-hide" style="grid-area: timer; --i: 3">
-    <p class="t-label">fokus-timer</p>
-    <svg class="ring push" viewBox="0 0 100 100" aria-hidden="true">
-      <circle cx="50" cy="50" r="42" fill="none" stroke="rgb(252 82 0 / 0.16)" stroke-width="8"></circle>
-      <circle class="progress" cx="50" cy="50" r="42" fill="none" stroke="#fc5200" stroke-width="8" stroke-linecap="round" pathLength="100" transform="rotate(-90 50 50)"></circle>
-      <text x="50" y="56" text-anchor="middle">25:00</text>
-    </svg>
+  <!-- Widget: Stundenplan der Woche -->
+  <div class="tile widget-tile m-hide" style="grid-area: sched; --i: 3">
+    <Image class="widget" src={widgetPlan} alt="" widths={[400, 800]} sizes="(max-width: 960px) 30vw, 180px" />
   </div>
 
   <!-- Maskottchen -->
@@ -58,13 +65,9 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     <p class="t-big push">App Store <span aria-hidden="true">↗</span></p>
   </div>
 
-  <!-- Web-App: Lerngruppen mit Wochenziel und Bestenliste -->
-  <div class="tile web m-hide" style="grid-area: web; --i: 6">
-    <p class="t-label pad">web · lerngruppen & bestenliste</p>
-    <div class="browser">
-      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
-      <Image src={screenWeb} alt="" widths={[480, 960]} sizes="(max-width: 960px) 60vw, 380px" />
-    </div>
+  <!-- Widget: Lernzeit heute, diese Woche und im Monat -->
+  <div class="tile widget-tile m-hide" style="grid-area: stats; --i: 6">
+    <Image class="widget" src={widgetStats} alt="" widths={[400, 800]} sizes="(max-width: 960px) 60vw, 370px" />
   </div>
 </Bento>
 
@@ -79,39 +82,17 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     opacity: 0.9;
   }
 
-  /* iPad hinten links, iPhone vorne rechts – beide unten angeschnitten */
-  .tablet {
-    position: absolute;
-    left: -6%;
-    top: 26%;
-    width: 84%;
-    padding: calc(var(--u) * 0.025);
-    border-radius: calc(var(--u) * 0.06);
-    background: #111112;
-    box-shadow: 0 calc(var(--u) * 0.08) calc(var(--u) * 0.22) rgb(120 30 0 / 0.4);
-    transform: rotate(-5deg);
-    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .tablet img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border-radius: calc(var(--u) * 0.035);
-  }
-
+  /* iPhones: zwei schräg dahinter, eines vorne – unten angeschnitten */
   .phone {
     position: absolute;
-    right: 6%;
-    top: 34%;
-    width: 40%;
-    border-radius: calc(var(--u) * 0.07);
+    top: 24%;
+    width: 36%;
     overflow: hidden;
-    background: #fff;
+    border-radius: calc(var(--u) * 0.075);
+    background: #111112;
     box-shadow:
-      0 calc(var(--u) * 0.1) calc(var(--u) * 0.25) rgb(120 30 0 / 0.5),
+      0 calc(var(--u) * 0.1) calc(var(--u) * 0.25) rgb(80 20 0 / 0.5),
       0 0 0 calc(var(--u) * 0.018) #111112;
-    transform: rotate(4deg);
     transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -121,12 +102,68 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     height: auto;
   }
 
-  .feed:hover .tablet {
-    transform: rotate(-7deg) translate(-3%, -3%);
+  .phone.left {
+    left: 5%;
+    top: 30%;
+    transform: rotate(-9deg);
   }
 
-  .feed:hover .phone {
-    transform: rotate(6deg) translate(2%, -6%);
+  .phone.right {
+    right: 5%;
+    top: 30%;
+    transform: rotate(9deg);
+  }
+
+  .phone.center {
+    left: 50%;
+    width: 40%;
+    z-index: 1;
+    transform: translateX(-50%);
+  }
+
+  .feed:hover .phone.left {
+    transform: rotate(-12deg) translate(-6%, -2%);
+  }
+
+  .feed:hover .phone.right {
+    transform: rotate(12deg) translate(6%, -2%);
+  }
+
+  .feed:hover .phone.center {
+    transform: translateX(-50%) translateY(-5%);
+  }
+
+  /* Hohe Kachel: Claim oben, Statistik-Ansicht ragt von unten herein */
+  .phone.tall {
+    top: auto;
+    bottom: -38%;
+    left: 50%;
+    width: 72%;
+    transform: translateX(-50%);
+  }
+
+  .head:hover .phone.tall {
+    transform: translateX(-50%) translateY(-6%);
+  }
+
+  /* Widgets wie auf dem Homescreen */
+  .widget-tile {
+    --t-bg: #0b0b0c;
+    background: var(--t-bg);
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+  }
+
+  .widget {
+    width: 88%;
+    height: auto;
+    border-radius: calc(var(--u) * 0.08);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .widget-tile:hover .widget {
+    transform: scale(1.03);
   }
 
   .logo {
@@ -160,29 +197,6 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     color: #ff6a2b;
   }
 
-  .ring {
-    width: 74%;
-    align-self: center;
-    margin-bottom: calc(var(--u) * -0.02);
-  }
-
-  .ring text {
-    font-family: var(--font-mono);
-    font-size: 17px;
-    font-weight: 600;
-    fill: #111112;
-  }
-
-  .progress {
-    stroke-dasharray: 100;
-    stroke-dashoffset: 28;
-    transition: stroke-dashoffset 1.6s cubic-bezier(0.6, 0, 0.2, 1) 0.4s;
-  }
-
-  :global(.js) :global([data-reveal]:not(.is-visible)) .progress {
-    stroke-dashoffset: 100;
-  }
-
   .mascot {
     --t-bg: radial-gradient(circle at 50% 70%, #ffe6d6 0%, #ffc9a8 100%);
     --t-fg: #5a2200;
@@ -209,45 +223,4 @@ const mobileAreas = `"feed feed logo" "feed feed photo"`;
     font-size: calc(var(--u) * 0.2);
   }
 
-  /* Web-App im Browserfenster, unten angeschnitten */
-  .web {
-    --t-bg: linear-gradient(160deg, #2a2a2d, #19191b);
-    background: var(--t-bg);
-  }
-
-  .browser {
-    position: absolute;
-    left: 7%;
-    right: 7%;
-    top: 30%;
-    border-radius: calc(var(--u) * 0.05) calc(var(--u) * 0.05) 0 0;
-    overflow: hidden;
-    background: #efede8;
-    box-shadow: 0 calc(var(--u) * 0.08) calc(var(--u) * 0.2) rgb(0 0 0 / 0.5);
-    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .dots {
-    display: flex;
-    gap: calc(var(--u) * 0.02);
-    padding: calc(var(--u) * 0.03) calc(var(--u) * 0.04);
-    background: #e3e0d8;
-  }
-
-  .dots i {
-    width: calc(var(--u) * 0.028);
-    height: calc(var(--u) * 0.028);
-    border-radius: 50%;
-    background: #c9c5bc;
-  }
-
-  .browser img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .web:hover .browser {
-    transform: translateY(-5%);
-  }
 </style>
