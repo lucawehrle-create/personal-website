@@ -146,8 +146,12 @@ export const caseStudy = {
       text: 'Ein Gruß, den man nicht erwartet, wird fotografiert, geteilt und weitererzählt. Die Kartoffel war Produkt und Werbefläche zugleich – bezahlte Werbung brauchte es nicht.',
     },
     {
-      title: 'Ein Video kann alles verändern.',
-      text: 'Im Monat des Reels mit 1,1 Mio. Aufrufen kamen im Shop 314 Bestellungen zusammen – über ein Drittel des Shop-Umsatzes. Reichweite kommt in Wellen, nicht linear.',
+      title: 'Reichweite ist noch kein Umsatz.',
+      text: 'Im Monat des Reels mit 1,1 Mio. Aufrufen kamen 314 Bestellungen, danach wurde es ruhiger. Das Geschäft hing an viralen Wellen – und nur ein Bruchteil der Reichweite wurde zu Käufen.',
+    },
+    {
+      title: 'Conversion ist Handwerk.',
+      text: 'Am meisten Spaß gemacht hat mir, die Conversion Rate im Shop durch ständiges Testen zu verbessern: ändern, messen, wieder ändern. Jeder Prozentpunkt zählt, wenn die Reichweite nicht planbar ist.',
     },
     {
       title: 'Viral heißt: Handarbeit skalieren.',

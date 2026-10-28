@@ -109,9 +109,9 @@ export const projects: Project[] = [
     period: '2024 – 2026',
     experiment: {
       hypothesis: 'Menschen zahlen für einen Gruß, der so absurd ist, dass man ihn weitererzählt.',
-      test: 'Shopify-Shop für handbeschriftete Kartoffeln, Reichweite über Kurzvideos auf TikTok und Instagram.',
+      test: 'Shopify-Shop für handbeschriftete Kartoffeln, Reichweite über Kurzvideos auf TikTok und Instagram – und die Conversion im Shop durch ständiges Testen verbessert.',
       result: 'Über 1.000 Bestellungen, 11.700 € Umsatz im Onlineshop und über 2,8 Mio. Aufrufe – ohne Werbebudget.',
-      learning: 'Wenn das Produkt selbst die Geschichte ist, erzählen Kund:innen sie weiter.',
+      learning: 'Reichweite ist noch kein Umsatz: Das Geschäft hing an viralen Wellen, auf über 3.000 Aufrufe kam eine Bestellung.',
     },
     tags: ['Shopify', 'TikTok', 'Instagram', 'Logistik'],
     caseStudy: '/projekte/gemuesegruss/',

@@ -3,13 +3,19 @@ import { Image } from 'astro:assets';
 import CaseStudy from '../../layouts/CaseStudy.astro';
 import ViewsChart from '../../components/ViewsChart.astro';
 import MonthlyChart from '../../components/MonthlyChart.astro';
-import { caseStudy, months, social, trafficSources, videos } from '../../data/gemuesegruss';
+import { caseStudy, months, shop, social, totalViews, trafficSources, videos } from '../../data/gemuesegruss';
 
 const c = caseStudy;
 const pad = (n: number) => String(n).padStart(2, '0');
 const de = new Intl.NumberFormat('de-DE');
 const maxShare = Math.max(...trafficSources.map((t) => t.share));
 const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
+
+// Von der Reichweite zum Kauf: Aufrufe der Top-Videos, Shop-Besuche, Shop-Bestellungen.
+const pct = (value: number) =>
+  new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1, minimumFractionDigits: 1 }).format(value * 100) + ' %';
+const viewsPerOrder = Math.floor(totalViews / shop.orders / 1000) * 1000;
+const bestConversion = months.reduce((best, m) => (m.conversion > best.conversion ? m : best));
 ---
 
 <CaseStudy
@@ -67,6 +73,50 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
             Onlineshop. Im Oktober 2025 wurden alle vier Bestellungen erstattet.
           </p>
         </div>
+      </div>
+    </section>
+
+    <section class="section funnel-wrap" aria-labelledby="funnel-title">
+      <div class="container">
+        <div class="split-head" data-reveal>
+          <p class="label">von der reichweite zum kauf</p>
+          <h2 id="funnel-title">Viele Aufrufe, wenige Käufe.</h2>
+          <p class="lead">
+            GemüseGruß hing an der Viralität: Lief ein Video, kamen Bestellungen – lief keins, wurde es ruhig. Und nur ein
+            Bruchteil der Reichweite wurde zu Käufen. Am meisten Spaß gemacht hat mir deshalb der Teil dazwischen: die
+            Conversion im Shop durch ständiges Testen zu verbessern.
+          </p>
+        </div>
+        <div class="funnel" data-reveal>
+          <div class="step">
+            <span class="f-value">{c.kpis[0].display}</span>
+            <span class="f-label">Aufrufe der zehn stärksten Videos auf TikTok und Instagram</span>
+          </div>
+          <p class="rate mono">≈ {pct(shop.sessions / totalViews)} landen im Shop</p>
+          <div class="step">
+            <span class="f-value">{de.format(shop.sessions)}</span>
+            <span class="f-label">Besuche im Onlineshop</span>
+          </div>
+          <p class="rate mono">{pct(shop.orders / shop.sessions)} bestellen</p>
+          <div class="step end">
+            <span class="f-value">{de.format(shop.orders)}</span>
+            <span class="f-label">Bestellungen im Onlineshop</span>
+          </div>
+        </div>
+        <ul class="funnel-facts">
+          <li data-reveal>
+            <strong>über {de.format(viewsPerOrder)}</strong>
+            <span>Aufrufe pro Bestellung</span>
+          </li>
+          <li data-reveal style="--delay: 0.08s">
+            <strong>bis zu {pct(bestConversion.conversion / 100)}</strong>
+            <span>Conversion im Shop in einem Monat ({bestConversion.label})</span>
+          </li>
+        </ul>
+        <p class="source mono">
+          Aufrufe: die zehn meistgesehenen Videos laut Instagram und TikTok. Besuche und Bestellungen: Shopify, Dezember 2024
+          bis Februar 2026. Nicht jeder Shop-Besuch kam über ein Video – die Quoten sind Näherungen.
+        </p>
       </div>
     </section>
 
@@ -249,6 +299,7 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
 
 <style>
   .revenue,
+  .funnel-wrap,
   .organic {
     border-top: 1px solid var(--line);
   }
@@ -634,9 +685,96 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
     backdrop-filter: blur(6px);
   }
 
+  /* Von der Reichweite zum Kauf */
+  .funnel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .step {
+    display: grid;
+    align-content: space-between;
+    gap: 1.25rem;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--bg-2);
+  }
+
+  .step.end {
+    border-color: var(--accent);
+  }
+
+  .f-value {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(2rem, 4.2vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .end .f-value {
+    color: var(--accent);
+  }
+
+  .f-label {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .rate {
+    display: grid;
+    justify-items: center;
+    align-self: center;
+    gap: 0.35rem;
+    max-width: 8.5rem;
+    color: var(--ink-2);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  .rate::after {
+    content: '→';
+    color: var(--accent);
+    font-size: 1.4rem;
+    line-height: 1;
+  }
+
+  .funnel-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem clamp(1.5rem, 3vw, 3rem);
+    margin: clamp(2rem, 4vw, 3rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .funnel-facts li {
+    display: grid;
+    gap: 0.4rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--ink);
+  }
+
+  .funnel-facts strong {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .funnel-facts span {
+    color: var(--ink-2);
+  }
+
   .learnings {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 2rem clamp(1.5rem, 3vw, 3rem);
     margin: 0;
     padding: 0;
@@ -681,8 +819,26 @@ const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
 
   @media (max-width: 900px) {
     .day-grid,
-    .organic-grid {
+    .organic-grid,
+    .funnel,
+    .funnel-facts {
       grid-template-columns: 1fr;
+    }
+
+    .funnel {
+      gap: 0.6rem;
+    }
+
+    .rate {
+      max-width: none;
+      grid-auto-flow: column;
+      justify-self: start;
+      padding-left: 1.25rem;
+    }
+
+    .rate::after {
+      content: '↓';
+      font-size: 1.1rem;
     }
 
     .steps,
