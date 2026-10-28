@@ -314,8 +314,8 @@ export const contact = {
  * Seite einen gut sichtbaren Platzhalter an.
  */
 export const legal = {
-  street: '',
-  city: '',
+  street: 'Augustinusstraße 17',
+  city: '54296 Trier-Tarforst',
   // Hosting-Anbieter inkl. Anschrift (die Seite liegt auf GitHub Pages)
   host: 'GitHub Pages, ein Dienst der GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA',
 };

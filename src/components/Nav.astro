@@ -98,10 +98,24 @@ const base = home ? '' : '/';
     window.addEventListener('resize', () => setActive(links.find((l) => l.classList.contains('active'))?.dataset.section ?? null));
   }
 
-  // Leichter Schatten, sobald gescrollt wurde.
-  const onScroll = () => pill?.classList.toggle('scrolled', window.scrollY > 24);
+  // Leichter Schatten, sobald gescrollt wurde. Mobil verschwindet die Leiste beim Runterscrollen
+  // (mehr Platz zum Lesen) und kommt beim Hochscrollen oder am Seitenende zurück.
+  const wrap = document.querySelector<HTMLElement>('.nav-wrap');
+  const mobile = window.matchMedia('(max-width: 720px)');
+  let lastY = window.scrollY;
+  const onScroll = () => {
+    const y = window.scrollY;
+    pill?.classList.toggle('scrolled', y > 24);
+    const atEnd = window.innerHeight + y >= document.documentElement.scrollHeight - 80;
+    const hide = mobile.matches && y > 160 && y > lastY + 4 && !atEnd;
+    if (hide) wrap?.classList.add('hidden');
+    else if (y < lastY - 4 || atEnd || y <= 160) wrap?.classList.remove('hidden');
+    lastY = y;
+  };
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
+  // Fokus per Tastatur holt die Leiste immer zurück.
+  wrap?.addEventListener('focusin', () => wrap.classList.remove('hidden'));
 </script>
 
 <style>
@@ -281,6 +295,15 @@ const base = home ? '' : '/';
     .nav-wrap {
       top: auto;
       bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .nav-wrap.hidden {
+      transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom, 0px)));
+    }
+
+    .pill {
+      background: rgb(18 18 20 / 0.9);
     }
 
     .brand,

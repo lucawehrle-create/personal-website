@@ -932,6 +932,36 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
   }
 
   @media (max-width: 560px) {
+    .quote p {
+      font-size: 1.45rem;
+    }
+
+    .quote p + p {
+      margin-top: 0.9rem;
+    }
+
+    .phone {
+      width: min(300px, 76%);
+      border-radius: 32px;
+    }
+
+    .phone img {
+      border-radius: 24px;
+    }
+
+    .post {
+      padding: 0.75rem;
+    }
+
+    .post-brand,
+    .post-logo {
+      font-size: 0.6rem;
+    }
+
+    .post-sub {
+      font-size: 0.72rem;
+    }
+
     .channels {
       grid-template-columns: 1fr;
     }
