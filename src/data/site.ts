@@ -175,8 +175,11 @@ export type CareerEntry = {
   role: string;
   org: string;
   place?: string;
+  // Zeitraum wie im Lebenslauf: „2023 – 2024“, „Okt 2025 – März 2026“, „2026 – heute“
   period: string;
   points?: string[];
+  // Kurzname für den Zeitstrahl im Recruiter-Modus
+  short?: string;
 };
 
 // Werdegang laut Lebenslauf (Stand: April 2026), neueste Station zuerst.
@@ -185,6 +188,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
     {
       role: 'Werkstudent',
       org: 'Würth IT',
+      short: 'Werkstudent · Würth IT',
       period: '2026 – heute',
     },
     {
@@ -199,6 +203,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
     {
       role: 'Freiwilliges Praktikum, Team Modern Work',
       org: 'Würth Deutschland',
+      short: 'Praktikum · Würth Deutschland',
       place: 'Künzelsau',
       period: 'Okt 2025 – März 2026',
       points: [
@@ -220,6 +225,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
     {
       role: 'Studentische Hilfskraft, Nutzerbetreuung',
       org: 'Computerpool der Fakultät BWL',
+      short: 'Hilfskraft · Fakultät BWL',
       place: 'Mannheim',
       period: '2022 – 2024',
     },
@@ -228,6 +234,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
     {
       role: 'Auslandssemester',
       org: 'Jönköping University',
+      short: 'Auslandssemester · Jönköping',
       place: 'Schweden',
       period: 'Aug – Dez 2024',
       points: ['Entrepreneurship, Business Digitalization, Service Marketing, Swedish Language'],
@@ -235,6 +242,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
     {
       role: 'B.Sc. Betriebswirtschaftslehre',
       org: 'Universität Mannheim',
+      short: 'B.Sc. BWL · Uni Mannheim',
       place: 'Mannheim',
       period: '2022 – 2025',
       points: ['Bachelorarbeit: Electronic Bond Trading', '79 ECTS in englischer Sprache'],
@@ -242,6 +250,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
     {
       role: 'Allgemeine Hochschulreife, Internationales Wirtschaftsgymnasium',
       org: 'Berufsschulzentrum Stockach',
+      short: 'Abitur · Wirtschaftsgymnasium',
       place: 'Stockach',
       period: '2019 – 2022',
       points: ['Jahrgangspreis für Ökonomische Studien und Informatik'],
@@ -251,6 +260,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
     {
       role: 'Growth Team',
       org: 'thinc! e.V.',
+      short: 'Growth Team · thinc!',
       place: 'Mannheim',
       period: '2022 – 2024',
       points: [
@@ -269,20 +279,15 @@ export const earlier = [
   { period: '2017', text: 'Praktikum Mediengestaltung, Kieweg und Freiermuth, Konstanz' },
 ];
 
-export const toolbox = [
-  'MVP Building',
-  'No-Code',
-  'Generative KI',
-  'Notion',
-  'n8n',
-  'Shopify',
-  'SAP HCM',
-  'MS Office',
-  'Adobe Creative Suite',
-  'Canva',
-  'Midjourney',
-  'Higgsfield',
+// Werkzeuge nach Bereichen; die Startseite zeigt sie als eine fortlaufende Liste.
+export const toolboxGroups = [
+  { title: 'produkt & no-code', items: ['MVP Building', 'No-Code', 'Notion', 'n8n', 'Shopify'] },
+  { title: 'ki', items: ['Generative KI', 'Midjourney', 'Higgsfield'] },
+  { title: 'design', items: ['Adobe Creative Suite', 'Canva'] },
+  { title: 'business-tools', items: ['SAP HCM', 'MS Office'] },
 ];
+
+export const toolbox = toolboxGroups.flatMap((group) => group.items);
 
 export const languages = [
   { name: 'Deutsch', level: 'Muttersprache' },

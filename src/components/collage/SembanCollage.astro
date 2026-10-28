@@ -2,10 +2,10 @@
 import { Image } from 'astro:assets';
 import Bento from './Bento.astro';
 import feed from '../../assets/collage/semban-feed.jpg';
-import lernfoto from '../../assets/collage/semban-lernfoto.jpg';
+import maskottchen from '../../assets/collage/semban-maskottchen.webp';
 
 const areas = `"feed feed logo head" "feed feed timer head" "photo store claim claim"`;
-const mobileAreas = `"feed feed" "logo head" "timer head"`;
+const mobileAreas = `"feed feed logo" "feed feed photo"`;
 ---
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
@@ -31,13 +31,13 @@ const mobileAreas = `"feed feed" "logo head" "timer head"`;
   </div>
 
   <!-- Claim -->
-  <div class="tile t-dark pad head" style="grid-area: head; --i: 2">
+  <div class="tile t-dark pad head m-hide" style="grid-area: head; --i: 2">
     <p class="t-label">your social study companion</p>
     <p class="t-big push">Lernen ist besser mit <span>Freunden.</span></p>
   </div>
 
   <!-- Fokus-Timer -->
-  <div class="tile t-cream pad timer" style="grid-area: timer; --i: 3">
+  <div class="tile t-cream pad timer m-hide" style="grid-area: timer; --i: 3">
     <p class="t-label">fokus-timer</p>
     <svg class="ring push" viewBox="0 0 100 100" aria-hidden="true">
       <circle cx="50" cy="50" r="42" fill="none" stroke="rgb(252 82 0 / 0.16)" stroke-width="8"></circle>
@@ -46,10 +46,10 @@ const mobileAreas = `"feed feed" "logo head" "timer head"`;
     </svg>
   </div>
 
-  <!-- Lernfoto aus dem Feed -->
-  <div class="tile m-hide" style="grid-area: photo; --i: 4">
-    <Image class="fill" src={lernfoto} alt="" widths={[320, 640]} sizes="(max-width: 960px) 25vw, 180px" />
-    <span class="chip">1 h 30 min</span>
+  <!-- Maskottchen -->
+  <div class="tile mascot" style="grid-area: photo; --i: 4">
+    <p class="t-label pad m-hide">maskottchen</p>
+    <Image class="fox" src={maskottchen} alt="" widths={[256, 512]} sizes="(max-width: 960px) 30vw, 180px" />
   </div>
 
   <!-- App Store -->
@@ -152,6 +152,28 @@ const mobileAreas = `"feed feed" "logo head" "timer head"`;
 
   :global(.js) :global([data-reveal]:not(.is-visible)) .progress {
     stroke-dashoffset: 100;
+  }
+
+  .mascot {
+    --t-bg: radial-gradient(circle at 50% 70%, #ffe6d6 0%, #ffc9a8 100%);
+    --t-fg: #5a2200;
+    background: var(--t-bg);
+  }
+
+  /* Der Fuchs sitzt unten in der Kachel und winkt beim Hover */
+  .fox {
+    position: absolute;
+    left: 50%;
+    bottom: -4%;
+    width: 80%;
+    height: auto;
+    transform: translateX(-50%);
+    transform-origin: 50% 100%;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .mascot:hover .fox {
+    transform: translateX(-50%) rotate(-6deg) scale(1.05);
   }
 
   .store .t-big {

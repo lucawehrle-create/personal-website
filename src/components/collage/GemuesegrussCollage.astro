@@ -7,13 +7,13 @@ import label from '../../assets/collage/gemuesegruss-label.jpg';
 import stift from '../../assets/gemuesegruss/tiktok-beschriften-stift.jpg';
 
 const areas = `"hero hero boxes views" "hero hero stift views" "orders orders label noad"`;
-const mobileAreas = `"hero hero" "orders orders" "label stift"`;
+const mobileAreas = `"hero hero label" "hero hero stift"`;
 ---
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
   <!-- Das Produkt -->
   <div class="tile" style="grid-area: hero; --i: 0">
-    <Image class="fill produkt" src={produkt} alt="" widths={[480, 900]} sizes="(max-width: 960px) 90vw, 380px" />
+    <Image class="fill" src={produkt} alt="" widths={[480, 900]} sizes="(max-width: 960px) 90vw, 380px" />
     <span class="chip">kartoffel mit botschaft</span>
   </div>
 
@@ -38,11 +38,11 @@ const mobileAreas = `"hero hero" "orders orders" "label stift"`;
   <!-- Handarbeit -->
   <div class="tile" style="grid-area: stift; --i: 3">
     <Image class="fill" src={stift} alt="" widths={[400]} sizes="(max-width: 960px) 45vw, 180px" />
-    <span class="chip">von hand beschriftet</span>
+    <span class="chip m-hide">von hand beschriftet</span>
   </div>
 
   <!-- Bestellungen -->
-  <div class="tile t-accent pad orders" style="grid-area: orders; --i: 4">
+  <div class="tile t-accent pad orders m-hide" style="grid-area: orders; --i: 4">
     <div class="push orders-row">
       <p class="t-big">1.000+</p>
       <p class="t-text">Kartoffeln mit Botschaft verschickt.</p>
@@ -70,11 +70,6 @@ const mobileAreas = `"hero hero" "orders orders" "label stift"`;
 </Bento>
 
 <style>
-  /* Mobil ist die Kachel breit: Ausschnitt auf Kartoffel und Etikett */
-  .produkt {
-    object-position: 50% 72%;
-  }
-
   .sticker-tile {
     --t-bg: #f5bb00;
     background: var(--t-bg);

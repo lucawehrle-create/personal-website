@@ -1,16 +1,42 @@
 ---
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Timeline from '../components/Timeline.astro';
 import portrait from '../assets/portrait.jpg';
-import { about, career, earlier, languages, projects, site, toolbox } from '../data/site';
+import maskottchen from '../assets/collage/semban-maskottchen.webp';
+import produktfoto from '../assets/gemuesegruss/produktfoto.jpg';
+import logoMark from '../assets/mindfulscreen/logo-mark.png';
+import { about, career, earlier, languages, projects, site, toolboxGroups } from '../data/site';
 
 const updated = new Date().toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+const pad = (n: number) => String(n).padStart(2, '0');
+const hostname = (href: string) => new URL(href).hostname.replace(/^www\./, '');
 
 const facts = [
-  { value: '1.000+', label: 'Bestellungen mit GemüseGruß – 11.700 € Shop-Umsatz, 0 € Werbebudget' },
-  { value: 'SemBan', label: 'eigene Lern-App, gerade gestartet (iPhone & Web)' },
-  { value: 'Würth IT', label: 'Werkstudent, davor Praktikum im Team Modern Work' },
+  { value: '1.000+', label: 'Bestellungen mit GemüseGruß – ohne Werbebudget', accent: true },
+  { value: '2,8 Mio.', label: 'organische Aufrufe auf TikTok und Instagram' },
+  { value: '3', label: 'eigene Produkte gestartet: App, Onlineshop, Buch' },
   { value: 'C1', label: 'Englisch, Auslandssemester in Schweden' },
+];
+
+const current = career.experience.filter((entry) => entry.period.includes('heute'));
+const openTo = ['Product', 'BizOps', 'Founder Associate'];
+
+// Zeitstrahl: Gründungen stehen bei den Projekten, nicht doppelt bei der Praxis.
+const projectNames = projects.map((project) => project.name);
+const timeline = [
+  { title: 'bildung', rows: career.education.map((e) => ({ label: e.short ?? e.role, period: e.period })) },
+  {
+    title: 'praxis',
+    rows: career.experience
+      .filter((e) => !projectNames.includes(e.org))
+      .map((e) => ({ label: e.short ?? `${e.role} · ${e.org}`, period: e.period })),
+  },
+  {
+    title: 'eigene projekte',
+    rows: projects.flatMap((p) => (p.period ? [{ label: p.name, period: p.period }] : [])),
+  },
+  { title: 'engagement', rows: career.engagement.map((e) => ({ label: e.short ?? e.role, period: e.period })) },
 ];
 
 const sections = [
@@ -18,6 +44,11 @@ const sections = [
   { title: 'bildung', entries: career.education },
   { title: 'engagement', entries: career.engagement },
 ];
+
+const thumbs = { semban: maskottchen, gemuesegruss: produktfoto, mindfulscreen: logoMark };
+
+// Sprachniveau als Balken: sechs Stufen (A1 bis C2), Muttersprache voll.
+const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, B1: 3, A2: 2, A1: 1, Grundkenntnisse: 1 };
 ---
 
 <Base
@@ -32,42 +63,89 @@ const sections = [
         recruiter-modus an
         <span class="hint">· zur kreativen version</span>
       </a>
-      <button class="btn print" type="button" hidden>als pdf speichern</button>
+      <div class="tools">
+        <a class="btn" href={`mailto:${site.email}`}>e-mail</a>
+        <button class="btn print" type="button" hidden>als pdf speichern</button>
+      </div>
     </div>
 
-    <header class="profile">
-      <Image src={portrait} alt="Porträt von Luca Wehrle" width={280} height={280} class="photo" loading="eager" />
-      <div class="intro">
-        <p class="label">auf einen blick</p>
-        <h1>{site.name}</h1>
+    <div class="top">
+      <header class="card profile">
+        <div class="id">
+          <Image src={portrait} alt="Porträt von Luca Wehrle" width={240} height={240} class="photo" loading="eager" />
+          <div>
+            <p class="label">auf einen blick</p>
+            <h1>{site.name}</h1>
+          </div>
+        </div>
         <p class="role">Product Builder · B.Sc. Betriebswirtschaftslehre, Universität Mannheim</p>
-        <ul class="contact mono">
-          <li>{site.location}, DE</li>
-          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-          <li><a href={site.linkedin} target="_blank" rel="noopener">linkedin.com/in/luca-wehrle</a></li>
-          <li><a href={site.instagram} target="_blank" rel="noopener">instagram {site.instagramHandle}</a></li>
-        </ul>
-        <p class="open"><span class="mono">interessiert an</span> Product · BizOps · Founder Associate</p>
-      </div>
-    </header>
+        <dl class="quick">
+          <div>
+            <dt class="mono">aktuell</dt>
+            <dd>
+              {
+                current.map((entry) => (
+                  <span class="current">
+                    {entry.role} · {entry.org}
+                  </span>
+                ))
+              }
+            </dd>
+          </div>
+          <div>
+            <dt class="mono">offen für</dt>
+            <dd>
+              <ul class="pills">{openTo.map((item) => <li>{item}</li>)}</ul>
+            </dd>
+          </div>
+          <div>
+            <dt class="mono">standort</dt>
+            <dd>{site.location}, DE</dd>
+          </div>
+        </dl>
+        <div class="cta">
+          <a class="btn btn-accent" href={`mailto:${site.email}`}>e-mail schreiben</a>
+          <a class="btn" href={site.linkedin} target="_blank" rel="noopener">linkedin ↗</a>
+          <a class="btn" href={site.instagram} target="_blank" rel="noopener">instagram ↗</a>
+        </div>
+        <p class="print-contact mono">
+          {site.email} · linkedin.com/in/luca-wehrle · instagram {site.instagramHandle}
+        </p>
+      </header>
 
-    <ul class="facts">
-      {
-        facts.map((fact) => (
-          <li>
-            <span class="value">{fact.value}</span>
-            <span class="fact-label">{fact.label}</span>
-          </li>
-        ))
-      }
-    </ul>
+      <ul class="facts">
+        {
+          facts.map((fact) => (
+            <li class:list={['card', 'fact', { accent: fact.accent }]}>
+              <span class="value">{fact.value}</span>
+              <span class="fact-label">{fact.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <section class="card" aria-labelledby="zeitstrahl-title" data-reveal>
+      <div class="card-head">
+        <h2 id="zeitstrahl-title" class="label">werdegang auf einen blick</h2>
+        <ul class="legend mono">
+          <li><span class="swatch now"></span>läuft gerade</li>
+          <li><span class="swatch"></span>abgeschlossen</li>
+        </ul>
+      </div>
+      <Timeline groups={timeline} />
+      <p class="note mono">Jahresangaben ohne Monat sind als ganze Jahre eingezeichnet. Details stehen darunter.</p>
+    </section>
 
     <div class="columns">
-      <div class="main">
+      <div class="col">
         {
           sections.map((section) => (
-            <section>
-              <h2 class="label">{section.title}</h2>
+            <section class="card">
+              <div class="card-head">
+                <h2 class="label">{section.title}</h2>
+                <span class="mono count">{pad(section.entries.length)}</span>
+              </div>
               <ol class="entries">
                 {section.entries.map((entry) => (
                   <li>
@@ -92,8 +170,11 @@ const sections = [
             </section>
           ))
         }
-        <section>
-          <h2 class="label">frühere stationen</h2>
+        <section class="card">
+          <div class="card-head">
+            <h2 class="label">frühere stationen</h2>
+            <span class="mono count">{pad(earlier.length)}</span>
+          </div>
           <ul class="entries compact">
             {
               earlier.map((item) => (
@@ -107,56 +188,101 @@ const sections = [
         </section>
       </div>
 
-      <aside class="side">
-        <section>
-          <h2 class="label">eigene projekte</h2>
+      <div class="col">
+        <section class="card">
+          <div class="card-head">
+            <h2 class="label">eigene projekte</h2>
+            <span class="mono count">{pad(projects.length)}</span>
+          </div>
           <ul class="projects">
             {
-              projects.map((project) => (
-                <li>
-                  <p class="entry-role">
-                    {project.href ? (
-                      <a href={project.href} target="_blank" rel="noopener">
-                        {project.name} ↗
-                      </a>
-                    ) : project.caseStudy ? (
-                      <a href={project.caseStudy}>{project.name} – case study →</a>
-                    ) : (
-                      project.name
-                    )}
-                  </p>
-                  <p class="mono metric">
-                    {project.status} · {project.metric.value} {project.metric.label}
-                    {project.period && ` · ${project.period}`}
-                  </p>
-                  <p class="desc">{project.description}</p>
-                </li>
-              ))
+              projects.map((project) => {
+                const thumb = project.collage ? thumbs[project.collage] : project.image;
+                const external = [
+                  ...(project.href ? [{ label: hostname(project.href), href: project.href }] : []),
+                  ...(project.links ?? []),
+                ];
+                return (
+                  <li>
+                    <span class:list={['thumb', project.collage]}>
+                      <Image src={thumb} alt="" width={128} height={128} />
+                    </span>
+                    <div>
+                      <p class="p-head">
+                        <span class="p-name">{project.name}</span>
+                        <span class:list={['pill', project.status]}>{project.status}</span>
+                      </p>
+                      <p class="mono p-meta">
+                        {project.category}
+                        {project.period && ` · ${project.period}`}
+                      </p>
+                      <p class="p-result">{project.experiment.result}</p>
+                      <p class="p-links mono">
+                        {project.caseStudy && <a href={project.caseStudy}>case study →</a>}
+                        {external.map((link) => (
+                          <a href={link.href} target="_blank" rel="noopener">
+                            {link.label.toLowerCase()} ↗
+                          </a>
+                        ))}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })
             }
           </ul>
         </section>
-        <section>
-          <h2 class="label">skills</h2>
-          <ul class="chips">{toolbox.map((tool) => <li>{tool}</li>)}</ul>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="label">skills</h2>
+          </div>
+          <dl class="skills">
+            {
+              toolboxGroups.map((group) => (
+                <div>
+                  <dt class="mono">{group.title}</dt>
+                  <dd>
+                    <ul class="chips">
+                      {group.items.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
         </section>
-        <section>
-          <h2 class="label">sprachen</h2>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="label">sprachen</h2>
+          </div>
           <ul class="langs">
             {
               languages.map((language) => (
                 <li>
-                  <span>{language.name}</span>
-                  <span class="mono">{language.level}</span>
+                  <span class="lang">{language.name}</span>
+                  <span class="meter" aria-hidden="true">
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <span class:list={{ on: i < (levels[language.level] ?? 0) }} />
+                    ))}
+                  </span>
+                  <span class="mono level">{language.level}</span>
                 </li>
               ))
             }
           </ul>
         </section>
-        <section>
-          <h2 class="label">interessen</h2>
-          <p class="interests">{about.interests.join(' · ')}</p>
+
+        <section class="card">
+          <div class="card-head">
+            <h2 class="label">interessen</h2>
+          </div>
+          <ul class="chips">{about.interests.map((item) => <li>{item}</li>)}</ul>
         </section>
-      </aside>
+      </div>
     </div>
 
     <p class="updated mono">Stand: {updated} · Die ausführliche Version gibt es unter {site.url.replace('https://', '')}</p>
@@ -173,8 +299,12 @@ const sections = [
 
 <style>
   .rec {
-    padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(4rem, 8vw, 6rem);
+    --card: #fbfaf7;
+    --gap: clamp(0.75rem, 1.4vw, 1rem);
+    padding-block: clamp(1rem, 3vw, 1.75rem) clamp(4rem, 8vw, 6rem);
   }
+
+  /* ---------- Leiste oben ---------- */
 
   .toolbar {
     display: flex;
@@ -182,8 +312,12 @@ const sections = [
     justify-content: space-between;
     align-items: center;
     gap: 1rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--line);
+    margin-bottom: var(--gap);
+  }
+
+  .tools {
+    display: flex;
+    gap: 0.5rem;
   }
 
   .mode {
@@ -230,114 +364,261 @@ const sections = [
     display: none;
   }
 
-  .profile {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: clamp(1.5rem, 4vw, 3rem);
-    align-items: center;
-    padding-block: clamp(2rem, 5vw, 3.5rem);
+  /* ---------- Karten ---------- */
+
+  .card {
+    padding: clamp(1.1rem, 2.4vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--card);
   }
 
-  .photo {
-    width: clamp(120px, 16vw, 200px);
-    height: auto;
-    aspect-ratio: 1;
-    border-radius: 18px;
-    object-fit: cover;
-  }
-
-  h1 {
-    margin-top: 0.75rem;
-    font-stretch: 125%;
-    font-size: clamp(2.4rem, 6vw, 5rem);
-    font-weight: 800;
-    letter-spacing: -0.045em;
-  }
-
-  .role {
-    margin-top: 0.75rem;
-    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
-    color: var(--ink-2);
-  }
-
-  .contact {
+  .card-head {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.5rem;
-    margin: 1.1rem 0 0;
-    padding: 0;
-    list-style: none;
-    color: var(--ink-2);
-  }
-
-  .contact a,
-  .projects a {
-    color: var(--ink);
-    text-decoration-color: var(--accent);
-    text-underline-offset: 3px;
-  }
-
-  .open {
-    margin-top: 0.9rem;
-  }
-
-  .open .mono {
-    margin-right: 0.6rem;
-    color: var(--ink-3);
-  }
-
-  .facts {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border-block: 1px solid var(--ink);
-  }
-
-  .facts li {
-    display: grid;
-    gap: 0.4rem;
-    padding: 1.4rem 1.25rem 1.4rem 0;
-  }
-
-  .facts li + li {
-    padding-left: 1.25rem;
-    border-left: 1px solid var(--line);
-  }
-
-  .value {
-    font-family: var(--font-display);
-    font-stretch: 112%;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
-
-  .fact-label {
-    color: var(--ink-2);
-    font-size: 0.95rem;
-  }
-
-  .columns {
-    display: grid;
-    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: clamp(2rem, 5vw, 4.5rem);
-    margin-top: clamp(2.5rem, 5vw, 3.5rem);
-  }
-
-  section + section {
-    margin-top: 2.5rem;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--line);
   }
 
   h2.label {
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--line);
+    margin: 0;
     font-family: var(--font-mono);
     font-size: 0.8rem;
     font-weight: 500;
     letter-spacing: 0.02em;
+  }
+
+  .count {
+    color: var(--ink-3);
+    font-size: 0.75rem;
+  }
+
+  /* ---------- Profil + Kennzahlen ---------- */
+
+  .top {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--gap);
+    margin-bottom: var(--gap);
+  }
+
+  /* Dunkle Profilkarte im Look der kreativen Version (Punktraster) */
+  .profile {
+    --bg: #111112;
+    --bg-2: #1b1b1d;
+    --ink: #f2f0eb;
+    --ink-2: #b9b6ae;
+    --ink-3: #8d8a84;
+    --line: #2e2e31;
+    --accent: #ff5b1f;
+    --on-accent: #0d0d0e;
+    display: grid;
+    align-content: start;
+    gap: 1.25rem;
+    border-color: var(--bg);
+    background:
+      radial-gradient(circle at 1px 1px, rgb(255 255 255 / 0.07) 1px, transparent 0) 0 0 / 14px 14px,
+      var(--bg);
+    color: var(--ink);
+  }
+
+  .id {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2.5vw, 1.75rem);
+  }
+
+  .photo {
+    flex: none;
+    width: clamp(84px, 11vw, 128px);
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 18px;
+    object-fit: cover;
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--accent);
+  }
+
+  h1 {
+    margin-top: 0.5rem;
+    font-stretch: 125%;
+    font-size: clamp(2.2rem, 5vw, 4.25rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
+
+  .role {
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    color: var(--ink-2);
+  }
+
+  .quick {
+    display: grid;
+    margin: 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .quick div {
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .quick dt {
+    color: var(--ink-3);
+    font-size: 0.75rem;
+  }
+
+  .quick dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    margin: 0;
+  }
+
+  .current::before {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+    vertical-align: 0.1em;
+  }
+
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pills li {
+    padding: 0.15rem 0.6rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 0.92rem;
+  }
+
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .print-contact {
+    display: none;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: var(--gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .fact {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    container-type: inline-size;
+  }
+
+  /* Zahl skaliert mit der Kachel und bricht nie um */
+  .value {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: min(3.4rem, 26cqw);
+    white-space: nowrap;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
+
+  .fact-label {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .fact.accent {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .fact.accent .value,
+  .fact.accent .fact-label {
+    color: #111112;
+  }
+
+  /* ---------- Zeitstrahl ---------- */
+
+  .legend {
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.72rem;
+    color: var(--ink-2);
+  }
+
+  .legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .swatch {
+    width: 14px;
+    height: 8px;
+    border-radius: 2px;
+    background: #8f8b82;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .swatch.now {
+    background: var(--accent);
+  }
+
+  .card :global(.timeline) {
+    margin-top: 1.25rem;
+  }
+
+  .note {
+    margin-top: 0.75rem;
+    color: var(--ink-3);
+    font-size: 0.7rem;
+  }
+
+  /* ---------- Details ---------- */
+
+  .columns {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--gap);
+    margin-top: var(--gap);
+    align-items: start;
+  }
+
+  .col {
+    display: grid;
+    gap: var(--gap);
   }
 
   .entries {
@@ -348,11 +629,16 @@ const sections = [
 
   .entries > li {
     display: grid;
-    grid-template-columns: 9.5rem minmax(0, 1fr);
+    grid-template-columns: 9rem minmax(0, 1fr);
     gap: 1rem;
     padding: 1rem 0;
     border-bottom: 1px solid var(--line);
     break-inside: avoid;
+  }
+
+  .entries > li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
   .entries.compact > li {
@@ -362,6 +648,7 @@ const sections = [
 
   .period {
     padding-top: 0.15rem;
+    font-size: 0.78rem;
     color: var(--accent);
   }
 
@@ -382,50 +669,163 @@ const sections = [
     margin: 0.4rem 0 0;
     padding-left: 1.1rem;
     color: var(--ink-3);
-    font-size: 0.95rem;
+    font-size: 0.93rem;
   }
 
+  /* Projekte */
   .projects {
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .projects li {
-    padding: 1rem 0;
+  .projects > li {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1.1rem 0;
     border-bottom: 1px solid var(--line);
     break-inside: avoid;
   }
 
-  .metric {
-    margin-top: 0.2rem;
+  .projects > li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+
+  .thumb {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--bg-2);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .thumb.semban {
+    background: radial-gradient(circle at 50% 70%, #ffe6d6, #ffc9a8);
+  }
+
+  .thumb.semban img {
+    object-fit: contain;
+    object-position: 50% 100%;
+    transform: translateY(6%);
+  }
+
+  .thumb.mindfulscreen {
+    display: grid;
+    place-items: center;
+    background: #000;
+  }
+
+  .thumb.mindfulscreen img {
+    width: 62%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .p-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .p-name {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+
+  .pill {
+    padding: 0.1rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--ink-3);
+  }
+
+  .pill.live {
+    border-color: var(--accent);
     color: var(--accent);
   }
 
-  .desc {
-    margin-top: 0.4rem;
-    color: var(--ink-2);
+  .p-meta {
+    margin-top: 0.2rem;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .p-result {
+    margin-top: 0.45rem;
     font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+
+  .p-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .p-links a {
+    color: var(--ink);
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+
+  /* Skills */
+  .skills {
+    display: grid;
+    gap: 0.9rem;
+    margin: 1rem 0 0;
+  }
+
+  .skills dt {
+    margin-bottom: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .skills dd {
+    margin: 0;
   }
 
   .chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
-    margin: 1rem 0 0;
+    gap: 0.35rem;
+    margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  .card > .chips {
+    margin-top: 1rem;
   }
 
   .chips li {
     padding: 0.3rem 0.7rem;
     border: 1px solid var(--line);
     border-radius: 999px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--ink-2);
+    background: var(--bg);
+    font-size: 0.88rem;
+    color: var(--ink);
   }
 
+  /* Sprachen */
   .langs {
     margin: 0;
     padding: 0;
@@ -433,48 +833,101 @@ const sections = [
   }
 
   .langs li {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.55rem 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto 8.5rem;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.6rem 0;
     border-bottom: 1px solid var(--line);
   }
 
-  .langs .mono {
-    color: var(--ink-3);
+  .langs li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
   }
 
-  .interests {
-    margin-top: 0.9rem;
-    color: var(--ink-2);
+  .meter {
+    display: flex;
+    gap: 3px;
+  }
+
+  .meter span {
+    width: 12px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--line);
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .meter .on {
+    background: var(--ink);
+  }
+
+  .level {
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    text-align: right;
   }
 
   .updated {
-    margin-top: clamp(3rem, 6vw, 4rem);
+    margin-top: clamp(2rem, 4vw, 3rem);
+    font-size: 0.75rem;
     color: var(--ink-3);
   }
 
-  @media (max-width: 900px) {
-    .facts {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  /* ---------- Responsiv ---------- */
 
-    .facts li + li:nth-child(3) {
-      padding-left: 0;
-      border-left: 0;
-    }
-
-    .facts li:nth-child(n + 3) {
-      border-top: 1px solid var(--line);
-    }
-
+  @media (max-width: 960px) {
+    .top,
     .columns {
       grid-template-columns: 1fr;
     }
   }
 
   @media (max-width: 560px) {
-    .profile {
+    .hint,
+    .print {
+      display: none;
+    }
+
+    .entries > li {
+      padding: 0.8rem 0;
+    }
+
+    .entry-role,
+    .entry-org {
+      font-size: 0.95rem;
+    }
+
+    .points {
+      font-size: 0.85rem;
+    }
+
+    .p-result {
+      font-size: 0.88rem;
+    }
+
+    .chips li {
+      padding: 0.2rem 0.6rem;
+      font-size: 0.8rem;
+    }
+
+    .card {
+      border-radius: 16px;
+    }
+
+    .quick div {
       grid-template-columns: 1fr;
+      gap: 0.3rem;
+    }
+
+    .fact {
+      gap: 0.75rem;
+    }
+
+    .fact-label {
+      font-size: 0.82rem;
     }
 
     .entries > li {
@@ -482,20 +935,25 @@ const sections = [
       gap: 0.2rem;
     }
 
-    .hint,
-    .print {
-      display: none;
+    .langs li {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .level {
+      grid-column: 1 / -1;
+      margin-top: -0.4rem;
+      text-align: left;
     }
   }
 
-  /* Druck / PDF: eine saubere, helle A4-Version */
+  /* ---------- Druck / PDF: helle, ruhige A4-Version ---------- */
   @media print {
     @page {
-      margin: 14mm;
+      margin: 12mm;
     }
 
     :global(html) {
-      font-size: 10px;
+      font-size: 9.5px;
       color-scheme: light;
     }
 
@@ -504,47 +962,75 @@ const sections = [
       background: #fff !important;
     }
 
-    h2.label {
-      break-after: avoid;
-    }
-
     :global(.site-footer),
     :global(.skip-link),
-    .toolbar {
+    .toolbar,
+    .cta,
+    .note {
       display: none !important;
     }
 
     .rec {
+      --card: #fff;
+      --gap: 8px;
       padding: 0;
     }
 
-    section + section {
-      margin-top: 1.75rem;
+    .card {
+      padding: 12px 14px;
+      border-radius: 10px;
+      break-inside: avoid;
+    }
+
+    .col > .card:first-child {
+      break-inside: auto;
     }
 
     .profile {
-      padding-block: 0 1.25rem;
+      --bg: #fff;
+      --ink: #111112;
+      --ink-2: #4f4d48;
+      --ink-3: #6f6c66;
+      --line: #d3cfc6;
+      --accent: #e8470f;
+      gap: 10px;
+      border-color: var(--line);
+      background: #fff;
+    }
+
+    .print-contact {
+      display: block;
+      color: var(--ink-2);
     }
 
     .photo {
-      width: 110px;
+      width: 76px;
+      box-shadow: none;
     }
 
     h1 {
-      font-size: 30pt;
+      font-size: 28pt;
     }
 
+    .top,
     .columns {
       grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-      gap: 1.5rem;
     }
 
-    .facts {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .fact.accent {
+      background: #fff;
     }
 
-    .facts li:nth-child(n + 3) {
-      border-top: 0;
+    .fact.accent .value {
+      color: var(--accent);
+    }
+
+    .value {
+      font-size: 22pt;
+    }
+
+    .updated {
+      margin-top: 10px;
     }
   }
 </style>

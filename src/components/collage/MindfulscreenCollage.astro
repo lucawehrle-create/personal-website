@@ -6,7 +6,7 @@ import mark from '../../assets/mindfulscreen/logo-mark.png';
 import instagram from '../../assets/mindfulscreen/instagram-profil.jpg';
 
 const areas = `"book book logo phone" "book book days phone" "post rating time time"`;
-const mobileAreas = `"book book" "logo days" "time time"`;
+const mobileAreas = `"book book logo" "book book days"`;
 const days = Array.from({ length: 21 }, (_, i) => i);
 ---
 
@@ -54,7 +54,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   </div>
 
   <!-- Bildschirmzeit vorher / nachher -->
-  <div class="tile t-dark pad time" style="grid-area: time; --i: 6">
+  <div class="tile t-dark pad time m-hide" style="grid-area: time; --i: 6">
     <p class="t-label">meine bildschirmzeit · ø pro tag</p>
     <p class="t-big">−59 %</p>
     <div class="bars push">
@@ -94,13 +94,6 @@ const days = Array.from({ length: 21 }, (_, i) => i);
 
   .book:hover .cover {
     transform: translateX(-50%) translateY(-3%) perspective(900px) rotateY(-4deg) rotateZ(0deg);
-  }
-
-  @container (max-width: 560px) {
-    .cover {
-      top: 30%;
-      width: 40%;
-    }
   }
 
   .logo {

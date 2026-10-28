@@ -1,5 +1,5 @@
 ---
-// Bento-Raster für Projekt-Collagen: 4 × 3 quadratische Felder (mobil 2 × 3).
+// Bento-Raster für Projekt-Collagen: 4 × 3 quadratische Felder (mobil kompakt 3 × 2).
 // Die Kacheln legen ihre Position über grid-area fest; die Anordnung kommt als
 // grid-template-areas von der jeweiligen Collage. Größen rechnen in --u (= eine Feldbreite).
 interface Props {
@@ -96,7 +96,7 @@ const { areas, mobileAreas } = Astro.props;
   /* Typo-Bausteine */
   .bento :global(.t-label) {
     font-family: var(--font-mono);
-    font-size: calc(var(--u) * 0.064);
+    font-size: max(9px, calc(var(--u) * 0.064));
     line-height: 1.3;
     letter-spacing: 0.01em;
     text-transform: lowercase;
@@ -127,7 +127,7 @@ const { areas, mobileAreas } = Astro.props;
     background: rgb(17 17 18 / 0.78);
     color: #f2f0eb;
     font-family: var(--font-mono);
-    font-size: calc(var(--u) * 0.06);
+    font-size: max(9px, calc(var(--u) * 0.06));
     white-space: nowrap;
     backdrop-filter: blur(6px);
   }
@@ -136,12 +136,12 @@ const { areas, mobileAreas } = Astro.props;
     margin-top: auto;
   }
 
-  /* Mobil: 2 Spalten, ausgewählte Kacheln */
+  /* Mobil: kompakt in 3 × 2 Feldern – ein großes Motiv und zwei kleine Kacheln */
   @container (max-width: 560px) {
     .bento {
-      --gap: 2.5cqw;
-      --u: 48.75cqw;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      --gap: 2cqw;
+      --u: 32cqw;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       grid-template-areas: var(--areas-m);
     }
 

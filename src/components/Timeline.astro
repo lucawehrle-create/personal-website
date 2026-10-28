@@ -1,0 +1,306 @@
+---
+// Werdegang als Zeitstrahl: eine Zeile pro Station, Balken über den Jahren.
+// Was heute noch läuft, ist orange; Abgeschlossenes grau. Details stehen in den Listen darunter.
+import { monthIndex, parsePeriod } from '../lib/period';
+
+interface Props {
+  groups: { title: string; rows: { label: string; period: string }[] }[];
+}
+
+const today = new Date();
+const now = monthIndex(today) + 1;
+// Ganze Jahre enden spätestens heute (z. B. „2024 – 2026“ im laufenden Jahr 2026).
+const groups = Astro.props.groups.map((group) => ({
+  ...group,
+  rows: group.rows
+    .map((row) => {
+      const span = parsePeriod(row.period, today);
+      return { ...row, span: { ...span, end: Math.min(span.end, now) } };
+    })
+    .sort((a, b) => a.span.start - b.span.start),
+}));
+
+const spans = groups.flatMap((group) => group.rows.map((row) => row.span));
+const firstYear = Math.floor(Math.min(...spans.map((span) => span.start)) / 12);
+const lastYear = Math.floor((Math.max(...spans.map((span) => span.end)) - 1) / 12);
+const years = Array.from({ length: lastYear - firstYear + 1 }, (_, i) => firstYear + i);
+const domainStart = firstYear * 12;
+const domain = years.length * 12;
+const pos = (month: number) => ((month - domainStart) / domain).toFixed(4);
+const todayPos = pos(now);
+---
+
+<div class="timeline" style={`--years: ${years.length}; --today: ${todayPos}`}>
+  <div class="axis" aria-hidden="true">
+    <span class="axis-pad"></span>
+    <ol class="years">
+      {
+        years.map((year) => (
+          <li>
+            <span class="full">{year}</span>
+            <span class="short">’{String(year).slice(2)}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  {
+    groups.map((group) => (
+      <div class="group">
+        <p class="row group-row">
+          <span class="label-cell mono">{group.title}</span>
+          <span class="track" />
+        </p>
+        <ol class="rows">
+          {group.rows.map((row) => (
+            <li class="row">
+              <span class="label-cell">{row.label}</span>
+              <span class="track">
+                <span
+                  class:list={['bar', { now: row.span.ongoing, 'tip-end': Number(pos(row.span.start)) > 0.55 }]}
+                  style={`--l: ${pos(row.span.start)}; --w: ${(Number(pos(row.span.end)) - Number(pos(row.span.start))).toFixed(4)}`}
+                  tabindex="0"
+                >
+                  <span class="tip mono">{row.period}</span>
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))
+  }
+  <p class="row today-row" aria-hidden="true">
+    <span class="axis-pad"></span>
+    <span class="track"><span class="today-label mono">heute</span></span>
+  </p>
+</div>
+
+<style>
+  .timeline {
+    --label-w: 15rem;
+    --grid: #e3e0d8;
+    --bar: #8f8b82;
+    --bar-now: var(--accent);
+  }
+
+  .row,
+  .axis {
+    display: grid;
+    grid-template-columns: var(--label-w) minmax(0, 1fr);
+    align-items: center;
+    margin: 0;
+  }
+
+  .years {
+    display: grid;
+    grid-template-columns: repeat(var(--years), minmax(0, 1fr));
+    margin: 0;
+    padding: 0 0 0.5rem;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .years li {
+    padding-left: 0.4rem;
+  }
+
+  .short {
+    display: none;
+  }
+
+  .rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Spur: senkrechte Jahreslinien und die Heute-Linie, über alle Zeilen hinweg bündig */
+  .track {
+    position: relative;
+    display: block;
+    height: 2.1rem;
+    background: repeating-linear-gradient(
+      to right,
+      var(--grid) 0 1px,
+      transparent 1px calc(100% / var(--years))
+    );
+  }
+
+  .track::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(var(--today) * 100%);
+    width: 1px;
+    background: var(--bar-now);
+  }
+
+  .group-row .track {
+    height: 1.9rem;
+  }
+
+  .label-cell {
+    padding-right: 1rem;
+    font-size: 0.92rem;
+    line-height: 1.2;
+  }
+
+  .group-row .label-cell {
+    padding-top: 0.6rem;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+
+  .axis + .group .group-row .label-cell {
+    padding-top: 0;
+  }
+
+  .bar {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--l) * 100%);
+    width: max(6px, calc(var(--w) * 100%));
+    height: 12px;
+    border-radius: 4px;
+    background: var(--bar);
+    transform: translateY(-50%);
+    outline-offset: 3px;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .bar.now {
+    background: var(--bar-now);
+  }
+
+  /* Balken wachsen beim ersten Anzeigen von links */
+  :global(.js) .timeline .bar {
+    transform-origin: left center;
+    transition: transform 0.9s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+
+  :global(.js) :global([data-reveal]:not(.is-visible)) .timeline .bar {
+    transform: translateY(-50%) scaleX(0);
+  }
+
+  .tip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    z-index: 2;
+    padding: 0.3rem 0.55rem;
+    border-radius: 6px;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 0.72rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
+  }
+
+  /* Rechts im Zeitstrahl öffnet der Tooltip nach links, damit er nicht übersteht */
+  .tip-end .tip {
+    left: auto;
+    right: 0;
+  }
+
+  .bar:hover .tip,
+  .bar:focus-visible .tip {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Hitbox größer als der Balken */
+  .bar::before {
+    content: '';
+    position: absolute;
+    inset: -10px -4px;
+  }
+
+  .today-row .track {
+    height: 1.6rem;
+    background: none;
+  }
+
+  .today-label {
+    position: absolute;
+    top: 0.35rem;
+    left: calc(var(--today) * 100%);
+    padding-right: 0.35rem;
+    transform: translateX(-100%);
+    font-size: 0.7rem;
+    color: var(--ink-2);
+  }
+
+  .today-row .track::after {
+    bottom: auto;
+    height: 0.3rem;
+  }
+
+  @media print {
+    :global(.js) .timeline .bar {
+      transform: translateY(-50%) !important;
+    }
+
+    .tip {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .timeline {
+      --label-w: 0px;
+    }
+
+    .row,
+    .axis {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .axis-pad {
+      display: none;
+    }
+
+    .full {
+      display: none;
+    }
+
+    .short {
+      display: inline;
+    }
+
+    .years li {
+      padding-left: 0.2rem;
+    }
+
+    .label-cell {
+      padding: 0.35rem 0 0;
+      font-size: 0.78rem;
+      color: var(--ink-2);
+    }
+
+    .track {
+      height: 1.15rem;
+    }
+
+    .bar {
+      height: 10px;
+    }
+
+    .group-row .track {
+      display: none;
+    }
+
+    .group-row .label-cell {
+      padding-top: 1rem;
+    }
+  }
+</style>

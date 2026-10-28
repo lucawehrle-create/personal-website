@@ -290,6 +290,14 @@ canvas {
   }
 }
 
+/* Beim Drucken ist alles sofort sichtbar, auch was noch nicht ins Bild gescrollt wurde */
+@media print {
+  .js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* Recruiter-Modus: auch der Überscroll-Bereich ist hell */
 html:has(body.paper) {
   background: #efede8;
