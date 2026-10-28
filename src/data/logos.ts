@@ -1,14 +1,15 @@
 // Bildmarken der Stationen im Lebenslauf (Recruiter-Modus), zugeordnet über den Namen der Organisation.
-// Quellen: offizielle Websites bzw. Wikimedia Commons (Würth); bei Würth und Jönköping nur das Bildzeichen.
+// Quellen: offizielle Websites bzw. Wikimedia Commons (Würth). Bei breiten Logos nur das Bildzeichen
+// (Würth, Universitäten, BSZ Stockach) – als SVG, damit es in jeder Größe scharf bleibt.
 import type { ImageMetadata } from 'astro';
 import wuerth from '../assets/logos/wuerth.svg';
 import semban from '../assets/logos/semban.svg';
-import gemuesegruss from '../assets/logos/gemuesegruss.jpg';
-import mindfulscreen from '../assets/mindfulscreen/logo-mark.png';
-import uniMannheim from '../assets/logos/uni-mannheim.png';
-import uniTrier from '../assets/logos/uni-trier.png';
+import gemuesegruss from '../assets/logos/gemuesegruss.png';
+import mindfulscreen from '../assets/logos/mindfulscreen.png';
+import uniMannheim from '../assets/logos/uni-mannheim.svg';
+import uniTrier from '../assets/logos/uni-trier.svg';
 import jonkoping from '../assets/logos/jonkoping-university.svg';
-import bszStockach from '../assets/logos/bsz-stockach.png';
+import bszStockach from '../assets/logos/bsz-stockach.svg';
 import thinc from '../assets/logos/thinc.svg';
 
 // bg: Fläche hinter dem Logo; pad: Abstand zum Rand für Zeichen ohne eigene Fläche
@@ -24,6 +25,6 @@ export const logos: Record<string, Logo> = {
   'Universität Mannheim': { src: uniMannheim, bg: '#fff' },
   'Universität Trier': { src: uniTrier, bg: '#fff', pad: true },
   'Jönköping University': { src: jonkoping, bg: '#fff', pad: true },
-  'Berufsschulzentrum Stockach': { src: bszStockach, bg: '#fff' },
+  'Berufsschulzentrum Stockach': { src: bszStockach, bg: '#fff', pad: true },
   'thinc! e.V.': { src: thinc, bg: '#0a0f2c' },
 };

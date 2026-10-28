@@ -151,6 +151,11 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
                 return (
                   <li class:list={{ 'has-logo': logo }}>
                     <p class="mono period">{entry.period}</p>
+                    {logo && (
+                      <span class:list={['logo', { pad: logo.pad, framed: logo.bg === '#fff' }]} style={`--logo-bg: ${logo.bg}`}>
+                        <img src={logo.src.src} alt={`Logo ${entry.org}`} width="40" height="40" loading="lazy" decoding="async" />
+                      </span>
+                    )}
                     <div>
                       <p class="entry-role">
                         {entry.role}
@@ -177,11 +182,6 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
                         </p>
                       )}
                     </div>
-                    {logo && (
-                      <span class:list={['logo', { pad: logo.pad }]} style={`--logo-bg: ${logo.bg}`}>
-                        <Image src={logo.src} alt={`Logo ${entry.org}`} width={96} height={96} />
-                      </span>
-                    )}
                   </li>
                 );
               })
@@ -216,6 +216,14 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
                 {section.entries.map((entry) => (
                   <li class:list={{ 'has-logo': logos[entry.org] }}>
                     <p class="mono period">{entry.period}</p>
+                    {logos[entry.org] && (
+                      <span
+                        class:list={['logo', { pad: logos[entry.org].pad, framed: logos[entry.org].bg === '#fff' }]}
+                        style={`--logo-bg: ${logos[entry.org].bg}`}
+                      >
+                        <img src={logos[entry.org].src.src} alt={`Logo ${entry.org}`} width="40" height="40" loading="lazy" decoding="async" />
+                      </span>
+                    )}
                     <div>
                       <p class="entry-role">
                         {entry.role}
@@ -233,14 +241,6 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
                         </ul>
                       )}
                     </div>
-                    {logos[entry.org] && (
-                      <span
-                        class:list={['logo', { pad: logos[entry.org].pad }]}
-                        style={`--logo-bg: ${logos[entry.org].bg}`}
-                      >
-                        <Image src={logos[entry.org].src} alt={`Logo ${entry.org}`} width={96} height={96} />
-                      </span>
-                    )}
                   </li>
                 ))}
               </ol>
@@ -644,33 +644,38 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     border-bottom: 0;
   }
 
-  /* Logo der Station rechts */
+  /* Logo links neben Titel und Organisation */
   .entries > li.has-logo {
-    grid-template-columns: 9rem minmax(0, 1fr) 48px;
+    grid-template-columns: 9rem 40px minmax(0, 1fr);
+    column-gap: 0.9rem;
   }
 
   .logo {
     display: grid;
     place-items: center;
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--logo-bg);
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
 
+  .logo.framed {
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
   .logo img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
 
   .logo.pad img {
-    width: 66%;
-    height: 66%;
+    width: 72%;
+    height: 72%;
     object-fit: contain;
   }
 
@@ -916,17 +921,18 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     }
 
     .entries > li.has-logo {
-      position: relative;
-      padding-right: 56px;
+      grid-template-columns: 36px minmax(0, 1fr);
+      column-gap: 0.8rem;
+    }
+
+    .entries > li.has-logo .period {
+      grid-column: 1 / -1;
     }
 
     .entries .logo {
-      position: absolute;
-      top: 0.8rem;
-      right: 0;
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
     }
 
     .langs li {
@@ -980,13 +986,13 @@ const levels: Record<string, number> = { Muttersprache: 6, C2: 6, C1: 5, B2: 4, 
     }
 
     .entries > li.has-logo {
-      grid-template-columns: 9rem minmax(0, 1fr) 30px;
+      grid-template-columns: 9rem 28px minmax(0, 1fr);
     }
 
     .logo {
-      width: 30px;
-      height: 30px;
-      border-radius: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
     }
 
     .profile {
