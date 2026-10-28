@@ -33,6 +33,63 @@ export const videos: Video[] = [
   { platform: 'Instagram', title: 'Würdest du? 🥔', date: '06.03.2025', views: 13_179 },
 ];
 
+export type Month = {
+  label: string;
+  short: string;
+  revenue: number;
+  orders: number;
+  conversion: number;
+};
+
+// Shopify-Analytics-Report (Stand März 2026): Umsatz und Bestellungen pro Monat.
+// März 2026 enthielt nur eine Rückerstattung und ist deshalb nicht dargestellt.
+export const months: Month[] = [
+  { label: 'Dezember 2024', short: 'Dez', revenue: 142.09, orders: 11, conversion: 2.08 },
+  { label: 'Januar 2025', short: 'Jan', revenue: 4008.4, orders: 314, conversion: 2.16 },
+  { label: 'Februar 2025', short: 'Feb', revenue: 3280.38, orders: 248, conversion: 2.76 },
+  { label: 'März 2025', short: 'Mär', revenue: 1246.07, orders: 93, conversion: 2.48 },
+  { label: 'April 2025', short: 'Apr', revenue: 563.47, orders: 41, conversion: 1.83 },
+  { label: 'Mai 2025', short: 'Mai', revenue: 510.18, orders: 38, conversion: 2.27 },
+  { label: 'Juni 2025', short: 'Jun', revenue: 265, orders: 24, conversion: 1.68 },
+  { label: 'Juli 2025', short: 'Jul', revenue: 426.52, orders: 33, conversion: 2.15 },
+  { label: 'August 2025', short: 'Aug', revenue: 771.67, orders: 57, conversion: 1.4 },
+  { label: 'September 2025', short: 'Sep', revenue: 0, orders: 0, conversion: 0 },
+  { label: 'Oktober 2025', short: 'Okt', revenue: 0, orders: 4, conversion: 0.92 },
+  { label: 'November 2025', short: 'Nov', revenue: 125.01, orders: 10, conversion: 1.66 },
+  { label: 'Dezember 2025', short: 'Dez', revenue: 178.97, orders: 13, conversion: 3.49 },
+  { label: 'Januar 2026', short: 'Jan', revenue: 134.35, orders: 11, conversion: 3.17 },
+  { label: 'Februar 2026', short: 'Feb', revenue: 86.92, orders: 7, conversion: 2.07 },
+];
+
+export const shop = {
+  revenue: 11_719.56,
+  orders: 904,
+  sessions: 31_708,
+  averageOrder: '12,96 €',
+  adSpend: 0,
+};
+
+// Sitzungen im Shop nach Herkunft (alle Zeiträume)
+export const trafficSources = [
+  { label: 'Social Media', share: 46.6, sessions: 14_772 },
+  { label: 'Direkt', share: 35.2, sessions: 11_152 },
+  { label: 'Suche', share: 17.8, sessions: 5_650 },
+  { label: 'Sonstige', share: 0.4, sessions: 134 },
+];
+
+export const social = {
+  followers: [
+    { platform: 'TikTok', count: 2_279 },
+    { platform: 'Instagram', count: 2_120 },
+  ],
+  facts: [
+    { value: '94,5 %', label: 'der TikTok-Aufrufe kamen über die „Für dich“-Seite' },
+    { value: '81,6 %', label: 'der Instagram-Aufrufe erreichten Nicht-Follower' },
+    { value: '25–34', label: 'größte Altersgruppe auf TikTok und Instagram' },
+    { value: '72 %', label: 'der TikTok-Zuschauer sind Frauen' },
+  ],
+};
+
 // Untergrenze: Das gerundete „1,1 Mio.“ zählt nur mit 1,05 Mio.
 export const totalViews = videos.reduce((sum, v) => sum + (v.rounded ? v.views - 50_000 : v.views), 0);
 
@@ -40,14 +97,14 @@ export const caseStudy = {
   title: 'GemüseGruß',
   claim: 'Der witzigste Gruß – auf einer Kartoffel.',
   intro:
-    'Ein Onlineshop für handbeschriftete Kartoffeln: Kund:innen schreiben ihre Botschaft, ich beschrifte die Kartoffel von Hand, verpacke sie in Heu und verschicke sie – auf Wunsch anonym. Was als Meme begann, wurde ein echtes Geschäft mit Shop, Logistik und viralem Marketing.',
-  period: '2024 – 2025',
+    'Ein Onlineshop für handbeschriftete Kartoffeln: Kund:innen schreiben ihre Botschaft, ich beschrifte die Kartoffel von Hand, verpacke sie in Heu und verschicke sie – auf Wunsch anonym. Was als Meme begann, wurde ein echtes Geschäft mit Shop, Logistik und viralem Marketing – ohne einen Euro Werbebudget.',
+  period: '2024 – 2026',
   roles: ['Idee & Marke', 'Shopify-Shop', 'Content & Social Media', 'Produktion & Versand'],
   kpis: [
-    { value: 2_800_000, display: '2,8 Mio.+', label: 'Aufrufe auf TikTok und Instagram' },
-    { value: 1_100_000, display: '1,1 Mio.', label: 'Aufrufe für das erfolgreichste Reel' },
-    { value: 1_000, display: '1.000+', label: 'Bestellungen insgesamt' },
-    { value: 44, display: '44', label: 'Bestellungen an einem einzigen Tag' },
+    { display: '2,8 Mio.+', label: 'Aufrufe auf TikTok und Instagram' },
+    { display: '11.700 €', label: 'Umsatz insgesamt' },
+    { display: '904', label: 'Bestellungen' },
+    { display: '0 €', label: 'Werbebudget – alles organisch' },
   ],
   bestDay: {
     revenue: '602,56 €',
@@ -83,11 +140,11 @@ export const caseStudy = {
   learnings: [
     {
       title: 'Das Produkt ist das Marketing.',
-      text: 'Ein Gruß, den man nicht erwartet, wird fotografiert, geteilt und weitererzählt. Die Kartoffel war Produkt und Werbefläche zugleich.',
+      text: 'Ein Gruß, den man nicht erwartet, wird fotografiert, geteilt und weitererzählt. Die Kartoffel war Produkt und Werbefläche zugleich – bezahlte Werbung brauchte es nicht.',
     },
     {
       title: 'Ein Video kann alles verändern.',
-      text: 'Ein einziges Reel erreichte über eine Million Aufrufe. Reichweite kommt in Wellen, nicht linear – an starken Tagen gingen Dutzende Bestellungen ein.',
+      text: 'Im Monat des Reels mit 1,1 Mio. Aufrufen kamen 314 Bestellungen zusammen – über ein Drittel des gesamten Umsatzes. Reichweite kommt in Wellen, nicht linear.',
     },
     {
       title: 'Viral heißt: Handarbeit skalieren.',

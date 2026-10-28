@@ -2,15 +2,19 @@
 import { Image } from 'astro:assets';
 import CaseStudy from '../../layouts/CaseStudy.astro';
 import ViewsChart from '../../components/ViewsChart.astro';
-import { caseStudy, videos } from '../../data/gemuesegruss';
+import MonthlyChart from '../../components/MonthlyChart.astro';
+import { caseStudy, months, social, trafficSources, videos } from '../../data/gemuesegruss';
 
 const c = caseStudy;
 const pad = (n: number) => String(n).padStart(2, '0');
+const de = new Intl.NumberFormat('de-DE');
+const maxShare = Math.max(...trafficSources.map((t) => t.share));
+const totalFollowers = social.followers.reduce((sum, f) => sum + f.count, 0);
 ---
 
 <CaseStudy
   title="GemüseGruß – Case Study"
-  description="Wie aus einem Meme ein Onlineshop wurde: GemüseGruß verschickte über 1.000 handbeschriftete Kartoffeln und erreichte über 2,8 Mio. Aufrufe auf TikTok und Instagram."
+  description="Wie aus einem Meme ein Onlineshop wurde: GemüseGruß erzielte 11.700 € Umsatz mit 904 Bestellungen und über 2,8 Mio. Aufrufen auf TikTok und Instagram – ohne Werbebudget."
   name="gemüsegruß"
   label={`case study · abgeschlossen · ${c.period}`}
   claim={c.claim}
@@ -36,6 +40,30 @@ const pad = (n: number) => String(n).padStart(2, '0');
           <p class="source mono">
             Quelle: Instagram-Statistik (2 Jahre) und angepinnte TikTok-Videos. Bei TikTok beschreibt der Titel das Video.
             Für die Summe zählt das gerundete „1,1 Mio.“ nur mit 1,05 Mio.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section revenue" aria-labelledby="umsatz-title">
+      <div class="container">
+        <div class="split-head" data-reveal>
+          <p class="label">umsatz pro monat</p>
+          <h2 id="umsatz-title">Ein Reel, ein Rekordmonat.</h2>
+          <p class="lead">
+            Im Januar 2025 ging das Reel mit 1,1 Millionen Aufrufen online. Im selben Monat kamen 314 Bestellungen und über
+            4.000 € Umsatz zusammen – mehr als ein Drittel des gesamten Umsatzes. Januar und Februar zusammen stehen für über
+            60 Prozent.
+          </p>
+        </div>
+        <div data-reveal>
+          <MonthlyChart
+            months={months}
+            note="26.01.2025: Reel „Das gibt es wirklich“ erreicht 1,1 Mio. Aufrufe"
+            noteShort="Reel mit 1,1 Mio. Aufrufen"
+          />
+          <p class="source mono">
+            Quelle: Shopify Analytics, Dezember 2024 bis Februar 2026. Im Oktober 2025 wurden alle vier Bestellungen erstattet.
           </p>
         </div>
       </div>
@@ -94,6 +122,51 @@ const pad = (n: number) => String(n).padStart(2, '0');
           </ol>
           <p class="phone-foot mono"><span>{c.bestDay.toPack}</span> bestellungen warten auf den versand</p>
         </div>
+      </div>
+    </section>
+
+    <section class="section organic" aria-labelledby="organisch-title">
+      <div class="container organic-grid">
+        <div data-reveal>
+          <div class="split-head">
+            <p class="label">ohne werbebudget</p>
+            <h2 id="organisch-title">0 € für Werbung. Alles organisch.</h2>
+            <p class="lead">
+              Keine Meta-Ads, keine Google-Ads, keine TikTok-Ads: Der gesamte Umsatz entstand organisch – über Kurzvideos,
+              direkte Aufrufe und Suche. {de.format(totalFollowers)} Menschen folgten GemüseGruß auf TikTok und Instagram.
+            </p>
+          </div>
+          <ul class="facts">
+            {
+              social.facts.map((fact) => (
+                <li>
+                  <span class="fact-value">{fact.value}</span>
+                  <span class="fact-label">{fact.label}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <figure class="sources" data-reveal style="--delay: 0.1s">
+          <figcaption class="mono sources-title">woher die besucher im shop kamen</figcaption>
+          <ol>
+            {
+              trafficSources.map((source, i) => (
+                <li class:list={{ top: i === 0 }}>
+                  <span class="src-label">{source.label}</span>
+                  <span class="src-value">{de.format(source.share)} %</span>
+                  <span class="src-track" aria-hidden="true">
+                    <span class="src-bar" style={`--w: ${(source.share / maxShare) * 100}%; --i: ${i}`} />
+                  </span>
+                  <span class="src-meta mono">{de.format(source.sessions)} Sitzungen</span>
+                </li>
+              ))
+            }
+          </ol>
+          <p class="sources-follow mono">
+            {social.followers.map((f) => `${f.platform}: ${de.format(f.count)} Follower`).join(' · ')}
+          </p>
+        </figure>
       </div>
     </section>
 
@@ -170,9 +243,137 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 
 <style>
+  .revenue,
+  .organic {
+    border-top: 1px solid var(--line);
+  }
+
   /* Der stärkste Tag */
   .day {
     border-top: 1px solid var(--line);
+  }
+
+  /* Ohne Werbebudget */
+  .organic-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: 3rem clamp(3rem, 7vw, 7rem);
+    align-items: start;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--ink);
+  }
+
+  .facts li {
+    display: grid;
+    gap: 0.35rem;
+    align-content: start;
+    padding: 1.1rem 1rem 1.1rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .facts li:nth-child(even) {
+    padding-left: 1rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .fact-value {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  .fact-label {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .sources {
+    --bar: #77746e;
+    margin: 0;
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    background: var(--bg-2);
+  }
+
+  .sources-title {
+    margin-bottom: 1rem;
+    color: var(--ink-3);
+  }
+
+  .sources ol {
+    display: grid;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sources li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 1rem;
+    align-items: baseline;
+  }
+
+  .src-label {
+    font-weight: 600;
+  }
+
+  .src-value {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sources li:not(.top) .src-value {
+    color: var(--ink-2);
+  }
+
+  .src-track {
+    grid-column: 1 / -1;
+    height: 14px;
+  }
+
+  .src-bar {
+    display: block;
+    width: max(var(--w), 3px);
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    background: var(--bar);
+    transform-origin: left;
+    transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(0.2s + var(--i) * 80ms);
+  }
+
+  .top .src-bar {
+    background: var(--accent);
+  }
+
+  :global(.js) .sources:not(:global(.is-visible)) .src-bar {
+    transform: scaleX(0);
+  }
+
+  .src-meta {
+    grid-column: 1 / -1;
+    color: var(--ink-3);
+    font-size: 0.72rem;
+  }
+
+  .sources-follow {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
   }
 
   .day-grid {
@@ -441,7 +642,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
 
   @media (max-width: 900px) {
-    .day-grid {
+    .day-grid,
+    .organic-grid {
       grid-template-columns: 1fr;
     }
 
@@ -476,6 +678,15 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
 
   @media (max-width: 480px) {
+    .facts {
+      grid-template-columns: 1fr;
+    }
+
+    .facts li:nth-child(even) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
     .stats {
       grid-template-columns: 1fr;
     }

@@ -1,0 +1,327 @@
+---
+// Säulendiagramm: Umsatz pro Monat. Der stärkste Monat ist hervorgehoben (Emphasis),
+// eine Anmerkung verbindet ihn mit dem viralen Reel.
+import type { Month } from '../data/gemuesegruss';
+
+interface Props {
+  months: Month[];
+  note?: string;
+  // Kürzere Anmerkung für schmale Bildschirme
+  noteShort?: string;
+}
+
+const { months, note, noteShort } = Astro.props;
+const MAX = 4500;
+const ticks = [0, 1000, 2000, 3000, 4000];
+const de = new Intl.NumberFormat('de-DE');
+const euro = (n: number) => `${de.format(Math.round(n))} €`;
+const peak = months.reduce((a, b) => (b.revenue > a.revenue ? b : a));
+// Jahreszahl unter dem ersten Monat jedes Jahres
+const years = months.map((m, i) => {
+  const year = m.label.slice(-4);
+  return i === 0 || months[i - 1].label.slice(-4) !== year ? year : '';
+});
+---
+
+<figure class="mchart" style={`--n: ${months.length}`}>
+  <div class="frame">
+    <div class="yaxis mono" aria-hidden="true">
+      {ticks.map((t) => <span style={`bottom: ${(t / MAX) * 100}%`}>{t === 0 ? '0' : euro(t)}</span>)}
+    </div>
+    <div class="plot">
+      {ticks.map((t) => <span class="grid" style={`bottom: ${(t / MAX) * 100}%`} aria-hidden="true" />)}
+      <ol class="cols">
+        {
+          months.map((m, i) => (
+            <li
+              class:list={['col', { peak: m === peak }]}
+              tabindex="0"
+              aria-label={`${m.label}: ${euro(m.revenue)} Umsatz, ${m.orders} Bestellungen`}
+              data-label={m.label}
+              data-revenue={euro(m.revenue)}
+              data-orders={String(m.orders)}
+              data-aov={m.orders && m.revenue ? `${de.format(Math.round((m.revenue / m.orders) * 100) / 100)} €` : ''}
+              data-conversion={m.conversion ? `${de.format(m.conversion)} %` : ''}
+            >
+              <span class="bar" style={`--h: ${(m.revenue / MAX) * 100}%; --i: ${i}`}>
+                {m === peak && <span class="cap">{euro(m.revenue)}</span>}
+              </span>
+              {m === peak && note && (
+                <span class="note mono">
+                  <span class="note-long">{note}</span>
+                  <span class="note-short">{noteShort ?? note}</span>
+                </span>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+    <span></span>
+    <ol class="xaxis mono" aria-hidden="true">
+      {
+        months.map((m, i) => (
+          <li class:list={{ peak: m === peak, first: i === 0 }}>
+            <span class="m-long">{m.short}</span>
+            <span class="m-short">{m.short[0]}</span>
+            <span class="year">{years[i]}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <div class="tip" hidden>
+    <p class="tip-value"></p>
+    <p class="tip-title"></p>
+    <p class="tip-meta mono"></p>
+  </div>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.mchart').forEach((chart) => {
+    const tip = chart.querySelector<HTMLElement>('.tip');
+    if (!tip) return;
+    const value = tip.querySelector('.tip-value')!;
+    const title = tip.querySelector('.tip-title')!;
+    const meta = tip.querySelector('.tip-meta')!;
+
+    const show = (col: HTMLElement) => {
+      const d = col.dataset;
+      value.textContent = `${d.revenue} Umsatz`;
+      title.textContent = d.label ?? '';
+      const parts = [`${d.orders} Bestellungen`];
+      if (d.aov) parts.push(`Ø ${d.aov}`);
+      if (d.conversion) parts.push(`Conversion ${d.conversion}`);
+      meta.textContent = parts.join(' · ');
+      tip.hidden = false;
+      // Neben die Spalte setzen (rechts, oder links, wenn rechts kein Platz ist).
+      const box = chart.getBoundingClientRect();
+      const r = col.getBoundingClientRect();
+      const width = tip.offsetWidth;
+      const right = r.right - box.left + 8;
+      tip.style.left = `${right + width <= box.width ? right : Math.max(0, r.left - box.left - width - 8)}px`;
+      chart.querySelectorAll('.col.hover').forEach((el) => el.classList.remove('hover'));
+      col.classList.add('hover');
+    };
+    const hide = () => {
+      tip.hidden = true;
+      chart.querySelectorAll('.col.hover').forEach((el) => el.classList.remove('hover'));
+    };
+
+    chart.querySelectorAll<HTMLElement>('.col').forEach((col) => {
+      col.addEventListener('pointerenter', () => show(col));
+      col.addEventListener('focus', () => show(col));
+      col.addEventListener('blur', hide);
+    });
+    chart.addEventListener('pointerleave', hide);
+  });
+</script>
+
+<style>
+  .mchart {
+    --bar: #77746e;
+    position: relative;
+    margin: 0;
+  }
+
+  .frame {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    column-gap: 0.75rem;
+  }
+
+  .yaxis {
+    position: relative;
+    height: clamp(240px, 32vw, 360px);
+    color: var(--ink-3);
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .yaxis span {
+    position: absolute;
+    right: 0;
+    transform: translateY(50%);
+    white-space: nowrap;
+  }
+
+  .plot {
+    position: relative;
+    height: clamp(240px, 32vw, 360px);
+  }
+
+  .grid {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .cols,
+  .xaxis {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cols {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Die ganze Spalte ist Trefferfläche, nicht nur die Säule. */
+  .col {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 100%;
+    outline-offset: -2px;
+    border-radius: 6px;
+  }
+
+  .col.hover,
+  .col:focus-visible {
+    background: rgb(255 255 255 / 0.04);
+  }
+
+  .bar {
+    position: relative;
+    width: min(24px, 64%);
+    height: var(--h);
+    border-radius: 4px 4px 0 0;
+    background: var(--bar);
+    transform-origin: bottom;
+    transition:
+      transform 1s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.2s ease;
+    transition-delay: calc(0.1s + var(--i) * 45ms), 0s;
+  }
+
+  .peak .bar {
+    background: var(--accent);
+  }
+
+  .col.hover .bar,
+  .col:focus-visible .bar {
+    filter: brightness(1.25);
+  }
+
+  :global(.js) :global([data-reveal]:not(.is-visible)) .bar {
+    transform: scaleY(0);
+  }
+
+  .cap {
+    position: absolute;
+    bottom: calc(100% + 0.4rem);
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 700;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Anmerkung rechts neben dem stärksten Monat */
+  .note {
+    position: absolute;
+    top: 7%;
+    left: calc(50% + 48px);
+    width: max-content;
+    max-width: min(22rem, 52vw);
+    padding-left: 0.8rem;
+    border-left: 1px solid var(--accent);
+    color: var(--ink-2);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    pointer-events: none;
+  }
+
+  .xaxis {
+    margin-top: 0.6rem;
+    color: var(--ink-3);
+    font-size: 0.7rem;
+  }
+
+  .xaxis li {
+    display: grid;
+    justify-items: center;
+    gap: 0.15rem;
+  }
+
+  .xaxis .peak {
+    color: var(--ink);
+  }
+
+  .year {
+    color: var(--ink-2);
+    min-height: 1em;
+  }
+
+  .m-short,
+  .note-short {
+    display: none;
+  }
+
+  .tip {
+    position: absolute;
+    top: 0.5rem;
+    z-index: 5;
+    min-width: 200px;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-2);
+    box-shadow: 0 16px 40px -12px rgb(0 0 0 / 0.6);
+    pointer-events: none;
+  }
+
+  .tip-value {
+    font-weight: 700;
+  }
+
+  .tip-title {
+    color: var(--ink-2);
+    font-size: 0.92rem;
+  }
+
+  .tip-meta {
+    margin-top: 0.25rem;
+    color: var(--ink-3);
+    font-size: 0.72rem;
+  }
+
+  @media (max-width: 600px) {
+    .frame {
+      grid-template-columns: 3.4rem minmax(0, 1fr);
+      column-gap: 0.4rem;
+    }
+
+    .yaxis {
+      font-size: 0.62rem;
+    }
+
+    .xaxis {
+      font-size: 0.6rem;
+    }
+
+    /* Monate als Anfangsbuchstaben, Jahr 2024 entfällt (zu eng neben 2025) */
+    .m-long,
+    .note-long,
+    .first .year {
+      display: none;
+    }
+
+    .m-short,
+    .note-short {
+      display: inline;
+    }
+
+    .note {
+      max-width: 40vw;
+      font-size: 0.68rem;
+    }
+  }
+</style>

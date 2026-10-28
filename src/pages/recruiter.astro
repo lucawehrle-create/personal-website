@@ -7,7 +7,7 @@ import { about, career, earlier, languages, projects, site, toolbox } from '../d
 const updated = new Date().toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
 
 const facts = [
-  { value: '1.000+', label: 'Bestellungen mit GemüseGruß, 2,8 Mio.+ Aufrufe auf Social Media' },
+  { value: '11.700 €', label: 'Umsatz mit GemüseGruß – 904 Bestellungen, 0 € Werbebudget' },
   { value: 'SemBan', label: 'eigene Lern-App, gerade gestartet (iPhone & Web)' },
   { value: 'Würth IT', label: 'Werkstudent, davor Praktikum im Team Modern Work' },
   { value: 'C1', label: 'Englisch, Auslandssemester in Schweden' },
@@ -45,6 +45,7 @@ const sections = [
           <li>{site.location}, DE</li>
           <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><a href={site.linkedin} target="_blank" rel="noopener">linkedin.com/in/luca-wehrle</a></li>
+          <li><a href={site.instagram} target="_blank" rel="noopener">instagram {site.instagramHandle}</a></li>
         </ul>
         <p class="open"><span class="mono">interessiert an</span> Product · BizOps · Founder Associate</p>
       </div>

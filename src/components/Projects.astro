@@ -79,8 +79,8 @@ const groups = [
                       <dd>{project.tags.join(' · ')}</dd>
                     </div>
                   </dl>
-                  {project.caseStudy && (
-                    <div class="links">
+                  <div class="links">
+                    {project.caseStudy && (
                       <a class="btn btn-accent" href={project.caseStudy}>
                         case study lesen
                         <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -94,11 +94,8 @@ const groups = [
                           />
                         </svg>
                       </a>
-                    </div>
-                  )}
-                  {project.href && (
-                    <div class="links">
-                      {[{ label: hostname(project.href), href: project.href }, ...(project.links ?? [])].map((link) => (
+                    )}
+                    {[...(project.href ? [{ label: hostname(project.href), href: project.href }] : []), ...(project.links ?? [])].map((link) => (
                         <a class="btn" href={link.href} target="_blank" rel="noopener">
                           {link.label}
                           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -113,8 +110,7 @@ const groups = [
                           </svg>
                         </a>
                       ))}
-                    </div>
-                  )}
+                  </div>
                 </div>
                 {project.href || project.caseStudy ? (
                   <a

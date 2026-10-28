@@ -9,7 +9,7 @@ export const caseStudy = {
   title: 'mindfulscreen',
   claim: 'In 21 Tagen weniger Handy.',
   intro:
-    'Mindfulscreen war meine Marke gegen Handysucht: eine Website, ein 21-Tage-Programm in Notion, ein Instagram-Kanal und ein eigenes Buch. Das Ziel: weniger Zeit am Handy verbringen, ohne an Produktivität zu verlieren.',
+    'Mindfulscreen war meine Marke gegen Handysucht, gerichtet vor allem an Schüler:innen: Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm, eine Website – und das Buch „Handy aus, Leben an“, das es bis heute auf Amazon gibt.',
   period: '2023 – 2024',
   roles: ['Marke & Website', '21-Tage-Programm', 'Content & Instagram', 'Autor'],
   hero,
@@ -18,7 +18,7 @@ export const caseStudy = {
     { display: '749', label: 'Follower auf Instagram' },
     { display: '21', label: 'Tage dauert das Programm' },
     { display: '5,0 ★', label: 'Amazon-Bewertung für mein Buch' },
-    { display: '4', label: 'Kanäle: Website, Programm, Instagram und Buch' },
+    { display: '1', label: 'Buch, bis heute auf Amazon erhältlich' },
   ],
   // Zitat von mindfulscreen.com
   quote: [
@@ -29,20 +29,24 @@ export const caseStudy = {
   websiteAlt: 'Website mindfulscreen.com auf dem Smartphone: „Ich bin Luca. Ich helfe dir, deine Zeit sinnvoll zu nutzen.“',
   channels: [
     {
-      title: 'Website',
-      text: 'mindfulscreen.com als Einstieg: was weniger Handynutzung bewirkt, mein persönlicher Weg und der Start ins Programm.',
+      title: 'Instagram',
+      text: 'Reels und Karussell-Posts zu Fokus, Motivation und Handysucht – der Kanal, über den die Reichweite entstand.',
+      status: '749 Follower',
     },
     {
       title: '21-Tage-Programm',
-      text: 'Ein komplettes System in Notion: 21-Tage-Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker.',
+      text: 'In 21 Tagen Handysucht loswerden: Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker in Notion.',
+      status: 'eingestellt',
     },
     {
-      title: 'Instagram',
-      text: 'Karussell-Posts zu Fokus, Motivation und Handysucht – für eine Community von 749 Followern.',
+      title: 'Website',
+      text: 'mindfulscreen.com als Einstieg: was weniger Handynutzung bewirkt, mein persönlicher Weg und der Start ins Programm.',
+      status: 'eingestellt',
     },
     {
       title: 'Buch',
-      text: '„Handy aus, Leben an“: der Weg zu weniger Bildschirmzeit Schritt für Schritt, erschienen auf Amazon.',
+      text: '„Handy aus, Leben an“: der Weg zu weniger Bildschirmzeit Schritt für Schritt, als E-Book auf Amazon.',
+      status: 'erhältlich',
     },
   ],
   book: {
@@ -53,8 +57,7 @@ export const caseStudy = {
     ratings: 2,
     cover,
     coverAlt: 'Buchcover „Handy aus, Leben an – Handysucht überwinden & Freiheit zurückgewinnen“ von Luca Wehrle',
-    // Link zum Buch auf Amazon eintragen, dann erscheint ein Button.
-    href: '',
+    href: 'https://www.amazon.de/dp/B0F5WK6PWT',
   },
   instagram,
   instagramAlt: 'Instagram-Profil @mindfulscreen: 19 Beiträge, 749 Follower, „Ich helfe dir, weniger Zeit am Handy zu verbringen!“',
@@ -66,14 +69,14 @@ export const caseStudy = {
   ],
   logoMark,
   experiment: {
-    hypothesis: 'Gründer und High-Performer wollen weniger Bildschirmzeit, ohne an Produktivität zu verlieren.',
-    test: 'Eine Marke mit vier Kanälen: Website, 21-Tage-Programm in Notion, Instagram und ein eigenes Buch.',
-    result: 'Ein Buch mit 5,0 Sternen auf Amazon und eine Community von 749 Followern.',
+    hypothesis: 'Schüler:innen wollen weniger Zeit am Handy verbringen – sie brauchen nur jemanden, der zeigt, wie es geht.',
+    test: 'Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm, eine Website und ein eigenes Buch.',
+    result: '749 Follower und ein Buch mit 5,0 Sternen, das bis heute auf Amazon erhältlich ist.',
   },
   learnings: [
     {
       title: 'Eine Idee, viele Formate.',
-      text: 'Website, Programm, Instagram und Buch erzählen dieselbe Botschaft – jedes Format erreicht andere Menschen auf ihrem Weg.',
+      text: 'Reels, Posts, Programm und Buch erzählen dieselbe Botschaft – jedes Format erreicht Menschen an einer anderen Stelle.',
     },
     {
       title: 'Glaubwürdig ist, was man selbst lebt.',

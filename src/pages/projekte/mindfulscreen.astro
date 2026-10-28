@@ -11,7 +11,7 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
 
 <CaseStudy
   title="Mindfulscreen – Case Study"
-  description="Mindfulscreen: eine Marke gegen Handysucht mit Website, 21-Tage-Programm, Instagram-Kanal und dem Buch „Handy aus, Leben an“."
+  description="Mindfulscreen: eine Marke gegen Handysucht für Schüler:innen – mit Instagram-Reels, 21-Tage-Programm und dem Buch „Handy aus, Leben an“, das bis heute auf Amazon erhältlich ist."
   name={c.title}
   label={`case study · abgeschlossen · ${c.period}`}
   claim={c.claim}
@@ -29,7 +29,7 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
         <h2 id="warum-title" class="visually-hidden">Warum Mindfulscreen</h2>
         <blockquote class="quote">
           {c.quote.map((line) => <p>{line}</p>)}
-          <footer class="mono">– von mindfulscreen.com</footer>
+          <footer class="mono">– von der damaligen Website mindfulscreen.com</footer>
         </blockquote>
       </div>
       <figure class="phone" data-reveal style="--delay: 0.1s">
@@ -48,7 +48,10 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
         {
           c.channels.map((channel, i) => (
             <li data-reveal style={`--delay: ${i * 0.08}s`}>
-              <span class="mono num">{pad(i + 1)}</span>
+              <span class="channel-top mono">
+                <span class="num">{pad(i + 1)}</span>
+                <span class:list={['state', { live: channel.status !== 'eingestellt' }]}>{channel.status}</span>
+              </span>
               <h3>{channel.title}</h3>
               <p>{channel.text}</p>
             </li>
@@ -74,8 +77,8 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
           <span><strong>{c.book.rating}</strong> von 5 Sternen · {c.book.ratings} Bewertungen auf Amazon</span>
         </p>
         <p class="lead">
-          Alles, was ich in Kurs und Content über Handysucht gelernt habe, in einem Buch: Schritt für Schritt zu weniger
-          Bildschirmzeit – geschrieben für alle, die ihr Handy weglegen wollen, aber nicht wissen, wie.
+          Was ich in Reels, Posts und im 21-Tage-Programm über Handysucht gesammelt habe, steckt in diesem Buch. Von
+          Mindfulscreen ist es das, was bleibt: als E-Book auf Amazon, bis heute erhältlich.
         </p>
         {
           c.book.href && (
@@ -95,8 +98,8 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
           <p class="label">instagram</p>
           <h2 id="content-title">Content, der kurz innehalten lässt.</h2>
           <p class="lead">
-            Auf @mindfulscreen habe ich Karussell-Posts zu Fokus, Motivation und Handysucht veröffentlicht – klare Typografie,
-            schwarzer Hintergrund, ein grünes Schlüsselwort.
+            Auf @mindfulscreen habe ich Reels und Karussell-Posts zu Fokus, Motivation und Handysucht veröffentlicht – klare
+            Typografie, schwarzer Hintergrund, ein grünes Schlüsselwort.
           </p>
         </div>
         <ul class="posts">
@@ -246,7 +249,27 @@ const parts = (text: string) => text.split('*').map((t, i) => ({ t, hl: i % 2 ==
     border-top: 1px solid var(--ink);
   }
 
+  .channel-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
   .channels .num {
+    color: var(--accent);
+  }
+
+  .state {
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-3);
+    font-size: 0.7rem;
+  }
+
+  .state.live {
+    border-color: var(--accent);
     color: var(--accent);
   }
 

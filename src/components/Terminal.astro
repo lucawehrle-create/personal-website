@@ -5,6 +5,8 @@ import { career, languages, projects, site, toolbox } from '../data/site';
 const data = {
   email: site.email,
   linkedin: site.linkedin,
+  instagram: site.instagram,
+  instagramHandle: site.instagramHandle,
   timeZone: site.timeZone,
   projects: projects.map((p) => ({
     name: p.name,
@@ -48,6 +50,8 @@ const data = {
   type Data = {
     email: string;
     linkedin: string;
+    instagram: string;
+    instagramHandle: string;
     timeZone: string;
     projects: { name: string; status: string; category: string; metric: string; href: string }[];
     career: { period: string; text: string }[];
@@ -142,8 +146,11 @@ const data = {
       skills: { help: 'die toolbox', run: () => print(data.toolbox.map(escape).join(' · ')) },
       sprachen: { help: 'sprachkenntnisse', run: () => print(data.languages.map(escape).join(' · ')) },
       kontakt: {
-        help: 'e-mail und linkedin',
-        run: () => print(`${link(`mailto:${data.email}`, data.email)}<br>${link(data.linkedin, 'linkedin.com/in/luca-wehrle')}`),
+        help: 'e-mail, linkedin und instagram',
+        run: () =>
+          print(
+            `${link(`mailto:${data.email}`, data.email)}<br>${link(data.linkedin, 'linkedin.com/in/luca-wehrle')}<br>${link(data.instagram, `instagram ${data.instagramHandle}`)}`,
+          ),
       },
       recruiter: {
         help: 'kompakte übersicht für recruiter',
@@ -155,7 +162,7 @@ const data = {
       kartoffel: {
         help: '🥔',
         run: () => {
-          print('über 1.000 kartoffeln verschickt. diese hier gibt’s gratis.', 'hl');
+          print('über 900 bestellungen verschickt. diese kartoffeln gibt’s gratis.', 'hl');
           potatoRain();
         },
       },

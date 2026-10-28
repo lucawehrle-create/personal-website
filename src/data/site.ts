@@ -23,6 +23,8 @@ export const site = {
   location: 'Mannheim',
   timeZone: 'Europe/Berlin',
   linkedin: 'https://www.linkedin.com/in/luca-wehrle-8112b8184/',
+  instagram: 'https://www.instagram.com/luca.weh/',
+  instagramHandle: '@luca.weh',
 };
 
 // Reihenfolge wie auf der Seite.
@@ -100,12 +102,12 @@ export const projects: Project[] = [
     category: 'E-Commerce · Viral',
     description:
       'E-Commerce, der eigentlich ein Meme ist – aber funktioniert: personalisierte Kartoffeln mit Grußbotschaft. Gebaut auf Shopify, gewachsen durch virales Marketing und UGC-Kampagnen.',
-    metric: { value: '1.000+', label: 'Bestellungen' },
-    period: '2024 – 2025',
+    metric: { value: '11.700 €', label: 'Umsatz' },
+    period: '2024 – 2026',
     experiment: {
       hypothesis: 'Menschen zahlen für einen Gruß, der so absurd ist, dass man ihn weitererzählt.',
       test: 'Shopify-Shop für handbeschriftete Kartoffeln, Reichweite über Kurzvideos auf TikTok und Instagram.',
-      result: 'Über 1.000 Bestellungen und mehr als 2,8 Mio. Aufrufe.',
+      result: '904 Bestellungen, 11.700 € Umsatz und über 2,8 Mio. Aufrufe – ohne Werbebudget.',
       learning: 'Wenn das Produkt selbst die Geschichte ist, erzählen Kund:innen sie weiter.',
     },
     tags: ['Shopify', 'TikTok', 'Instagram', 'Logistik'],
@@ -116,18 +118,19 @@ export const projects: Project[] = [
   {
     name: 'Mindfulscreen',
     status: 'abgeschlossen',
-    category: 'Digital Health · Marke & Content',
+    category: 'Digital Health · Content & Buch',
     description:
-      'Eine Marke gegen Handysucht: Website, 21-Tage-Programm in Notion, Instagram-Kanal und das eigene Buch „Handy aus, Leben an“ auf Amazon.',
+      'Eine Marke gegen Handysucht, vor allem für Schüler:innen: Instagram-Reels und Karussell-Posts, ein 21-Tage-Programm und das eigene Buch „Handy aus, Leben an“ – bis heute auf Amazon erhältlich.',
     metric: { value: '5,0 ★', label: 'für das eigene Buch' },
     period: '2023 – 2024',
     experiment: {
-      hypothesis: 'Gründer und High-Performer wollen weniger Bildschirmzeit, ohne an Produktivität zu verlieren.',
-      test: 'Eine Marke mit vier Kanälen: Website, 21-Tage-Programm in Notion, Instagram und ein eigenes Buch.',
-      result: 'Ein Buch mit 5,0 Sternen auf Amazon und 749 Follower auf Instagram.',
+      hypothesis: 'Schüler:innen wollen weniger Zeit am Handy verbringen – sie brauchen nur jemanden, der zeigt, wie es geht.',
+      test: 'Reels und Karussell-Posts auf Instagram, ein 21-Tage-Programm und ein eigenes Buch.',
+      result: '749 Follower und ein Buch mit 5,0 Sternen auf Amazon.',
       learning: 'Gewohnheiten ändern sich über einfache Routinen, nicht über Verbote.',
     },
-    tags: ['Notion', 'Instagram', 'Content', 'Buch'],
+    tags: ['Instagram', 'Reels', 'Notion', 'Buch'],
+    links: [{ label: 'Buch auf Amazon', href: 'https://www.amazon.de/dp/B0F5WK6PWT' }],
     caseStudy: '/projekte/mindfulscreen/',
     image: mindfulscreenImage,
     imageAlt:
@@ -151,7 +154,7 @@ export const about = {
     {
       label: 'strange venture',
       title: 'Potato-as-a-Service',
-      text: 'Skalierbarer E-Commerce für beschriftete Kartoffeln. Über 1.000 Stück verschickt. Ernsthaft.',
+      text: 'Skalierbarer E-Commerce für beschriftete Kartoffeln. Über 900 Bestellungen. Ernsthaft.',
     },
     {
       label: 'co-founders',
@@ -205,6 +208,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       period: '2023 – 2024',
       points: [
         'Entwicklung von Strategien und digitalen Lösungen für reduzierte Handynutzung',
+        'Instagram-Reels und Karussell-Posts, vor allem für Schüler:innen',
         'Autor des Buchs „Handy aus, Leben an“ (Amazon, 5,0 Sterne)',
       ],
     },
