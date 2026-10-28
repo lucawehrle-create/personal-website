@@ -1,0 +1,24 @@
+<!--
+  thinc! favicon — the same 7 primitives as components/coded/LogoMark.tsx,
+  verbatim, inside a translate/scale that centres the 148.153 x 204 mark in a
+  square tile. app/icon.test.ts fails if any number here drifts from the mark.
+
+  It is a filled tile and not a bare mark because a tab strip can be light or
+  dark and the icon has to survive both. Dark ground, off-white mark, one asset.
+
+  Ceiling: at a 16 px render the ring stroke lands near three quarters of a
+  pixel and softens. Accepted — the fix is a second, simplified mark for small
+  sizes, which is a design decision and not a build step.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#070a2f"/>
+  <g transform="translate(55.376 28) scale(0.980392)" fill="#f3f6fc">
+    <rect x="60.9107" y="191.413" width="26.3319" height="12.4426"/>
+    <rect x="40.9447" y="164.502" width="66.2638" height="12.4426"/>
+    <rect x="40.9447" y="140.485" width="66.2638" height="12.4426"/>
+    <rect x="55.1234" y="86.0851" width="12.4426" height="55.5574"/>
+    <rect x="80.5872" y="86.0851" width="12.4426" height="55.5574"/>
+    <rect x="67.8553" y="73.3532" width="12.4426" height="12.4426"/>
+    <circle cx="74.0766" cy="74.0766" r="67.7106" fill="none" stroke="#f3f6fc" stroke-width="12.7319"/>
+  </g>
+</svg>

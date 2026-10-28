@@ -41,7 +41,7 @@ export const hero = {
     { label: 'tldr', text: 'Business Student. Product Builder. Creator of many Side Projects.' },
     {
       label: 'studium & praxis',
-      text: 'B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute Master in Trier und Werkstudent bei Würth IT.',
+      text: 'Abgeschlossener B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute Master in Trier und Werkstudent bei Würth IT.',
     },
     {
       label: 'nebenbei',
@@ -166,6 +166,8 @@ export type CareerEntry = {
   points?: string[];
   // Kurzname für den Zeitstrahl im Recruiter-Modus
   short?: string;
+  // Hervorhebung neben dem Titel, z. B. „abgeschlossen“ beim Studienabschluss
+  badge?: string;
 };
 
 // Werdegang laut Lebenslauf (Stand: April 2026), neueste Station zuerst.
@@ -246,6 +248,7 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       role: 'B.Sc. Betriebswirtschaftslehre',
       org: 'Universität Mannheim',
       short: 'B.Sc. BWL · Uni Mannheim',
+      badge: 'abgeschlossen',
       place: 'Mannheim',
       period: 'Sep 2022 – 2025',
       points: ['Bachelorarbeit: Electronic Bond Trading', '79 ECTS in englischer Sprache'],
