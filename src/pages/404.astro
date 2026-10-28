@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Seite nicht gefunden" noindex>
+  <section class="container not-found">
+    <p class="mono code">Fehler 404</p>
+    <h1>Diese Seite ist wohl noch im Lab.</h1>
+    <p class="muted">Oder sie hat den Realitätscheck nicht bestanden. Zurück zu den Dingen, die es schon gibt:</p>
+    <a class="btn btn-primary" href="/">Zur Startseite</a>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    display: grid;
+    gap: 1.5rem;
+    justify-items: start;
+    padding-block: clamp(5rem, 14vw, 10rem);
+  }
+
+  .code {
+    color: var(--accent);
+  }
+
+  h1 {
+    max-width: 16ch;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+  }
+
+  .muted {
+    max-width: 40ch;
+    font-size: 1.15rem;
+  }
+</style>

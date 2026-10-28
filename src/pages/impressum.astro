@@ -1,0 +1,32 @@
+---
+import Legal from '../layouts/Legal.astro';
+import Placeholder from '../components/Placeholder.astro';
+import { legal, site } from '../data/site';
+---
+
+<Legal title="Impressum">
+  <h2>Angaben gemäß § 5 DDG</h2>
+  <p>
+    {site.name}<br />
+    <Placeholder value={legal.street} hint="Straße und Hausnummer" /><br />
+    <Placeholder value={legal.city} hint="PLZ und Ort" /><br />
+    Deutschland
+  </p>
+
+  <h2>Kontakt</h2>
+  <p>E-Mail: <a href={`mailto:${site.email}`}>{site.email}</a></p>
+
+  <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+  <p>
+    {site.name}<br />
+    Anschrift wie oben
+  </p>
+
+  <h2>Haftung für Links</h2>
+  <p>
+    Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Für die
+    Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Zum Zeitpunkt der
+    Verlinkung waren keine Rechtsverstöße erkennbar. Werden mir Rechtsverletzungen bekannt, entferne ich die
+    betreffenden Links umgehend.
+  </p>
+</Legal>

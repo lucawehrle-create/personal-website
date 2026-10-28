@@ -1,0 +1,11 @@
+---
+// Zeigt den Wert an – oder einen auffälligen Hinweis, solange er in src/data/site.ts fehlt.
+interface Props {
+  value: string;
+  hint: string;
+}
+
+const { value, hint } = Astro.props;
+---
+
+{value ? value : <span class="todo">[{hint} in src/data/site.ts ergänzen]</span>}

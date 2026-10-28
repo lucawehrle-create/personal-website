@@ -1,0 +1,53 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <p>© {year} {site.name} · {site.location}</p>
+    <nav aria-label="Rechtliches">
+      <a href="/impressum/">Impressum</a>
+      <a href="/datenschutz/">Datenschutz</a>
+    </nav>
+    <p class="mono note">Ohne Cookies. Ohne Tracking.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    color: var(--ink-3);
+    font-size: 0.92rem;
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block: 1.75rem;
+  }
+
+  nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  a {
+    text-decoration: none;
+    color: var(--ink-2);
+  }
+
+  a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .note {
+    font-size: 0.72rem;
+  }
+</style>
