@@ -38,7 +38,7 @@ export const nav = [
 export const hero = {
   label: 'portfolio 2026',
   columns: [
-    { label: 'tldr', text: 'Business Student. Product Builder. Creator of Unusual Side Projects.' },
+    { label: 'tldr', text: 'Business Student. Product Builder. Creator of many Side Projects.' },
     {
       label: 'studium & praxis',
       text: 'B.Sc. BWL an der Universität Mannheim, Auslandssemester in Jönköping. Heute Werkstudent bei Würth IT.',
