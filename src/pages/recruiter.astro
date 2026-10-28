@@ -1,0 +1,543 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import portrait from '../assets/portrait.jpg';
+import { about, career, earlier, languages, projects, site, toolbox } from '../data/site';
+
+const updated = new Date().toLocaleDateString('de-DE', { month: 'long', year: 'numeric' });
+
+const facts = [
+  { value: '1.000+', label: 'Bestellungen mit dem eigenen Shop GemüseGruß' },
+  { value: '2', label: 'eigene Produkte gegründet und gelauncht' },
+  { value: 'Würth IT', label: 'Werkstudent, davor Praktikum im Team Modern Work' },
+  { value: 'C1', label: 'Englisch, Auslandssemester in Schweden' },
+];
+
+const sections = [
+  { title: 'erfahrung', entries: career.experience },
+  { title: 'bildung', entries: career.education },
+  { title: 'engagement', entries: career.engagement },
+];
+---
+
+<Base
+  title="Recruiter-Modus"
+  description="Luca Wehrle auf einen Blick: Werdegang, Projekte, Skills und Kontakt – kompakt für Recruiter."
+  recruiter
+>
+  <div class="container rec">
+    <div class="toolbar">
+      <a class="mode mono" href="/" aria-label="Recruiter-Modus ausschalten und zur kreativen Version wechseln">
+        <span class="switch" aria-hidden="true"><span></span></span>
+        recruiter-modus an
+        <span class="hint">· zur kreativen version</span>
+      </a>
+      <button class="btn print" type="button" hidden>als pdf speichern</button>
+    </div>
+
+    <header class="profile">
+      <Image src={portrait} alt="Porträt von Luca Wehrle" width={280} height={280} class="photo" loading="eager" />
+      <div class="intro">
+        <p class="label">auf einen blick</p>
+        <h1>{site.name}</h1>
+        <p class="role">Product Builder · B.Sc. Betriebswirtschaftslehre, Universität Mannheim</p>
+        <ul class="contact mono">
+          <li>{site.location}, DE</li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={site.linkedin} target="_blank" rel="noopener">linkedin.com/in/luca-wehrle</a></li>
+        </ul>
+        <p class="open"><span class="mono">interessiert an</span> Product · BizOps · Founder Associate</p>
+      </div>
+    </header>
+
+    <ul class="facts">
+      {
+        facts.map((fact) => (
+          <li>
+            <span class="value">{fact.value}</span>
+            <span class="fact-label">{fact.label}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="columns">
+      <div class="main">
+        {
+          sections.map((section) => (
+            <section>
+              <h2 class="label">{section.title}</h2>
+              <ol class="entries">
+                {section.entries.map((entry) => (
+                  <li>
+                    <p class="mono period">{entry.period}</p>
+                    <div>
+                      <p class="entry-role">{entry.role}</p>
+                      <p class="entry-org">
+                        {entry.org}
+                        {entry.place && ` · ${entry.place}`}
+                      </p>
+                      {entry.points && (
+                        <ul class="points">
+                          {entry.points.map((point) => (
+                            <li>{point}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          ))
+        }
+        <section>
+          <h2 class="label">frühere stationen</h2>
+          <ul class="entries compact">
+            {
+              earlier.map((item) => (
+                <li>
+                  <p class="mono period">{item.period}</p>
+                  <p>{item.text}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+      </div>
+
+      <aside class="side">
+        <section>
+          <h2 class="label">eigene projekte</h2>
+          <ul class="projects">
+            {
+              projects.map((project) => (
+                <li>
+                  <p class="entry-role">
+                    <a href={project.href} target="_blank" rel="noopener">
+                      {project.name} ↗
+                    </a>
+                  </p>
+                  <p class="mono metric">
+                    {project.metric.value} {project.metric.label}
+                    {project.period && ` · ${project.period}`}
+                  </p>
+                  <p class="desc">{project.description}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+        <section>
+          <h2 class="label">skills</h2>
+          <ul class="chips">{toolbox.map((tool) => <li>{tool}</li>)}</ul>
+        </section>
+        <section>
+          <h2 class="label">sprachen</h2>
+          <ul class="langs">
+            {
+              languages.map((language) => (
+                <li>
+                  <span>{language.name}</span>
+                  <span class="mono">{language.level}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+        <section>
+          <h2 class="label">interessen</h2>
+          <p class="interests">{about.interests.join(' · ')}</p>
+        </section>
+      </aside>
+    </div>
+
+    <p class="updated mono">Stand: {updated} · Die ausführliche Version gibt es unter {site.url.replace('https://', '')}</p>
+  </div>
+</Base>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('.print');
+  if (button && typeof window.print === 'function') {
+    button.hidden = false;
+    button.addEventListener('click', () => window.print());
+  }
+</script>
+
+<style>
+  .rec {
+    padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(4rem, 8vw, 6rem);
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mode {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .hint {
+    color: var(--ink-3);
+    transition: color 0.2s ease;
+  }
+
+  .mode:hover .hint {
+    color: var(--accent);
+  }
+
+  .switch {
+    position: relative;
+    width: 32px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+
+  .switch span {
+    position: absolute;
+    top: 3px;
+    left: 17px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg);
+    transition: transform 0.25s ease;
+  }
+
+  .mode:hover .switch span {
+    transform: translateX(-3px);
+  }
+
+  .print[hidden] {
+    display: none;
+  }
+
+  .profile {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .photo {
+    width: clamp(120px, 16vw, 200px);
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 18px;
+    object-fit: cover;
+  }
+
+  h1 {
+    margin-top: 0.75rem;
+    font-stretch: 125%;
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+  }
+
+  .role {
+    margin-top: 0.75rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+    color: var(--ink-2);
+  }
+
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.5rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ink-2);
+  }
+
+  .contact a,
+  .projects a {
+    color: var(--ink);
+    text-decoration-color: var(--accent);
+    text-underline-offset: 3px;
+  }
+
+  .open {
+    margin-top: 0.9rem;
+  }
+
+  .open .mono {
+    margin-right: 0.6rem;
+    color: var(--ink-3);
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-block: 1px solid var(--ink);
+  }
+
+  .facts li {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1.4rem 1.25rem 1.4rem 0;
+  }
+
+  .facts li + li {
+    padding-left: 1.25rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .value {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .fact-label {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  section + section {
+    margin-top: 2.5rem;
+  }
+
+  h2.label {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .entries {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .entries > li {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    break-inside: avoid;
+  }
+
+  .entries.compact > li {
+    padding: 0.6rem 0;
+    color: var(--ink-2);
+  }
+
+  .period {
+    padding-top: 0.15rem;
+    color: var(--accent);
+  }
+
+  .compact .period {
+    color: var(--ink-3);
+  }
+
+  .entry-role {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .entry-org {
+    color: var(--ink-2);
+  }
+
+  .points {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+    color: var(--ink-3);
+    font-size: 0.95rem;
+  }
+
+  .projects {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .projects li {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    break-inside: avoid;
+  }
+
+  .metric {
+    margin-top: 0.2rem;
+    color: var(--accent);
+  }
+
+  .desc {
+    margin-top: 0.4rem;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .chips li {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-2);
+  }
+
+  .langs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .langs li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .langs .mono {
+    color: var(--ink-3);
+  }
+
+  .interests {
+    margin-top: 0.9rem;
+    color: var(--ink-2);
+  }
+
+  .updated {
+    margin-top: clamp(3rem, 6vw, 4rem);
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 900px) {
+    .facts {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .facts li + li:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .facts li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+
+    .columns {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .profile {
+      grid-template-columns: 1fr;
+    }
+
+    .entries > li {
+      grid-template-columns: 1fr;
+      gap: 0.2rem;
+    }
+
+    .hint,
+    .print {
+      display: none;
+    }
+  }
+
+  /* Druck / PDF: eine saubere, helle A4-Version */
+  @media print {
+    @page {
+      margin: 14mm;
+    }
+
+    :global(html) {
+      font-size: 10px;
+      color-scheme: light;
+    }
+
+    :global(html),
+    :global(body) {
+      background: #fff !important;
+    }
+
+    h2.label {
+      break-after: avoid;
+    }
+
+    :global(.site-footer),
+    :global(.skip-link),
+    .toolbar {
+      display: none !important;
+    }
+
+    .rec {
+      padding: 0;
+    }
+
+    section + section {
+      margin-top: 1.75rem;
+    }
+
+    .profile {
+      padding-block: 0 1.25rem;
+    }
+
+    .photo {
+      width: 110px;
+    }
+
+    h1 {
+      font-size: 30pt;
+    }
+
+    .columns {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 1.5rem;
+    }
+
+    .facts {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .facts li:nth-child(n + 3) {
+      border-top: 0;
+    }
+  }
+</style>

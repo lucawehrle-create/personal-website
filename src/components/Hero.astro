@@ -9,13 +9,15 @@ const lines = [letters(first), letters(last)];
 ---
 
 <section id="top" class="hero" aria-labelledby="hero-title">
-  <DotField />
+  <DotField portrait />
+  <div class="portrait-slot desk" data-portrait-slot aria-hidden="true"></div>
   <div class="container inner">
     <div class="top-row mono">
       <span class="label">{hero.label}</span>
       <span class="where">
         {site.location}, DE<span class="clock" data-clock={site.timeZone}></span>
       </span>
+      <a class="mode-mobile" href="/recruiter/">recruiter-modus →</a>
     </div>
 
     <div class="cols">
@@ -28,6 +30,8 @@ const lines = [letters(first), letters(last)];
         ))
       }
     </div>
+
+    <div class="portrait-slot mob" data-portrait-slot data-align="center" aria-hidden="true"></div>
 
     <h1 id="hero-title" class="name display" aria-label={site.name}>
       {
@@ -45,6 +49,10 @@ const lines = [letters(first), letters(last)];
 
     <div class="bottom-row mono">
       <span>{hero.tagline}</span>
+      <button class="term-hint mono" type="button" data-terminal-open>
+        <span class="desk-only">drück <kbd>/</kbd> für das terminal</span>
+        <span class="mob-only">terminal öffnen &gt;_</span>
+      </button>
       <a class="scroll" href="#projekte">
         scroll
         <svg viewBox="0 0 24 24" aria-hidden="true"
@@ -94,11 +102,24 @@ const lines = [letters(first), letters(last)];
     content: ' — ';
   }
 
+  /* Rechts zeichnet das Punktraster das Porträt in diesen Bereich. */
+  .portrait-slot.desk {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 54%;
+    height: 86%;
+    pointer-events: none;
+  }
+
+  .portrait-slot.mob {
+    display: none;
+  }
+
   .cols {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2rem clamp(1.5rem, 3vw, 3rem);
-    max-width: 1120px;
+    gap: 1.75rem;
+    max-width: 420px;
   }
 
   .col-label {
@@ -147,6 +168,37 @@ const lines = [letters(first), letters(last)];
     }
   }
 
+  .term-hint {
+    padding: 0.35rem 0.7rem;
+    border: 1px dashed var(--line);
+    border-radius: 999px;
+    background: none;
+    color: var(--ink-3);
+    font: inherit;
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .term-hint:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  .term-hint kbd {
+    padding: 0 0.35em;
+    border: 1px solid var(--ink-3);
+    border-radius: 4px;
+    font: inherit;
+    color: var(--accent);
+  }
+
+  .mob-only,
+  .mode-mobile {
+    display: none;
+  }
+
   .scroll {
     display: inline-flex;
     align-items: center;
@@ -172,11 +224,6 @@ const lines = [letters(first), letters(last)];
   }
 
   @media (max-width: 860px) {
-    .cols {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
     .cols .col:nth-child(3) {
       display: none;
     }
@@ -184,13 +231,53 @@ const lines = [letters(first), letters(last)];
 
   @media (max-width: 720px) {
     .inner {
-      padding-top: calc(env(safe-area-inset-top, 0px) + 2rem);
+      gap: 1.25rem;
+      padding-top: calc(env(safe-area-inset-top, 0px) + 1.5rem);
       padding-bottom: 6.5rem;
     }
 
     .name {
       flex-direction: column;
+      margin-top: 0;
       font-size: clamp(3.6rem, 23vw, 9rem);
+    }
+
+    .cols .col:nth-child(n + 2),
+    .portrait-slot.desk {
+      display: none;
+    }
+
+    .bottom-row {
+      flex-wrap: wrap;
+    }
+
+    .bottom-row > span:first-child {
+      flex-basis: 100%;
+    }
+
+    .desk-only,
+    .where {
+      display: none;
+    }
+
+    .mode-mobile {
+      display: inline;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink-2);
+      text-decoration: none;
+    }
+
+    .mob-only {
+      display: inline;
+    }
+
+    .portrait-slot.mob {
+      display: block;
+      flex: 1;
+      min-height: 30svh;
+      margin-block: 0 -1.5rem;
     }
   }
 </style>

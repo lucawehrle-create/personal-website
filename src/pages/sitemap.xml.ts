@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
 // Impressum und Datenschutz sind auf noindex gesetzt und fehlen hier bewusst.
-const pages = ['/'];
+const pages = ['/', '/recruiter/'];
 
 export const GET: APIRoute = ({ site }) => {
   const urls = pages.map((path) => `  <url><loc>${new URL(path, site).href}</loc></url>`).join('\n');

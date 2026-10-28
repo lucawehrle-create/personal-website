@@ -23,18 +23,26 @@ const pad = (n: number) => String(n).padStart(2, '0');
                 {pad(i + 1)}
               </p>
               <h3 class="title">{project.name}</h3>
-              <p class="desc">{project.description}</p>
+              <p class="mono category">{project.category}</p>
+              <ol class="experiment" aria-label="Experiment">
+                <li>
+                  <span class="mono step">hypothese</span>
+                  <p>{project.experiment.hypothesis}</p>
+                </li>
+                <li>
+                  <span class="mono step">test</span>
+                  <p>{project.experiment.test}</p>
+                </li>
+                <li class="result">
+                  <span class="mono step">ergebnis</span>
+                  <p>{project.experiment.result}</p>
+                </li>
+                <li>
+                  <span class="mono step">learning</span>
+                  <p>{project.experiment.learning}</p>
+                </li>
+              </ol>
               <dl class="meta">
-                <div>
-                  <dt class="mono">kategorie</dt>
-                  <dd>{project.category}</dd>
-                </div>
-                <div>
-                  <dt class="mono">ergebnis</dt>
-                  <dd>
-                    <span class="metric">{project.metric.value}</span> {project.metric.label}
-                  </dd>
-                </div>
                 {project.period && (
                   <div>
                     <dt class="mono">zeitraum</dt>
@@ -125,7 +133,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: clamp(2rem, 4vw, 4.5rem);
-    align-items: center;
+    align-items: start;
   }
 
   .project:nth-child(even) .info {
@@ -150,15 +158,79 @@ const pad = (n: number) => String(n).padStart(2, '0');
     letter-spacing: -0.04em;
   }
 
-  .desc {
-    max-width: 44ch;
-    margin-top: 1.4rem;
+  .category {
+    margin-top: 0.9rem;
+    color: var(--ink-3);
+  }
+
+  /* Experiment-Log: senkrechte Linie mit Markierungen */
+  .experiment {
+    position: relative;
+    display: grid;
+    gap: 1.1rem;
+    margin: 2rem 0 0;
+    padding: 0 0 0 1.5rem;
+    list-style: none;
+  }
+
+  .experiment::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: var(--line);
+  }
+
+  .experiment li {
+    position: relative;
+  }
+
+  .experiment li::before {
+    content: '';
+    position: absolute;
+    left: calc(-1.5rem + 1px);
+    top: 0.42rem;
+    width: 7px;
+    height: 7px;
+    border: 1px solid var(--ink-3);
+    background: var(--bg);
+  }
+
+  .experiment .result::before {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .step {
+    display: block;
+    margin-bottom: 0.15rem;
+    color: var(--ink-3);
+  }
+
+  .result .step {
+    color: var(--accent);
+  }
+
+  .experiment p {
+    max-width: 46ch;
     color: var(--ink-2);
+  }
+
+  .result p {
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
   }
 
   .meta {
     display: grid;
-    margin: 2rem 0;
+    margin: 1.75rem 0 2rem;
     border-top: 1px solid var(--line);
   }
 
@@ -185,6 +257,8 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
 
   .media {
+    position: sticky;
+    top: 6.5rem;
     display: block;
     overflow: hidden;
     border-radius: 16px;
@@ -243,6 +317,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
     }
 
     .media {
+      position: static;
       order: -1;
     }
   }

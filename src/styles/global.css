@@ -37,6 +37,10 @@
   color: var(--ink);
 }
 
+@view-transition {
+  navigation: auto;
+}
+
 *,
 *::before,
 *::after {
@@ -284,4 +288,10 @@ canvas {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Recruiter-Modus: auch der Überscroll-Bereich ist hell */
+html:has(body.paper) {
+  background: #efede8;
+  color-scheme: light;
 }

@@ -4,6 +4,7 @@ import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import Terminal from '../components/Terminal.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -12,9 +13,11 @@ interface Props {
   noindex?: boolean;
   // Unterseiten verlinken die Abschnitte der Startseite statt per Anker zu scrollen.
   home?: boolean;
+  // Recruiter-Modus: helle, ruhige Seite ohne Pill-Navigation und Filmkorn.
+  recruiter?: boolean;
 }
 
-const { title, description = site.description, noindex = false, home = false } = Astro.props;
+const { title, description = site.description, noindex = false, home = false, recruiter = false } = Astro.props;
 const pageTitle = title ? `${title} – ${site.name}` : site.title;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL('/og-image.png', Astro.site).href;
@@ -74,14 +77,15 @@ const personSchema = {
       document.documentElement.classList.add('js');
     </script>
   </head>
-  <body>
+  <body class:list={{ paper: recruiter }}>
     <a class="skip-link" href="#main">Zum Inhalt springen</a>
-    <Nav home={home} />
+    {!recruiter && <Nav home={home} />}
     <main id="main">
       <slot />
     </main>
     <Footer />
-    <div class="grain" aria-hidden="true"></div>
+    <Terminal />
+    {!recruiter && <div class="grain" aria-hidden="true" />}
 
     <script>
       // Scroll-Reveal

@@ -1,0 +1,398 @@
+---
+// Verstecktes Terminal: öffnet mit „/“ oder ⌘K / Strg+K (oder über [data-terminal-open]).
+import { career, languages, projects, site, toolbox } from '../data/site';
+
+const data = {
+  email: site.email,
+  linkedin: site.linkedin,
+  timeZone: site.timeZone,
+  projects: projects.map((p) => ({
+    name: p.name,
+    category: p.category,
+    metric: `${p.metric.value} ${p.metric.label}`,
+    href: p.href,
+  })),
+  career: [...career.experience, ...career.education, ...career.engagement].map((e) => ({
+    period: e.period,
+    text: `${e.role}, ${e.org}`,
+  })),
+  toolbox,
+  languages: languages.map((l) => `${l.name} (${l.level})`),
+};
+---
+
+<dialog class="terminal" aria-label="Terminal">
+  <div class="bar mono">
+    <span>~/luca — terminal</span>
+    <button class="close mono" type="button" aria-label="Terminal schließen">esc ✕</button>
+  </div>
+  <div class="log mono" role="log" aria-live="polite"></div>
+  <form class="line mono" autocomplete="off">
+    <label for="terminal-input" class="prompt">$</label>
+    <input
+      id="terminal-input"
+      name="command"
+      type="text"
+      spellcheck="false"
+      autocapitalize="off"
+      autocomplete="off"
+      enterkeyhint="send"
+      aria-label="Befehl eingeben"
+    />
+  </form>
+</dialog>
+<script type="application/json" id="terminal-data" set:html={JSON.stringify(data)} />
+
+<script>
+  type Data = {
+    email: string;
+    linkedin: string;
+    timeZone: string;
+    projects: { name: string; category: string; metric: string; href: string }[];
+    career: { period: string; text: string }[];
+    toolbox: string[];
+    languages: string[];
+  };
+
+  const dialog = document.querySelector<HTMLDialogElement>('dialog.terminal');
+  const log = dialog?.querySelector<HTMLElement>('.log');
+  const form = dialog?.querySelector<HTMLFormElement>('.line');
+  const input = dialog?.querySelector<HTMLInputElement>('input');
+  const data: Data = JSON.parse(document.getElementById('terminal-data')?.textContent ?? '{}');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const onHome = !!document.getElementById('top');
+
+  if (dialog && log && form && input) {
+    const history: string[] = [];
+    let historyIndex = 0;
+
+    const escape = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+    const link = (href: string, label: string) =>
+      `<a href="${escape(href)}"${href.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${escape(label)}</a>`;
+
+    const print = (html: string, kind = '') => {
+      const line = document.createElement('div');
+      line.className = `out ${kind}`;
+      line.innerHTML = html;
+      log.append(line);
+      log.scrollTop = log.scrollHeight;
+    };
+
+    const goTo = (id: string) => {
+      dialog.close();
+      if (onHome) document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
+      else window.location.href = `/#${id}`;
+    };
+
+    const potatoRain = () => {
+      if (reduceMotion) return;
+      const layer = document.createElement('div');
+      layer.className = 'potato-rain';
+      layer.setAttribute('aria-hidden', 'true');
+      for (let i = 0; i < 36; i++) {
+        const potato = document.createElement('span');
+        potato.textContent = '🥔';
+        potato.style.left = `${Math.random() * 100}%`;
+        potato.style.animationDelay = `${Math.random() * 1.2}s`;
+        potato.style.animationDuration = `${2.2 + Math.random() * 1.6}s`;
+        potato.style.fontSize = `${18 + Math.random() * 26}px`;
+        potato.style.setProperty('--spin', `${(Math.random() - 0.5) * 720}deg`);
+        layer.append(potato);
+      }
+      document.body.append(layer);
+      setTimeout(() => layer.remove(), 4200);
+    };
+
+    const commands: Record<string, { help: string; run: (args: string[]) => void }> = {
+      help: {
+        help: 'alle befehle anzeigen',
+        run: () =>
+          print(
+            Object.entries(commands)
+              .filter(([name]) => !['cat', 'cd', 'echo', 'sudo'].includes(name))
+              .map(([name, c]) => `<span class="cmd">${name.padEnd(10, ' ')}</span>${c.help}`)
+              .join('<br>') + '<br><span class="dim">psst: es gibt auch ls, cat, cd, echo und sudo.</span>',
+          ),
+      },
+      whoami: {
+        help: 'wer ist luca?',
+        run: () =>
+          print(
+            'Luca Wehrle – Product Builder &amp; Creator aus Mannheim.<br>B.Sc. BWL, Werkstudent bei Würth IT, baut nebenbei merkwürdige Produkte.',
+          ),
+      },
+      projekte: {
+        help: 'eigene produkte',
+        run: () =>
+          print(
+            data.projects
+              .map((p) => `${link(p.href, p.name)} <span class="dim">· ${escape(p.category)} ·</span> <span class="hl">${escape(p.metric)}</span>`)
+              .join('<br>'),
+          ),
+      },
+      werdegang: {
+        help: 'stationen im überblick',
+        run: () =>
+          print(data.career.map((c) => `<span class="hl">${escape(c.period.padEnd(19, ' '))}</span>${escape(c.text)}`).join('<br>')),
+      },
+      skills: { help: 'die toolbox', run: () => print(data.toolbox.map(escape).join(' · ')) },
+      sprachen: { help: 'sprachkenntnisse', run: () => print(data.languages.map(escape).join(' · ')) },
+      kontakt: {
+        help: 'e-mail und linkedin',
+        run: () => print(`${link(`mailto:${data.email}`, data.email)}<br>${link(data.linkedin, 'linkedin.com/in/luca-wehrle')}`),
+      },
+      recruiter: {
+        help: 'kompakte übersicht für recruiter',
+        run: () => {
+          print('starte recruiter-modus …', 'hl');
+          setTimeout(() => (window.location.href = '/recruiter/'), 500);
+        },
+      },
+      kartoffel: {
+        help: '🥔',
+        run: () => {
+          print('über 1.000 kartoffeln verschickt. diese hier gibt’s gratis.', 'hl');
+          potatoRain();
+        },
+      },
+      uhrzeit: {
+        help: 'ortszeit in mannheim',
+        run: () =>
+          print(
+            new Intl.DateTimeFormat('de-DE', { dateStyle: 'full', timeStyle: 'short', timeZone: data.timeZone }).format(new Date()),
+          ),
+      },
+      clear: { help: 'ausgabe leeren', run: () => (log.innerHTML = '') },
+      exit: { help: 'terminal schließen', run: () => dialog.close() },
+      ls: { help: '', run: () => print('projekte/  werdegang/  kontakt.txt  geheim.txt') },
+      cat: {
+        help: '',
+        run: ([file]) => {
+          if (file === 'geheim.txt') print('Die beste Kartoffel ist die, die ankommt.');
+          else if (file === 'kontakt.txt') commands.kontakt.run([]);
+          else print(`cat: ${escape(file ?? '')}: datei nicht gefunden`, 'err');
+        },
+      },
+      cd: {
+        help: '',
+        run: ([dir = '']) => {
+          const target = { projekte: 'projekte', werdegang: 'werdegang', kontakt: 'kontakt', 'ueber': 'ueber', '~': 'top', '..': 'top' }[
+            dir.replace(/\/$/, '').replace('über', 'ueber')
+          ];
+          if (target) goTo(target);
+          else print(`cd: ${escape(dir)}: verzeichnis nicht gefunden`, 'err');
+        },
+      },
+      echo: { help: '', run: (args) => print(escape(args.join(' '))) },
+      sudo: {
+        help: '',
+        run: (args) => {
+          if (args.join(' ') === 'hire luca') {
+            print('[sudo] passwort für recruiter: ********', 'dim');
+            setTimeout(() => print('zugriff gewährt. ich öffne dein e-mail-programm …', 'hl'), 600);
+            setTimeout(() => {
+              window.location.href = `mailto:${data.email}?subject=${encodeURIComponent('Lass uns reden')}`;
+            }, 1500);
+          } else {
+            print('netter versuch. probier mal: sudo hire luca', 'err');
+          }
+        },
+      },
+    };
+
+    const run = (raw: string) => {
+      const value = raw.trim();
+      print(`<span class="prompt">$</span> ${escape(value)}`, 'echo');
+      if (!value) return;
+      history.push(value);
+      historyIndex = history.length;
+      const [name, ...args] = value.toLowerCase().split(/\s+/);
+      const command = commands[name];
+      if (command) command.run(args);
+      else print(`befehl nicht gefunden: ${escape(name)}. tippe <span class="cmd">help</span>.`, 'err');
+    };
+
+    const open = () => {
+      if (dialog.open) return;
+      if (!log.childElementCount) {
+        print('luca-os 2026 · <span class="dim">tippe</span> <span class="cmd">help</span> <span class="dim">für alle befehle</span>');
+      }
+      dialog.showModal();
+      input.focus();
+    };
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      run(input.value);
+      input.value = '';
+    });
+
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowUp' && history.length) {
+        event.preventDefault();
+        historyIndex = Math.max(0, historyIndex - 1);
+        input.value = history[historyIndex];
+      } else if (event.key === 'ArrowDown' && history.length) {
+        event.preventDefault();
+        historyIndex = Math.min(history.length, historyIndex + 1);
+        input.value = history[historyIndex] ?? '';
+      } else if (event.key === 'Tab') {
+        event.preventDefault();
+        const match = Object.keys(commands).find((name) => name.startsWith(input.value.toLowerCase()));
+        if (match && input.value) input.value = match + ' ';
+      }
+    });
+
+    dialog.querySelector('.close')?.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      const target = event.target as HTMLElement;
+      const typing = target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName);
+      if ((event.key === 'k' && (event.metaKey || event.ctrlKey)) || (event.key === '/' && !typing)) {
+        event.preventDefault();
+        open();
+      }
+    });
+
+    document.querySelectorAll('[data-terminal-open]').forEach((el) => el.addEventListener('click', open));
+  }
+</script>
+
+<style>
+  .terminal {
+    width: min(720px, calc(100vw - 2rem));
+    max-height: min(560px, calc(100dvh - 4rem));
+    padding: 0;
+    border: 1px solid #2c2c2f;
+    border-radius: 16px;
+    background: #111112;
+    color: #e9e7e1;
+    box-shadow: 0 40px 120px -20px rgb(0 0 0 / 0.8);
+    overflow: hidden;
+  }
+
+  .terminal[open] {
+    display: flex;
+    flex-direction: column;
+    animation: pop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .terminal::backdrop {
+    background: rgb(5 5 6 / 0.6);
+    backdrop-filter: blur(6px);
+  }
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(12px) scale(0.98);
+    }
+  }
+
+  .bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 0.9rem 0.7rem 1.2rem;
+    border-bottom: 1px solid #262628;
+    color: #8a8780;
+  }
+
+  .close {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid #2c2c2f;
+    border-radius: 999px;
+    background: none;
+    color: #8a8780;
+    cursor: pointer;
+  }
+
+  .close:hover {
+    color: #e9e7e1;
+  }
+
+  .log {
+    flex: 1;
+    min-height: 220px;
+    padding: 1.1rem 1.2rem 0.25rem;
+    overflow-y: auto;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  .log :global(.out + .out) {
+    margin-top: 0.35rem;
+  }
+
+  .log :global(.echo) {
+    margin-top: 0.9rem;
+    color: #b9b6af;
+  }
+
+  .log :global(.prompt),
+  .log :global(.hl),
+  .log :global(.cmd) {
+    color: #ff5b1f;
+  }
+
+  .log :global(.dim) {
+    color: #8a8780;
+  }
+
+  .log :global(.err) {
+    color: #ff8a65;
+  }
+
+  .log :global(a) {
+    color: #f2f0eb;
+    text-decoration-color: #ff5b1f;
+    text-underline-offset: 3px;
+  }
+
+  .line {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.2rem 1.1rem;
+    font-size: 0.92rem;
+  }
+
+  .prompt {
+    color: #ff5b1f;
+  }
+
+  .line input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: #f2f0eb;
+    font: inherit;
+    caret-color: #ff5b1f;
+    outline: none;
+  }
+
+  :global(.potato-rain) {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  :global(.potato-rain span) {
+    position: absolute;
+    top: -60px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(calc(100vh + 120px)) rotate(var(--spin));
+    }
+  }
+</style>

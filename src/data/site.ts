@@ -57,6 +57,8 @@ export type Project = {
   description: string;
   metric: { value: string; label: string };
   period?: string;
+  // Projekt als Experiment erzählt: Was war die Annahme, wie wurde sie getestet, was kam raus?
+  experiment: { hypothesis: string; test: string; result: string; learning: string };
   tags: string[];
   href: string;
   // Vorschaubild im Seitenverhältnis 16:10, liegt in src/assets/projects/.
@@ -71,6 +73,12 @@ export const projects: Project[] = [
     description:
       'E-Commerce, der eigentlich ein Meme ist – aber funktioniert: personalisierte Kartoffeln mit Grußbotschaft. Gebaut auf Shopify, gewachsen durch virales Marketing und UGC-Kampagnen.',
     metric: { value: '1.000+', label: 'Bestellungen' },
+    experiment: {
+      hypothesis: 'Menschen zahlen für einen Gruß, der so absurd ist, dass man ihn weitererzählt.',
+      test: 'Shopify-Shop für personalisierte Kartoffeln mit Grußbotschaft, Reichweite über virales Marketing und UGC-Kampagnen.',
+      result: 'Über 1.000 Bestellungen.',
+      learning: 'Wenn das Produkt selbst die Geschichte ist, erzählen Kund:innen sie weiter.',
+    },
     tags: ['Shopify', 'Marketing', 'UGC', 'Logistik'],
     href: 'https://www.gemuesegruss.de/',
     image: gemuesegrussImage,
@@ -83,6 +91,12 @@ export const projects: Project[] = [
       'Digital-Detox- und Deep-Work-System für Gründer und High-Performer: 21-Tage-Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker – komplett in Notion.',
     metric: { value: '21', label: 'Tage Programm' },
     period: '2023 – 2024',
+    experiment: {
+      hypothesis: 'Gründer und High-Performer wollen weniger Bildschirmzeit, ohne an Produktivität zu verlieren.',
+      test: 'Ein komplettes System in Notion: 21-Tage-Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker.',
+      result: 'Als Startup gegründet und als komplettes System gelauncht.',
+      learning: 'Gewohnheiten ändern sich über einfache Routinen, nicht über Verbote.',
+    },
     tags: ['Notion', 'UX', 'AI-Integration', 'Content'],
     href: 'https://mindfulscreen.com/',
     image: mindfulscreenImage,

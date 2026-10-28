@@ -1,8 +1,23 @@
 ---
 // Interaktives Punktraster (Canvas). Füllt das nächste positionierte Elternelement.
+// Mit `portrait` zeichnet es zusätzlich das Porträt als feines Halbton-Mosaik in den
+// sichtbaren Bereich mit dem Attribut data-portrait-slot (Daten: src/data/portrait-map.ts).
+import { portraitMap } from '../data/portrait-map';
+
+interface Props {
+  portrait?: boolean;
+}
+
+const { portrait = false } = Astro.props;
 ---
 
-<canvas class="dotfield" data-dotfield aria-hidden="true"></canvas>
+<canvas
+  class="dotfield"
+  data-dotfield
+  data-portrait={portrait ? portraitMap.data : undefined}
+  data-portrait-width={portrait ? portraitMap.width : undefined}
+  data-portrait-height={portrait ? portraitMap.height : undefined}
+  aria-hidden="true"></canvas>
 
 <script>
   const GAP = 14;
@@ -10,31 +25,126 @@
   const BASE = [242, 240, 235];
   const ACCENT = [255, 91, 31];
   const BUCKETS = 10;
+  const FACE = { x: 0.42, y: 0.3 };
+  const INTRO_MS = 2200;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Fester Pseudo-Zufall pro Rasterpunkt (für das Zerstreuen beim Scrollen).
+  const hash = (x: number, y: number) => {
+    const s = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+    return s - Math.floor(s);
+  };
+
+  const buckets = () => Array.from({ length: BUCKETS }, () => [] as number[]);
 
   document.querySelectorAll<HTMLCanvasElement>('canvas[data-dotfield]').forEach((canvas) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const mapWidth = Number(canvas.dataset.portraitWidth ?? 0);
+    const mapHeight = Number(canvas.dataset.portraitHeight ?? 0);
+    const map = canvas.dataset.portrait ? Uint8Array.from(atob(canvas.dataset.portrait), (c) => c.charCodeAt(0)) : null;
+    // Es kann mehrere Bereiche geben (Desktop/Mobil); genutzt wird der sichtbare.
+    const slots = map ? [...(canvas.parentElement?.querySelectorAll<HTMLElement>('[data-portrait-slot]') ?? [])] : [];
+
     let width = 0;
     let height = 0;
+    let dpr = 1;
     let running = false;
     let visible = false;
+    let introStart = 0;
+    const box = { x: 0, y: 0, w: 0, h: 0, gap: 7 };
     const pointer = { x: -9999, y: -9999, tx: -9999, ty: -9999 };
 
+    // Fertig gezeichnetes Porträt, solange sich nichts bewegt (spart Rechenzeit).
+    const cache = document.createElement('canvas');
+    const cacheCtx = cache.getContext('2d');
+    let cacheValid = false;
+
+    const sample = (x: number, y: number) => {
+      if (!map || x < box.x || x >= box.x + box.w || y < box.y || y >= box.y + box.h) return 0;
+      const u = Math.floor(((x - box.x) / box.w) * mapWidth);
+      const v = Math.floor(((y - box.y) / box.h) * mapHeight);
+      return map[v * mapWidth + u];
+    };
+
+    const layoutPortrait = () => {
+      const slot = slots.find((el) => el.offsetWidth > 0 && el.offsetHeight > 0);
+      if (!map || !slot) {
+        box.w = box.h = 0;
+        return;
+      }
+      const c = canvas.getBoundingClientRect();
+      const s = slot.getBoundingClientRect();
+      const scale = Math.min(s.width / mapWidth, s.height / mapHeight);
+      box.w = mapWidth * scale;
+      box.h = mapHeight * scale;
+      // rechts unten ausrichten (data-align="center" zentriert horizontal)
+      const align = slot.dataset.align === 'center' ? (s.width - box.w) / 2 : s.width - box.w;
+      box.x = s.left - c.left + align;
+      box.y = s.top - c.top + (s.height - box.h);
+      box.gap = Math.min(8, Math.max(5, Math.round(box.h / 110)));
+    };
+
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = canvas.clientWidth;
       height = canvas.clientHeight;
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
+      canvas.width = cache.width = Math.round(width * dpr);
+      canvas.height = cache.height = Math.round(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cacheCtx?.setTransform(dpr, 0, 0, dpr, 0, 0);
+      cacheValid = false;
+      layoutPortrait();
       if (!running) draw(performance.now());
     };
 
-    // Punkte nach Helligkeit gruppieren und pro Gruppe einmal füllen (schnell).
-    const base: number[][] = Array.from({ length: BUCKETS }, () => []);
-    const hot: number[][] = Array.from({ length: BUCKETS }, () => []);
+    const fillSquares = (target: CanvasRenderingContext2D, group: number[][], rgb: number[], alpha: (i: number) => number) =>
+      group.forEach((points, i) => {
+        if (!points.length) return;
+        target.fillStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha(i)})`;
+        target.beginPath();
+        for (let p = 0; p < points.length; p += 3) {
+          const s = points[p + 2];
+          target.rect(points[p] - s / 2, points[p + 1] - s / 2, s, s);
+        }
+        target.fill();
+      });
+
+    // Porträt als Mosaik aus Quadraten: Größe und Helligkeit folgen dem Foto.
+    const drawPortrait = (target: CanvasRenderingContext2D, intro: number, scroll: number, withPointer: boolean) => {
+      const light = buckets();
+      const hot = buckets();
+      const g = box.gap;
+      const spread = scroll * scroll * 220;
+      for (let y = box.y + g / 2; y < box.y + box.h; y += g) {
+        for (let x = box.x + g / 2; x < box.x + box.w; x += g) {
+          const value = sample(x, y);
+          if (!value) continue;
+          const n = (value - 1) / 254;
+          const u = (x - box.x) / box.w;
+          const v = (y - box.y) / box.h;
+          const appear = Math.min(1, Math.max(0, (intro - 250 - Math.hypot(u - FACE.x, v - FACE.y) * 1100) / 600));
+          const alpha = (0.3 + 0.7 * n) * appear * (1 - scroll);
+          if (alpha < 0.03) continue;
+          let near = 0;
+          if (withPointer) {
+            // kleinerer Spotlight-Radius auf dem Gesicht, damit es erkennbar bleibt
+            const d = Math.hypot(x - pointer.x, y - pointer.y);
+            near = d < RADIUS * 0.6 ? 1 - d / (RADIUS * 0.6) : 0;
+          }
+          const size = (0.6 + Math.pow(n, 1.5) * g * 0.88) * (1 + near * near * 0.6) * (0.5 + 0.5 * appear);
+          const px = x + (hash(x, y) - 0.5) * 2 * spread;
+          const py = y + (hash(y, x) - 0.5) * 2 * spread - scroll * 60;
+          (near > 0.2 ? hot : light)[Math.min(BUCKETS - 1, Math.floor(alpha * BUCKETS))].push(px, py, size);
+        }
+      }
+      fillSquares(target, light, BASE, (i) => (i + 1) / BUCKETS);
+      fillSquares(target, hot, ACCENT, (i) => Math.min(1, (i + 3) / BUCKETS));
+    };
+
+    const base = buckets();
+    const hot = buckets();
 
     const draw = (t: number) => {
       ctx.clearRect(0, 0, width, height);
@@ -44,41 +154,48 @@
       pointer.x += (pointer.tx - pointer.x) * 0.14;
       pointer.y += (pointer.ty - pointer.y) * 0.14;
       const time = reduceMotion ? 0 : t;
+      const intro = reduceMotion ? Infinity : t - introStart;
+      // Fortschritt beim Herausscrollen (0 = oben, 1 = Hero verlassen)
+      const scroll = reduceMotion ? 0 : Math.min(1, Math.max(0, -canvas.getBoundingClientRect().top / (height * 0.75)));
 
+      // Hintergrundraster (ohne die Fläche, die das Porträt belegt)
       for (let y = GAP / 2; y < height; y += GAP) {
         for (let x = GAP / 2; x < width; x += GAP) {
-          const dx = x - pointer.x;
-          const dy = y - pointer.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < RADIUS) {
-            const f = 1 - dist / RADIUS;
+          if (scroll < 0.5 && sample(x, y)) continue;
+          const d = Math.hypot(x - pointer.x, y - pointer.y);
+          if (d < RADIUS) {
+            const f = 1 - d / RADIUS;
             const level = Math.min(BUCKETS - 1, Math.floor(f * f * BUCKETS));
-            hot[level].push(x, y);
+            const size = 1.6 + ((level + 1) / BUCKETS) * 3.4;
+            hot[level].push(x, y, size);
           } else {
             const wave =
               0.5 + 0.5 * Math.sin(x * 0.011 + time * 0.00055) * Math.sin(y * 0.013 - time * 0.0004 + x * 0.004);
-            base[Math.min(BUCKETS - 1, Math.floor(wave * BUCKETS))].push(x, y);
+            base[Math.min(BUCKETS - 1, Math.floor(wave * BUCKETS))].push(x, y, 1.6);
           }
         }
       }
+      fillSquares(ctx, base, BASE, (i) => 0.04 + (i / BUCKETS) * 0.11);
+      fillSquares(ctx, hot, ACCENT, (i) => 0.25 + ((i + 1) / BUCKETS) * 0.75);
 
-      base.forEach((points, i) => {
-        if (!points.length) return;
-        ctx.fillStyle = `rgba(${BASE[0]},${BASE[1]},${BASE[2]},${0.04 + (i / BUCKETS) * 0.11})`;
-        ctx.beginPath();
-        for (let p = 0; p < points.length; p += 2) ctx.rect(points[p] - 0.8, points[p + 1] - 0.8, 1.6, 1.6);
-        ctx.fill();
-      });
+      if (!box.w) return;
+      const pointerNear =
+        pointer.x > box.x - RADIUS &&
+        pointer.x < box.x + box.w + RADIUS &&
+        pointer.y > box.y - RADIUS &&
+        pointer.y < box.y + box.h + RADIUS;
+      const settled = intro > INTRO_MS && scroll === 0 && !pointerNear;
 
-      hot.forEach((points, i) => {
-        if (!points.length) return;
-        const e = (i + 1) / BUCKETS;
-        const size = 1.6 + e * 3.4;
-        ctx.fillStyle = `rgba(${ACCENT[0]},${ACCENT[1]},${ACCENT[2]},${0.25 + e * 0.75})`;
-        ctx.beginPath();
-        for (let p = 0; p < points.length; p += 2) ctx.rect(points[p] - size / 2, points[p + 1] - size / 2, size, size);
-        ctx.fill();
-      });
+      if (settled && cacheCtx) {
+        if (!cacheValid) {
+          cacheCtx.clearRect(0, 0, width, height);
+          drawPortrait(cacheCtx, Infinity, 0, false);
+          cacheValid = true;
+        }
+        ctx.drawImage(cache, 0, 0, width, height);
+      } else {
+        drawPortrait(ctx, intro, scroll, pointerNear);
+      }
     };
 
     const loop = (t: number) => {
@@ -97,8 +214,10 @@
     };
 
     new ResizeObserver(resize).observe(canvas);
+    slots.forEach((el) => new ResizeObserver(resize).observe(el));
     new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting;
+      if (visible && !introStart) introStart = performance.now();
       if (visible) start();
     }).observe(canvas);
     document.addEventListener('visibilitychange', () => !document.hidden && visible && start());
@@ -130,5 +249,10 @@
     height: 100%;
     mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, #000 40%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 85% 80% at 50% 45%, #000 40%, transparent 100%);
+  }
+
+  .dotfield[data-portrait] {
+    mask-image: linear-gradient(#000 72%, transparent);
+    -webkit-mask-image: linear-gradient(#000 72%, transparent);
   }
 </style>

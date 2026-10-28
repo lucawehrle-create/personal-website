@@ -1,14 +1,20 @@
 ---
 import RiseText from './RiseText.astro';
+import Signature from './Signature.astro';
 import { contact, site } from '../data/site';
 ---
 
 <section id="kontakt" class="section contact" aria-labelledby="kontakt-title">
   <div class="container">
     <p class="label" data-reveal>kontakt</p>
-    <h2 id="kontakt-title" class="display giant" data-reveal>
-      <a href={`mailto:${site.email}`}><RiseText text={contact.heading} /></a>
-    </h2>
+    <div class="heading-wrap">
+      <h2 id="kontakt-title" class="display giant" data-reveal>
+        <a href={`mailto:${site.email}`}><RiseText text={contact.heading} /></a>
+      </h2>
+      <div class="sig" data-reveal style="--delay: 0.4s">
+        <Signature />
+      </div>
+    </div>
 
     <div class="grid">
       <p class="text" data-reveal>{contact.text}</p>
@@ -70,6 +76,20 @@ import { contact, site } from '../data/site';
 <style>
   .contact {
     border-top: 1px solid var(--line);
+  }
+
+  .heading-wrap {
+    position: relative;
+  }
+
+  /* Unterschrift schräg über der rechten Seite der Überschrift */
+  .sig {
+    position: absolute;
+    right: 0;
+    bottom: -28%;
+    width: clamp(220px, 36vw, 540px);
+    transform: rotate(-7deg);
+    pointer-events: none;
   }
 
   .giant {
@@ -142,6 +162,13 @@ import { contact, site } from '../data/site';
   @media (max-width: 760px) {
     .grid {
       grid-template-columns: 1fr;
+    }
+
+    .sig {
+      position: relative;
+      bottom: auto;
+      width: min(78vw, 320px);
+      margin: -0.5rem 0 0 auto;
     }
   }
 </style>
