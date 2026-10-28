@@ -114,23 +114,24 @@ export const projects: Project[] = [
     imageAlt: 'Laptop mit der Website von GemüseGruß: „Der witzigste Gruß – auf einer Kartoffel!“ über beschrifteten Kartoffeln',
   },
   {
-    name: 'Mindfulscreen OS',
+    name: 'Mindfulscreen',
     status: 'abgeschlossen',
-    category: 'Digital Health · Productivity',
+    category: 'Digital Health · Marke & Content',
     description:
-      'Digital-Detox- und Deep-Work-System für Gründer und High-Performer: 21-Tage-Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker – komplett in Notion.',
-    metric: { value: '21', label: 'Tage Programm' },
+      'Eine Marke gegen Handysucht: Website, 21-Tage-Programm in Notion, Instagram-Kanal und das eigene Buch „Handy aus, Leben an“ auf Amazon.',
+    metric: { value: '5,0 ★', label: 'für das eigene Buch' },
     period: '2023 – 2024',
     experiment: {
       hypothesis: 'Gründer und High-Performer wollen weniger Bildschirmzeit, ohne an Produktivität zu verlieren.',
-      test: 'Ein komplettes System in Notion: 21-Tage-Kurs, Screen-Time-Rechner, Pomodoro-System und Fokus-Tracker.',
-      result: 'Als Startup gegründet und als komplettes System gelauncht.',
+      test: 'Eine Marke mit vier Kanälen: Website, 21-Tage-Programm in Notion, Instagram und ein eigenes Buch.',
+      result: 'Ein Buch mit 5,0 Sternen auf Amazon und 749 Follower auf Instagram.',
       learning: 'Gewohnheiten ändern sich über einfache Routinen, nicht über Verbote.',
     },
-    tags: ['Notion', 'UX', 'AI-Integration', 'Content'],
+    tags: ['Notion', 'Instagram', 'Content', 'Buch'],
+    caseStudy: '/projekte/mindfulscreen/',
     image: mindfulscreenImage,
     imageAlt:
-      'Mindfulscreen-OS-Dashboard mit 21-Tage-Fortschritt, Pomodoro-Timer und Fokus-Tracker, daneben ein Smartphone im Fokus-Modus',
+      'Das Buch „Handy aus, Leben an“, die Website mindfulscreen.com auf dem Smartphone und das Instagram-Profil von Mindfulscreen',
   },
 ];
 
@@ -202,7 +203,10 @@ export const career: { experience: CareerEntry[]; education: CareerEntry[]; enga
       org: 'Mindfulscreen',
       place: 'Mannheim',
       period: '2023 – 2024',
-      points: ['Entwicklung von Strategien und digitalen Lösungen für reduzierte Handynutzung'],
+      points: [
+        'Entwicklung von Strategien und digitalen Lösungen für reduzierte Handynutzung',
+        'Autor des Buchs „Handy aus, Leben an“ (Amazon, 5,0 Sterne)',
+      ],
     },
     {
       role: 'Studentische Hilfskraft, Nutzerbetreuung',

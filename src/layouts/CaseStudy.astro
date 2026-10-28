@@ -1,0 +1,287 @@
+---
+// Gemeinsamer Rahmen für Case Studies: Kopf mit Titel und Bild, Kennzahlen, Inhalt (Slot), Weiter-Link.
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import Base from './Base.astro';
+import RiseText from '../components/RiseText.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  name: string;
+  label: string;
+  claim: string;
+  intro: string;
+  roles: string[];
+  hero: ImageMetadata;
+  heroAlt: string;
+  kpis: { display: string; label: string }[];
+  next?: { href: string; label: string };
+}
+
+const { title, description, name, label, claim, intro, roles, hero, heroAlt, kpis, next } = Astro.props;
+---
+
+<Base title={title} description={description}>
+  <article class="case">
+    <header class="section hero">
+      <div class="container">
+        <a class="back mono" href="/#projekte">← alle projekte</a>
+        <p class="label">{label}</p>
+        <h1 class="display name" data-reveal style={`--chars: ${[...name].length}`}><RiseText text={name} /></h1>
+        <div class="intro">
+          <p class="claim" data-reveal>{claim}</p>
+          <div data-reveal style="--delay: 0.1s">
+            <p class="text">{intro}</p>
+            <ul class="roles mono">{roles.map((role) => <li>{role}</li>)}</ul>
+          </div>
+        </div>
+        <div class="hero-media" data-reveal>
+          <Image src={hero} alt={heroAlt} widths={[800, 1200, 1800]} sizes="(max-width: 1440px) 100vw, 1360px" loading="eager" />
+        </div>
+      </div>
+    </header>
+
+    <section class="kpis-wrap" aria-label="Ergebnisse in Zahlen">
+      <div class="container">
+        <ul class="kpis">
+          {
+            kpis.map((kpi, i) => (
+              <li data-reveal style={`--delay: ${i * 0.08}s`}>
+                <span class="kpi-value" data-count>
+                  {kpi.display}
+                </span>
+                <span class="kpi-label">{kpi.label}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <slot />
+
+    <nav class="section next" aria-label="Weiter">
+      <div class="container">
+        <a class="next-link" href={next?.href ?? '/#projekte'}>
+          <span class="label">weiter</span>
+          <span class="display next-title">{next?.label ?? 'alle projekte'} →</span>
+        </a>
+      </div>
+    </nav>
+  </article>
+</Base>
+
+<script>
+  // Zahlen zählen hoch, sobald sie ins Bild kommen (Format bleibt wie im HTML).
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const counters = document.querySelectorAll<HTMLElement>('[data-count]');
+
+  const animate = (el: HTMLElement) => {
+    const final = el.textContent?.trim() ?? '';
+    const match = final.match(/[\d.,]+/);
+    if (!match) return;
+    const raw = match[0];
+    const decimals = raw.includes(',') ? raw.split(',')[1].length : 0;
+    const target = parseFloat(raw.replace(/\./g, '').replace(',', '.'));
+    const format = new Intl.NumberFormat('de-DE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    const start = performance.now();
+    const duration = 1400;
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - t, 4);
+      el.textContent = final.replace(raw, format.format(target * eased));
+      if (t < 1) requestAnimationFrame(step);
+      else el.textContent = final;
+    };
+    requestAnimationFrame(step);
+  };
+
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            animate(entry.target as HTMLElement);
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.6 },
+    );
+    counters.forEach((el) => observer.observe(el));
+  }
+</script>
+
+<style>
+  .hero {
+    padding-top: clamp(7rem, 14vw, 10rem);
+    padding-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--ink-3);
+    text-decoration: none;
+  }
+
+  .back:hover {
+    color: var(--accent);
+  }
+
+  /* Größe so wählen, dass der Name (je nach Länge) genau in eine Zeile passt. */
+  .name {
+    margin-top: 1.25rem;
+    font-size: min(12rem, calc((min(100vw, 1440px) - 2 * var(--gutter)) / (var(--chars) * 0.8)));
+  }
+
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 2rem clamp(2rem, 6vw, 6rem);
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .claim {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(1.6rem, 3.2vw, 2.8rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+
+  .text {
+    color: var(--ink-2);
+    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+  }
+
+  .roles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .roles li {
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-2);
+  }
+
+  .hero-media {
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    overflow: hidden;
+    border-radius: 18px;
+    aspect-ratio: 16 / 9;
+    max-width: 100%;
+  }
+
+  .hero-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 45%;
+  }
+
+  .kpis-wrap {
+    border-block: 1px solid var(--line);
+  }
+
+  .kpis {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .kpis li {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+    padding: clamp(1.75rem, 3.5vw, 2.75rem) 1.5rem clamp(1.75rem, 3.5vw, 2.75rem) 0;
+  }
+
+  .kpis li + li {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--line);
+  }
+
+  .kpi-value {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-size: clamp(2.2rem, 4.6vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+  }
+
+  .kpis li:first-child .kpi-value {
+    color: var(--accent);
+  }
+
+  .kpi-label {
+    color: var(--ink-2);
+    font-size: 0.98rem;
+  }
+
+  .next {
+    border-top: 1px solid var(--line);
+  }
+
+  .next-link {
+    display: grid;
+    gap: 1rem;
+    text-decoration: none;
+  }
+
+  .next-title {
+    font-size: clamp(2.2rem, 8vw, 8rem);
+    transition: color 0.3s ease;
+  }
+
+  .next-link:hover .next-title {
+    color: var(--accent);
+  }
+
+  @media (max-width: 900px) {
+    .intro {
+      grid-template-columns: 1fr;
+    }
+
+    .kpis {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .kpis li + li:nth-child(3) {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .kpis li:nth-child(n + 3) {
+      border-top: 1px solid var(--line);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .kpis {
+      grid-template-columns: 1fr;
+    }
+
+    .kpis li,
+    .kpis li + li {
+      padding-left: 0;
+      border-left: 0;
+    }
+
+    .kpis li + li {
+      border-top: 1px solid var(--line);
+    }
+  }
+</style>

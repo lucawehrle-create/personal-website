@@ -1,7 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import Base from '../../layouts/Base.astro';
-import RiseText from '../../components/RiseText.astro';
+import CaseStudy from '../../layouts/CaseStudy.astro';
 import ViewsChart from '../../components/ViewsChart.astro';
 import { caseStudy, videos } from '../../data/gemuesegruss';
 
@@ -9,46 +8,19 @@ const c = caseStudy;
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
-<Base
+<CaseStudy
   title="GemüseGruß – Case Study"
   description="Wie aus einem Meme ein Onlineshop wurde: GemüseGruß verschickte über 1.000 handbeschriftete Kartoffeln und erreichte über 2,8 Mio. Aufrufe auf TikTok und Instagram."
+  name="gemüsegruß"
+  label={`case study · abgeschlossen · ${c.period}`}
+  claim={c.claim}
+  intro={c.intro}
+  roles={c.roles}
+  hero={c.hero}
+  heroAlt={c.heroAlt}
+  kpis={c.kpis}
+  next={{ href: '/projekte/mindfulscreen/', label: 'mindfulscreen' }}
 >
-  <article class="case">
-    <header class="section hero">
-      <div class="container">
-        <a class="back mono" href="/#projekte">← alle projekte</a>
-        <p class="label">case study · abgeschlossen · {c.period}</p>
-        <h1 class="display name" data-reveal><RiseText text="gemüsegruß" /></h1>
-        <div class="intro">
-          <p class="claim" data-reveal>{c.claim}</p>
-          <div data-reveal style="--delay: 0.1s">
-            <p class="text">{c.intro}</p>
-            <ul class="roles mono">{c.roles.map((role) => <li>{role}</li>)}</ul>
-          </div>
-        </div>
-        <div class="hero-media" data-reveal>
-          <Image src={c.hero} alt={c.heroAlt} widths={[800, 1200, 1800]} sizes="(max-width: 1440px) 100vw, 1360px" loading="eager" />
-        </div>
-      </div>
-    </header>
-
-    <section class="kpis-wrap" aria-label="Ergebnisse in Zahlen">
-      <div class="container">
-        <ul class="kpis">
-          {
-            c.kpis.map((kpi, i) => (
-              <li data-reveal style={`--delay: ${i * 0.08}s`}>
-                <span class="kpi-value" data-count>
-                  {kpi.display}
-                </span>
-                <span class="kpi-label">{kpi.label}</span>
-              </li>
-            ))
-          }
-        </ul>
-      </div>
-    </section>
-
     <section class="section" aria-labelledby="reichweite-title">
       <div class="container">
         <div class="split-head" data-reveal>
@@ -61,7 +33,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
         </div>
         <div data-reveal>
           <ViewsChart videos={videos} />
-          <p class="note mono">
+          <p class="source mono">
             Quelle: Instagram-Statistik (2 Jahre) und angepinnte TikTok-Videos. Bei TikTok beschreibt der Titel das Video.
             Für die Summe zählt das gerundete „1,1 Mio.“ nur mit 1,05 Mio.
           </p>
@@ -194,204 +166,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
       </div>
     </section>
 
-    <nav class="section next" aria-label="Weiter">
-      <div class="container next-inner">
-        <a class="next-link" href="/#projekte">
-          <span class="label">weiter</span>
-          <span class="display next-title">alle projekte →</span>
-        </a>
-      </div>
-    </nav>
-  </article>
-</Base>
+</CaseStudy>
 
-<script>
-  // Zahlen zählen hoch, sobald sie ins Bild kommen (Format bleibt wie im HTML).
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const counters = document.querySelectorAll<HTMLElement>('[data-count]');
-
-  const animate = (el: HTMLElement) => {
-    const final = el.textContent?.trim() ?? '';
-    const match = final.match(/[\d.,]+/);
-    if (!match) return;
-    const raw = match[0];
-    const decimals = raw.includes(',') ? raw.split(',')[1].length : 0;
-    const target = parseFloat(raw.replace(/\./g, '').replace(',', '.'));
-    const format = new Intl.NumberFormat('de-DE', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
-    const start = performance.now();
-    const duration = 1400;
-    const step = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 4);
-      el.textContent = final.replace(raw, format.format(target * eased));
-      if (t < 1) requestAnimationFrame(step);
-      else el.textContent = final;
-    };
-    requestAnimationFrame(step);
-  };
-
-  if (!reduceMotion && 'IntersectionObserver' in window) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            animate(entry.target as HTMLElement);
-            observer.unobserve(entry.target);
-          }
-        }
-      },
-      { threshold: 0.6 },
-    );
-    counters.forEach((el) => observer.observe(el));
-  }
-</script>
 
 <style>
-  .hero {
-    padding-top: clamp(7rem, 14vw, 10rem);
-    padding-bottom: clamp(3rem, 6vw, 5rem);
-  }
-
-  .back {
-    display: inline-block;
-    margin-bottom: 2rem;
-    color: var(--ink-3);
-    text-decoration: none;
-  }
-
-  .back:hover {
-    color: var(--accent);
-  }
-
-  .name {
-    margin-top: 1.25rem;
-    font-size: clamp(2.2rem, 11.8vw, 12rem);
-  }
-
-  .intro {
-    display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    gap: 2rem clamp(2rem, 6vw, 6rem);
-    margin-top: clamp(2rem, 5vw, 3.5rem);
-  }
-
-  .claim {
-    font-family: var(--font-display);
-    font-stretch: 112%;
-    font-size: clamp(1.6rem, 3.2vw, 2.8rem);
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: -0.04em;
-  }
-
-  .text {
-    color: var(--ink-2);
-    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
-  }
-
-  .roles {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin: 1.5rem 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .roles li {
-    padding: 0.35rem 0.75rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    color: var(--ink-2);
-  }
-
-  .hero-media {
-    margin-top: clamp(2.5rem, 6vw, 4.5rem);
-    overflow: hidden;
-    border-radius: 18px;
-    aspect-ratio: 16 / 9;
-    max-width: 100%;
-  }
-
-  .hero-media img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 45%;
-  }
-
-  .kpis-wrap {
-    border-block: 1px solid var(--line);
-  }
-
-  .kpis {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .kpis li {
-    display: grid;
-    align-content: start;
-    gap: 0.6rem;
-    padding: clamp(1.75rem, 3.5vw, 2.75rem) 1.5rem clamp(1.75rem, 3.5vw, 2.75rem) 0;
-  }
-
-  .kpis li + li {
-    padding-left: 1.5rem;
-    border-left: 1px solid var(--line);
-  }
-
-  .kpi-value {
-    font-family: var(--font-display);
-    font-stretch: 112%;
-    font-size: clamp(2.2rem, 4.6vw, 4.2rem);
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -0.045em;
-    white-space: nowrap;
-  }
-
-  .kpis li:first-child .kpi-value {
-    color: var(--accent);
-  }
-
-  .kpi-label {
-    color: var(--ink-2);
-    font-size: 0.98rem;
-  }
-
-  .split-head {
-    display: grid;
-    gap: 1.1rem;
-    max-width: 52rem;
-    margin-bottom: clamp(2.5rem, 5vw, 4rem);
-  }
-
-  h2 {
-    font-stretch: 112%;
-    font-size: clamp(2.2rem, 5vw, 4.4rem);
-    font-weight: 800;
-    letter-spacing: -0.045em;
-    line-height: 0.98;
-  }
-
-  .lead {
-    max-width: 52ch;
-    color: var(--ink-2);
-    font-size: clamp(1.05rem, 1.4vw, 1.2rem);
-  }
-
-  .note {
-    max-width: 80ch;
-    margin-top: 1.25rem;
-    color: var(--ink-3);
-    font-size: 0.72rem;
-    line-height: 1.6;
-  }
-
   /* Der stärkste Tag */
   .day {
     border-top: 1px solid var(--line);
@@ -662,42 +440,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
     color: var(--ink-3);
   }
 
-  .next {
-    border-top: 1px solid var(--line);
-  }
-
-  .next-link {
-    display: grid;
-    gap: 1rem;
-    text-decoration: none;
-  }
-
-  .next-title {
-    font-size: clamp(2.6rem, 9vw, 8rem);
-    transition: color 0.3s ease;
-  }
-
-  .next-link:hover .next-title {
-    color: var(--accent);
-  }
-
   @media (max-width: 900px) {
-    .intro,
     .day-grid {
       grid-template-columns: 1fr;
-    }
-
-    .kpis {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .kpis li + li:nth-child(3) {
-      padding-left: 0;
-      border-left: 0;
-    }
-
-    .kpis li:nth-child(n + 3) {
-      border-top: 1px solid var(--line);
     }
 
     .steps,
@@ -731,20 +476,6 @@ const pad = (n: number) => String(n).padStart(2, '0');
   }
 
   @media (max-width: 480px) {
-    .kpis {
-      grid-template-columns: 1fr;
-    }
-
-    .kpis li,
-    .kpis li + li {
-      padding-left: 0;
-      border-left: 0;
-    }
-
-    .kpis li + li {
-      border-top: 1px solid var(--line);
-    }
-
     .stats {
       grid-template-columns: 1fr;
     }

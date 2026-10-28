@@ -295,3 +295,34 @@ html:has(body.paper) {
   background: #efede8;
   color-scheme: light;
 }
+
+/* ---------- Case Studies: gemeinsame Abschnittsbausteine ---------- */
+
+.case .split-head {
+  display: grid;
+  gap: 1.1rem;
+  max-width: 52rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.case h2 {
+  font-stretch: 112%;
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.case .lead {
+  max-width: 52ch;
+  color: var(--ink-2);
+  font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+}
+
+.case .source {
+  max-width: 80ch;
+  margin-top: 1.25rem;
+  color: var(--ink-3);
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
