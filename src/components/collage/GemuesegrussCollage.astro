@@ -2,12 +2,13 @@
 import { Image } from 'astro:assets';
 import Bento from './Bento.astro';
 import produkt from '../../assets/gemuesegruss/produktfoto.jpg';
-import kartons from '../../assets/collage/gemuesegruss-kartons.jpg';
-import label from '../../assets/collage/gemuesegruss-label.jpg';
+import urlaubsgruss from '../../assets/gemuesegruss/tiktok-urlaubsgruss.jpg';
+import { caseStudy } from '../../data/gemuesegruss';
 import stift from '../../assets/gemuesegruss/tiktok-beschriften-stift.jpg';
 
-const areas = `"hero hero boxes views" "hero hero stift views" "orders orders label noad"`;
-const mobileAreas = `"hero hero label" "hero hero stift"`;
+const areas = `"hero hero gruss views" "hero hero stift views" "orders orders best noad"`;
+const mobileAreas = `"hero hero gruss" "hero hero best"`;
+const bestDay = caseStudy.bestDay;
 ---
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
@@ -17,10 +18,10 @@ const mobileAreas = `"hero hero label" "hero hero stift"`;
     <span class="chip">kartoffel mit botschaft</span>
   </div>
 
-  <!-- Versandfertige Kartons -->
-  <div class="tile m-hide" style="grid-area: boxes; --i: 1">
-    <Image class="fill" src={kartons} alt="" widths={[400]} sizes="180px" />
-    <span class="chip">versandfertig</span>
+  <!-- Ein echter Gruß aus einem Video -->
+  <div class="tile" style="grid-area: gruss; --i: 1">
+    <Image class="fill" src={urlaubsgruss} alt="" widths={[400]} sizes="(max-width: 960px) 30vw, 180px" />
+    <span class="chip">dein gruß</span>
   </div>
 
   <!-- Reichweite -->
@@ -36,9 +37,9 @@ const mobileAreas = `"hero hero label" "hero hero stift"`;
   </div>
 
   <!-- Handarbeit -->
-  <div class="tile" style="grid-area: stift; --i: 3">
-    <Image class="fill" src={stift} alt="" widths={[400]} sizes="(max-width: 960px) 45vw, 180px" />
-    <span class="chip m-hide">von hand beschriftet</span>
+  <div class="tile m-hide" style="grid-area: stift; --i: 3">
+    <Image class="fill" src={stift} alt="" widths={[400]} sizes="180px" />
+    <span class="chip">von hand beschriftet</span>
   </div>
 
   <!-- Bestellungen -->
@@ -55,11 +56,11 @@ const mobileAreas = `"hero hero label" "hero hero stift"`;
     </p>
   </div>
 
-  <!-- Logo: Etikett als Sticker -->
-  <div class="tile sticker-tile" style="grid-area: label; --i: 5">
-    <div class="sticker">
-      <Image src={label} alt="" widths={[300, 465]} sizes="(max-width: 960px) 40vw, 170px" />
-    </div>
+  <!-- Der stärkste Tag laut Shopify -->
+  <div class="tile t-dark pad best" style="grid-area: best; --i: 5">
+    <p class="t-label">bester tag</p>
+    <p class="t-big push">{bestDay.orders}</p>
+    <p class="t-text">Bestellungen an einem Tag</p>
   </div>
 
   <!-- Werbebudget -->
@@ -70,30 +71,14 @@ const mobileAreas = `"hero hero label" "hero hero stift"`;
 </Bento>
 
 <style>
-  .sticker-tile {
-    --t-bg: #f5bb00;
-    background: var(--t-bg);
-    align-items: center;
-    justify-content: center;
+  .best .t-big {
+    font-size: calc(var(--u) * 0.42);
   }
 
-  .sticker {
-    width: 86%;
-    transform: rotate(-7deg);
-    border-radius: calc(var(--u) * 0.03);
-    overflow: hidden;
-    box-shadow: 0 calc(var(--u) * 0.04) calc(var(--u) * 0.1) rgb(90 60 0 / 0.35);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .sticker img {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  .sticker-tile:hover .sticker {
-    transform: rotate(-2deg) scale(1.04);
+  .best .t-text {
+    margin-top: calc(var(--u) * 0.03);
+    font-size: max(10px, calc(var(--u) * 0.075));
+    font-weight: 600;
   }
 
   .play {

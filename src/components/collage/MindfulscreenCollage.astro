@@ -12,7 +12,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
 
 <Bento areas={areas} mobileAreas={mobileAreas}>
   <!-- Das Buch -->
-  <div class="tile book" style="grid-area: book; --i: 0">
+  <div class="tile t-cream book" style="grid-area: book; --i: 0">
     <p class="t-label pad">buch · amazon</p>
     <div class="cover">
       <Image src={cover} alt="" widths={[300, 600]} sizes="(max-width: 960px) 45vw, 220px" />
@@ -20,12 +20,12 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   </div>
 
   <!-- Logo -->
-  <div class="tile logo" style="grid-area: logo; --i: 1">
+  <div class="tile t-dark logo" style="grid-area: logo; --i: 1">
     <Image class="mark" src={mark} alt="" widths={[200, 400]} sizes="120px" />
   </div>
 
   <!-- Instagram-Profil -->
-  <div class="tile phone-tile m-hide" style="grid-area: phone; --i: 2">
+  <div class="tile t-dark phone-tile m-hide" style="grid-area: phone; --i: 2">
     <p class="t-label pad">instagram · reels & posts</p>
     <div class="phone">
       <Image src={instagram} alt="" widths={[320, 640]} sizes="(max-width: 960px) 30vw, 160px" />
@@ -33,7 +33,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   </div>
 
   <!-- 21 Tage -->
-  <div class="tile pad days" style="grid-area: days; --i: 3">
+  <div class="tile t-accent pad days" style="grid-area: days; --i: 3">
     <p class="t-big">21 <span>Tage</span></p>
     <ol class="grid push" aria-hidden="true">
       {days.map((d) => <li style={`--d: ${d}`} />)}
@@ -41,20 +41,20 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   </div>
 
   <!-- Bewertung -->
-  <div class="tile t-cream pad rating m-hide" style="grid-area: rating; --i: 4">
+  <div class="tile t-dark pad rating m-hide" style="grid-area: rating; --i: 4">
     <p class="t-label">amazon-bewertung</p>
     <p class="t-big push">5,0</p>
     <p class="stars" aria-hidden="true">★★★★★</p>
   </div>
 
   <!-- Karussell-Post (nachgebaut) -->
-  <div class="tile pad post m-hide" style="grid-area: post; --i: 5">
+  <div class="tile t-dark pad post m-hide" style="grid-area: post; --i: 5">
     <p class="post-brand">luca wehrle</p>
     <p class="post-title push">Wie dein Handy dich <span>kontrolliert!</span></p>
   </div>
 
   <!-- Bildschirmzeit vorher / nachher -->
-  <div class="tile t-dark pad time m-hide" style="grid-area: time; --i: 6">
+  <div class="tile t-cream pad time m-hide" style="grid-area: time; --i: 6">
     <p class="t-label">meine bildschirmzeit · ø pro tag</p>
     <p class="t-big">−59 %</p>
     <div class="bars push">
@@ -66,9 +66,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
 
 <style>
   .book {
-    --t-bg: #0148b0;
-    background: radial-gradient(ellipse at 70% 20%, #2a6ad6, #0148b0 55%, #00307a);
-    color: #fff;
+    background: radial-gradient(ellipse at 65% 25%, #f8f6f1, #efede8 55%, #e3e0d8);
   }
 
   /* Buch ragt von unten in die Kachel */
@@ -81,8 +79,8 @@ const days = Array.from({ length: 21 }, (_, i) => i);
     border-radius: 2px 6px 6px 2px;
     overflow: hidden;
     box-shadow:
-      calc(var(--u) * -0.08) calc(var(--u) * 0.14) calc(var(--u) * 0.24) rgb(0 10 40 / 0.6),
-      inset 0 0 0 1px rgb(255 255 255 / 0.1);
+      calc(var(--u) * -0.08) calc(var(--u) * 0.14) calc(var(--u) * 0.24) rgb(40 30 10 / 0.35),
+      inset 0 0 0 1px rgb(0 0 0 / 0.06);
     transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -97,8 +95,6 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   }
 
   .logo {
-    --t-bg: #000;
-    background: #000;
     align-items: center;
     justify-content: center;
     gap: calc(var(--u) * 0.1);
@@ -114,12 +110,6 @@ const days = Array.from({ length: 21 }, (_, i) => i);
     transform: rotate(-10deg);
   }
 
-  .phone-tile {
-    --t-bg: #12201a;
-    background: linear-gradient(180deg, #1c3328, #0e1813);
-    color: #d6efe2;
-  }
-
   .phone {
     position: absolute;
     left: 50%;
@@ -128,7 +118,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
     transform: translateX(-50%);
     padding: calc(var(--u) * 0.035);
     border-radius: calc(var(--u) * 0.14);
-    background: #050706;
+    background: #0d0d0e;
     box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 calc(var(--u) * 0.1) calc(var(--u) * 0.2) rgb(0 0 0 / 0.5);
     transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -142,12 +132,6 @@ const days = Array.from({ length: 21 }, (_, i) => i);
 
   .phone-tile:hover .phone {
     transform: translateX(-50%) translateY(-4%);
-  }
-
-  .days {
-    --t-bg: #8ed691;
-    background: #8ed691;
-    color: #0f2a1b;
   }
 
   .days .t-big {
@@ -171,7 +155,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   .grid li {
     aspect-ratio: 1;
     border-radius: 28%;
-    background: #0f2a1b;
+    background: #0d0d0e;
     transition: opacity 0.3s ease;
     transition-delay: calc(0.5s + var(--d) * 45ms);
   }
@@ -186,18 +170,12 @@ const days = Array.from({ length: 21 }, (_, i) => i);
 
   .stars {
     margin-top: calc(var(--u) * 0.03);
-    color: #ff5b1f;
+    color: #ff6a2b;
     font-size: calc(var(--u) * 0.11);
     letter-spacing: 0.08em;
   }
 
   /* Nachbau der Instagram-Karussell-Cover */
-  .post {
-    --t-bg: #000;
-    background: #000;
-    color: #fff;
-  }
-
   .post-brand {
     padding-bottom: calc(var(--u) * 0.035);
     border-bottom: 1px solid rgb(255 255 255 / 0.25);
@@ -217,7 +195,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   }
 
   .post-title span {
-    color: #8ed691;
+    color: #ff6a2b;
   }
 
   .bars {
@@ -233,7 +211,7 @@ const days = Array.from({ length: 21 }, (_, i) => i);
     gap: calc(var(--u) * 0.04);
     font-family: var(--font-mono);
     font-size: calc(var(--u) * 0.058);
-    color: rgb(242 240 235 / 0.7);
+    color: #5c5a55;
   }
 
   .row .bar {
@@ -246,11 +224,11 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   }
 
   .row.now {
-    color: #ff6a2b;
+    color: #111112;
   }
 
   .row.now .bar {
-    background: #ff5b1f;
+    background: #e8470f;
     transition-delay: 0.75s;
   }
 
@@ -261,6 +239,5 @@ const days = Array.from({ length: 21 }, (_, i) => i);
   .time .t-big {
     margin-top: calc(var(--u) * 0.05);
     font-size: calc(var(--u) * 0.26);
-    color: #ff6a2b;
   }
 </style>
