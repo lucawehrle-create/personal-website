@@ -1,0 +1,230 @@
+---
+import { Image } from 'astro:assets';
+import Bento from './Bento.astro';
+import cover from '../../assets/mindfulscreen/buch-cover.jpg';
+import mark from '../../assets/mindfulscreen/logo-mark.png';
+import instagram from '../../assets/mindfulscreen/instagram-profil.jpg';
+
+const areas = `"book book logo phone" "book book days phone" "rating post quote quote"`;
+const mobileAreas = `"book book" "logo days" "post rating"`;
+const days = Array.from({ length: 21 }, (_, i) => i);
+---
+
+<Bento areas={areas} mobileAreas={mobileAreas}>
+  <!-- Das Buch -->
+  <div class="tile book" style="grid-area: book; --i: 0">
+    <p class="t-label pad">buch · amazon</p>
+    <div class="cover">
+      <Image src={cover} alt="" widths={[300, 600]} sizes="(max-width: 960px) 45vw, 220px" />
+    </div>
+  </div>
+
+  <!-- Logo -->
+  <div class="tile logo" style="grid-area: logo; --i: 1">
+    <Image class="mark" src={mark} alt="" widths={[200, 400]} sizes="120px" />
+  </div>
+
+  <!-- Instagram-Profil -->
+  <div class="tile phone-tile m-hide" style="grid-area: phone; --i: 2">
+    <p class="t-label pad">instagram · reels & posts</p>
+    <div class="phone">
+      <Image src={instagram} alt="" widths={[320, 640]} sizes="(max-width: 960px) 30vw, 160px" />
+    </div>
+  </div>
+
+  <!-- 21 Tage -->
+  <div class="tile pad days" style="grid-area: days; --i: 3">
+    <p class="t-big">21 <span>Tage</span></p>
+    <ol class="grid push" aria-hidden="true">
+      {days.map((d) => <li style={`--d: ${d}`} />)}
+    </ol>
+  </div>
+
+  <!-- Bewertung -->
+  <div class="tile t-cream pad rating" style="grid-area: rating; --i: 4">
+    <p class="t-label">amazon-bewertung</p>
+    <p class="t-big push">5,0</p>
+    <p class="stars" aria-hidden="true">★★★★★</p>
+  </div>
+
+  <!-- Karussell-Post (nachgebaut) -->
+  <div class="tile pad post" style="grid-area: post; --i: 5">
+    <p class="post-brand">luca wehrle</p>
+    <p class="post-title push">Wie dein Handy dich <span>kontrolliert!</span></p>
+  </div>
+
+  <!-- Zitat -->
+  <div class="tile t-cream pad quote m-hide" style="grid-area: quote; --i: 6">
+    <p class="t-label">mindfulscreen · für schüler:innen</p>
+    <p class="t-big push">Handy aus,<br />Leben an.</p>
+  </div>
+</Bento>
+
+<style>
+  .book {
+    --t-bg: #0148b0;
+    background: radial-gradient(ellipse at 70% 20%, #2a6ad6, #0148b0 55%, #00307a);
+    color: #fff;
+  }
+
+  /* Buch ragt von unten in die Kachel */
+  .cover {
+    position: absolute;
+    left: 56%;
+    top: 20%;
+    width: 48%;
+    transform: translateX(-50%) perspective(900px) rotateY(-16deg) rotateZ(3deg);
+    border-radius: 2px 6px 6px 2px;
+    overflow: hidden;
+    box-shadow:
+      calc(var(--u) * -0.08) calc(var(--u) * 0.14) calc(var(--u) * 0.24) rgb(0 10 40 / 0.6),
+      inset 0 0 0 1px rgb(255 255 255 / 0.1);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cover img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .book:hover .cover {
+    transform: translateX(-50%) translateY(-3%) perspective(900px) rotateY(-4deg) rotateZ(0deg);
+  }
+
+  @container (max-width: 560px) {
+    .cover {
+      top: 30%;
+      width: 40%;
+    }
+  }
+
+  .logo {
+    --t-bg: #000;
+    background: #000;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--u) * 0.1);
+  }
+
+  .logo .mark {
+    width: 58%;
+    height: auto;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .logo:hover .mark {
+    transform: rotate(-10deg);
+  }
+
+  .phone-tile {
+    --t-bg: #12201a;
+    background: linear-gradient(180deg, #1c3328, #0e1813);
+    color: #d6efe2;
+  }
+
+  .phone {
+    position: absolute;
+    left: 50%;
+    top: 22%;
+    width: 78%;
+    transform: translateX(-50%);
+    padding: calc(var(--u) * 0.035);
+    border-radius: calc(var(--u) * 0.14);
+    background: #050706;
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 calc(var(--u) * 0.1) calc(var(--u) * 0.2) rgb(0 0 0 / 0.5);
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .phone img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: calc(var(--u) * 0.11);
+  }
+
+  .phone-tile:hover .phone {
+    transform: translateX(-50%) translateY(-4%);
+  }
+
+  .days {
+    --t-bg: #8ed691;
+    background: #8ed691;
+    color: #0f2a1b;
+  }
+
+  .days .t-big {
+    font-size: calc(var(--u) * 0.3);
+  }
+
+  .days .t-big span {
+    font-size: 0.42em;
+    letter-spacing: -0.02em;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: calc(var(--u) * 0.025);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .grid li {
+    aspect-ratio: 1;
+    border-radius: 28%;
+    background: #0f2a1b;
+    transition: opacity 0.3s ease;
+    transition-delay: calc(0.5s + var(--d) * 45ms);
+  }
+
+  :global(.js) :global([data-reveal]:not(.is-visible)) .grid li {
+    opacity: 0.15;
+  }
+
+  .rating .t-big {
+    font-size: calc(var(--u) * 0.36);
+  }
+
+  .stars {
+    margin-top: calc(var(--u) * 0.03);
+    color: #ff5b1f;
+    font-size: calc(var(--u) * 0.11);
+    letter-spacing: 0.08em;
+  }
+
+  /* Nachbau der Instagram-Karussell-Cover */
+  .post {
+    --t-bg: #000;
+    background: #000;
+    color: #fff;
+  }
+
+  .post-brand {
+    padding-bottom: calc(var(--u) * 0.035);
+    border-bottom: 1px solid rgb(255 255 255 / 0.25);
+    font-family: var(--font-mono);
+    font-size: calc(var(--u) * 0.05);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .post-title {
+    font-family: var(--font-display);
+    font-size: calc(var(--u) * 0.13);
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+  }
+
+  .post-title span {
+    color: #8ed691;
+  }
+
+  .quote .t-big {
+    font-size: calc(var(--u) * 0.27);
+    color: #295842;
+  }
+</style>

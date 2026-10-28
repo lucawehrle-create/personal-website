@@ -70,6 +70,8 @@ export type Project = {
   links?: { label: string; href: string }[];
   // Pfad zu einer ausführlichen Case Study auf dieser Website
   caseStudy?: string;
+  // Bento-Collage statt Einzelbild (src/components/collage/)
+  collage?: 'semban' | 'gemuesegruss' | 'mindfulscreen';
   // Vorschaubild im Seitenverhältnis 16:10, liegt in src/assets/projects/.
   image: ImageMetadata;
   imageAlt: string;
@@ -92,6 +94,7 @@ export const projects: Project[] = [
     },
     tags: ['iOS', 'Web', 'Social', 'Produktentwicklung'],
     href: 'https://semban.de/',
+    collage: 'semban',
     links: [{ label: 'App Store', href: 'https://apps.apple.com/app/id6820568096' }],
     image: sembanImage,
     imageAlt: 'Website von SemBan im Browser und auf dem Smartphone: „Lernen ist besser mit Freunden.“ mit Lern-Feed der App',
@@ -112,6 +115,7 @@ export const projects: Project[] = [
     },
     tags: ['Shopify', 'TikTok', 'Instagram', 'Logistik'],
     caseStudy: '/projekte/gemuesegruss/',
+    collage: 'gemuesegruss',
     image: gemuesegrussImage,
     imageAlt: 'Laptop mit der Website von GemüseGruß: „Der witzigste Gruß – auf einer Kartoffel!“ über beschrifteten Kartoffeln',
   },
@@ -132,6 +136,7 @@ export const projects: Project[] = [
     tags: ['Instagram', 'Reels', 'Notion', 'Buch'],
     links: [{ label: 'Buch auf Amazon', href: 'https://www.amazon.de/dp/B0F5WK6PWT' }],
     caseStudy: '/projekte/mindfulscreen/',
+    collage: 'mindfulscreen',
     image: mindfulscreenImage,
     imageAlt:
       'Das Buch „Handy aus, Leben an“, die Website mindfulscreen.com auf dem Smartphone und das Instagram-Profil von Mindfulscreen',

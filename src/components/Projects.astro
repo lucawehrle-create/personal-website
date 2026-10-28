@@ -1,7 +1,17 @@
 ---
 import { Image } from 'astro:assets';
 import RiseText from './RiseText.astro';
+import SembanCollage from './collage/SembanCollage.astro';
+import GemuesegrussCollage from './collage/GemuesegrussCollage.astro';
+import MindfulscreenCollage from './collage/MindfulscreenCollage.astro';
 import { projects } from '../data/site';
+
+// Collagen pro Projekt (siehe src/components/collage/)
+const collages = {
+  semban: SembanCollage,
+  gemuesegruss: GemuesegrussCollage,
+  mindfulscreen: MindfulscreenCollage,
+};
 
 const hostname = (href: string) => new URL(href).hostname.replace(/^www\./, '');
 const pad = (n: number) => String(n).padStart(2, '0');
@@ -30,7 +40,9 @@ const groups = [
             </p>
           )}
           <ol class="list">
-            {group.items.map(({ project, index }) => (
+            {group.items.map(({ project, index }) => {
+              const Collage = project.collage ? collages[project.collage] : null;
+              return (
               <li class:list={['project', { done: project.status === 'abgeschlossen' }]} data-reveal>
                 <div class="info">
                   <p class="num" aria-hidden="true">
@@ -114,7 +126,7 @@ const groups = [
                 </div>
                 {project.href || project.caseStudy ? (
                   <a
-                    class="media"
+                    class:list={['media', { 'has-collage': Collage }]}
                     href={project.caseStudy ?? project.href}
                     target={project.caseStudy ? undefined : '_blank'}
                     rel={project.caseStudy ? undefined : 'noopener'}
@@ -122,13 +134,17 @@ const groups = [
                     tabindex="-1"
                     aria-hidden="true"
                   >
-                    <Image
-                      src={project.image}
-                      alt={project.imageAlt}
-                      widths={[640, 960, 1280, 1600]}
-                      sizes="(max-width: 960px) calc(100vw - 2rem), 60vw"
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                    />
+                    {Collage ? (
+                      <Collage />
+                    ) : (
+                      <Image
+                        src={project.image}
+                        alt={project.imageAlt}
+                        widths={[640, 960, 1280, 1600]}
+                        sizes="(max-width: 960px) calc(100vw - 2rem), 60vw"
+                        loading={index === 0 ? 'eager' : 'lazy'}
+                      />
+                    )}
                   </a>
                 ) : (
                   <div class="media">
@@ -142,7 +158,8 @@ const groups = [
                   </div>
                 )}
               </li>
-            ))}
+              );
+            })}
           </ol>
         </div>
       ))
@@ -201,6 +218,11 @@ const groups = [
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: clamp(2rem, 4vw, 4.5rem);
     align-items: start;
+  }
+
+  /* Abwechselnd: Bild links, Text rechts – das Bild behält die breite Spalte */
+  .project:nth-child(even) {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   }
 
   .project:nth-child(even) .info {
@@ -388,6 +410,16 @@ const groups = [
     transform: scale(1.04);
   }
 
+  /* Collage statt Einzelbild: eigene Höhe, Kacheln bringen ihre Flächen mit */
+  .media.has-collage {
+    aspect-ratio: auto;
+    overflow: visible;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    text-decoration: none;
+  }
+
   @media (hover: hover) and (pointer: fine) {
     a.media {
       cursor: none;
@@ -419,7 +451,8 @@ const groups = [
   }
 
   @media (max-width: 960px) {
-    .project {
+    .project,
+    .project:nth-child(even) {
       grid-template-columns: 1fr;
     }
 

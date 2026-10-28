@@ -1,0 +1,152 @@
+---
+// Bento-Raster für Projekt-Collagen: 4 × 3 quadratische Felder (mobil 2 × 3).
+// Die Kacheln legen ihre Position über grid-area fest; die Anordnung kommt als
+// grid-template-areas von der jeweiligen Collage. Größen rechnen in --u (= eine Feldbreite).
+interface Props {
+  areas: string;
+  mobileAreas: string;
+}
+
+const { areas, mobileAreas } = Astro.props;
+---
+
+<div class="bento-wrap">
+  <div class="bento" style={`--areas: ${areas}; --areas-m: ${mobileAreas}`}>
+    <slot />
+  </div>
+</div>
+
+<style>
+  .bento-wrap {
+    container-type: inline-size;
+  }
+
+  .bento {
+    --gap: 1.4cqw;
+    --u: 23.95cqw;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: var(--u);
+    grid-template-areas: var(--areas);
+    gap: var(--gap);
+  }
+
+  /* ---------- Kacheln ---------- */
+
+  .bento :global(.tile) {
+    --pad: calc(var(--u) * 0.1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: calc(var(--u) * 0.085);
+    background: var(--t-bg, #19191b);
+    color: var(--t-fg, #f2f0eb);
+    transition:
+      opacity 0.6s ease,
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  :global(.js) :global([data-reveal]:not(.is-visible)) .bento :global(.tile) {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+
+  .bento :global(.pad) {
+    padding: var(--pad);
+  }
+
+  .bento :global(.t-cream) {
+    --t-bg: #efede8;
+    --t-fg: #111112;
+  }
+
+  .bento :global(.t-paper) {
+    --t-bg: #fbfaf7;
+    --t-fg: #111112;
+  }
+
+  .bento :global(.t-dark) {
+    --t-bg: #19191b;
+    --t-fg: #f2f0eb;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.07);
+  }
+
+  .bento :global(.t-accent) {
+    --t-bg: #ff5b1f;
+    --t-fg: #0d0d0e;
+  }
+
+  /* Bild füllt die Kachel und zoomt beim Hover */
+  .bento :global(.fill) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bento :global(.tile:hover .fill) {
+    transform: scale(1.05);
+  }
+
+  /* Typo-Bausteine */
+  .bento :global(.t-label) {
+    font-family: var(--font-mono);
+    font-size: calc(var(--u) * 0.064);
+    line-height: 1.3;
+    letter-spacing: 0.01em;
+    text-transform: lowercase;
+    opacity: 0.72;
+  }
+
+  .bento :global(.t-big) {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+  }
+
+  .bento :global(.t-text) {
+    font-size: calc(var(--u) * 0.075);
+    line-height: 1.3;
+  }
+
+  /* Kleines Etikett auf Fotos */
+  .bento :global(.chip) {
+    position: absolute;
+    left: var(--pad);
+    bottom: var(--pad);
+    z-index: 2;
+    padding: calc(var(--u) * 0.03) calc(var(--u) * 0.06);
+    border-radius: 999px;
+    background: rgb(17 17 18 / 0.78);
+    color: #f2f0eb;
+    font-family: var(--font-mono);
+    font-size: calc(var(--u) * 0.06);
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+  }
+
+  .bento :global(.push) {
+    margin-top: auto;
+  }
+
+  /* Mobil: 2 Spalten, ausgewählte Kacheln */
+  @container (max-width: 560px) {
+    .bento {
+      --gap: 2.5cqw;
+      --u: 48.75cqw;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-areas: var(--areas-m);
+    }
+
+    .bento :global(.m-hide) {
+      display: none;
+    }
+  }
+</style>

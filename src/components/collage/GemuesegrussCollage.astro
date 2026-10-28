@@ -1,0 +1,225 @@
+---
+import '@fontsource/permanent-marker/latin-400.css';
+import { Image } from 'astro:assets';
+import Bento from './Bento.astro';
+import kartons from '../../assets/collage/gemuesegruss-kartons.jpg';
+import label from '../../assets/collage/gemuesegruss-label.jpg';
+import stift from '../../assets/gemuesegruss/tiktok-beschriften-stift.jpg';
+
+const areas = `"boxes boxes label views" "boxes boxes stift views" "orders orders greet noad"`;
+const mobileAreas = `"boxes boxes" "orders orders" "label greet"`;
+---
+
+<Bento areas={areas} mobileAreas={mobileAreas}>
+  <!-- Versandfertige Kartons -->
+  <div class="tile" style="grid-area: boxes; --i: 0">
+    <Image class="fill" src={kartons} alt="" widths={[480, 900]} sizes="(max-width: 960px) 90vw, 380px" />
+    <span class="chip">versandfertig · weihnachten</span>
+  </div>
+
+  <!-- Logo: Etikett als Sticker -->
+  <div class="tile sticker-tile" style="grid-area: label; --i: 1">
+    <div class="sticker">
+      <Image src={label} alt="" widths={[300, 465]} sizes="(max-width: 960px) 40vw, 170px" />
+    </div>
+  </div>
+
+  <!-- Reichweite -->
+  <div class="tile t-dark pad views m-hide" style="grid-area: views; --i: 2">
+    <span class="play" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5-11-6.5Z" fill="currentColor"></path></svg>
+    </span>
+    <p class="t-big push top">1,1 Mio.</p>
+    <p class="t-label">aufrufe für ein reel</p>
+    <hr />
+    <p class="t-big total">2,8 Mio.+</p>
+    <p class="t-label">aufrufe insgesamt · tiktok & instagram</p>
+  </div>
+
+  <!-- Handarbeit -->
+  <div class="tile m-hide" style="grid-area: stift; --i: 3">
+    <Image class="fill" src={stift} alt="" widths={[400]} sizes="180px" />
+    <span class="chip">von hand beschriftet</span>
+  </div>
+
+  <!-- Bestellungen -->
+  <div class="tile t-accent pad orders" style="grid-area: orders; --i: 4">
+    <div class="push orders-row">
+      <p class="t-big">1.000+</p>
+      <p class="t-text">Kartoffeln mit Botschaft verschickt.</p>
+    </div>
+    <p class="note" aria-hidden="true">
+      <span class="bag">
+        <svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 11.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8L5 8Z" fill="currentColor"></path></svg>
+      </span>
+      <span><strong>Bestellung #1052</strong><br />13,49 € · GemüseGruß</span>
+    </p>
+  </div>
+
+  <!-- Die Kartoffel -->
+  <div class="tile greet" style="grid-area: greet; --i: 5">
+    <div class="potato"><span>Alles Gute!</span></div>
+  </div>
+
+  <!-- Werbebudget -->
+  <div class="tile t-cream pad noad m-hide" style="grid-area: noad; --i: 6">
+    <p class="t-big">0 €</p>
+    <p class="t-text push">Werbebudget.<br />100 % organisch.</p>
+  </div>
+</Bento>
+
+<style>
+  .sticker-tile {
+    --t-bg: #f5bb00;
+    background: var(--t-bg);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sticker {
+    width: 86%;
+    transform: rotate(-7deg);
+    border-radius: calc(var(--u) * 0.03);
+    overflow: hidden;
+    box-shadow: 0 calc(var(--u) * 0.04) calc(var(--u) * 0.1) rgb(90 60 0 / 0.35);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sticker img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .sticker-tile:hover .sticker {
+    transform: rotate(-2deg) scale(1.04);
+  }
+
+  .play {
+    display: grid;
+    place-items: center;
+    width: calc(var(--u) * 0.26);
+    height: calc(var(--u) * 0.26);
+    border-radius: 50%;
+    background: #ff5b1f;
+    color: #0d0d0e;
+  }
+
+  .play svg {
+    width: 52%;
+    margin-left: 8%;
+  }
+
+  .views .top {
+    font-size: calc(var(--u) * 0.27);
+  }
+
+  .views .t-label {
+    margin-top: calc(var(--u) * 0.04);
+  }
+
+  .views hr {
+    width: 100%;
+    margin: calc(var(--u) * 0.1) 0;
+    border: 0;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  .views .total {
+    font-size: calc(var(--u) * 0.17);
+    color: #ff6a2b;
+  }
+
+  .orders .t-big {
+    font-size: calc(var(--u) * 0.42);
+  }
+
+  .orders-row {
+    display: flex;
+    align-items: flex-end;
+    gap: calc(var(--u) * 0.08);
+  }
+
+  .orders .t-text {
+    max-width: 9em;
+    padding-bottom: calc(var(--u) * 0.03);
+    font-weight: 600;
+  }
+
+  .note {
+    position: absolute;
+    right: var(--pad);
+    top: var(--pad);
+    display: flex;
+    align-items: center;
+    gap: calc(var(--u) * 0.05);
+    padding: calc(var(--u) * 0.04) calc(var(--u) * 0.07) calc(var(--u) * 0.04) calc(var(--u) * 0.04);
+    border-radius: calc(var(--u) * 0.07);
+    background: rgb(255 255 255 / 0.92);
+    color: #111112;
+    font-size: calc(var(--u) * 0.055);
+    line-height: 1.3;
+    box-shadow: 0 6px 18px rgb(120 30 0 / 0.25);
+    transform: rotate(2deg);
+  }
+
+  .bag {
+    display: grid;
+    place-items: center;
+    width: calc(var(--u) * 0.15);
+    height: calc(var(--u) * 0.15);
+    border-radius: calc(var(--u) * 0.035);
+    background: #95bf47;
+    color: #fff;
+  }
+
+  .bag svg {
+    width: 60%;
+  }
+
+  .greet {
+    --t-bg: #2a2116;
+    background: radial-gradient(circle at 50% 40%, #3a2d1b, #1f1810);
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Eine Kartoffel aus CSS mit handschriftlichem Gruß */
+  .potato {
+    display: grid;
+    place-items: center;
+    width: 84%;
+    aspect-ratio: 1.35;
+    border-radius: 52% 46% 50% 48% / 56% 50% 52% 46%;
+    background:
+      radial-gradient(circle at 26% 30%, rgb(110 70 30 / 0.5) 0 2%, transparent 3%),
+      radial-gradient(circle at 70% 24%, rgb(110 70 30 / 0.45) 0 1.6%, transparent 2.6%),
+      radial-gradient(circle at 78% 70%, rgb(110 70 30 / 0.45) 0 1.8%, transparent 2.8%),
+      radial-gradient(circle at 34% 78%, rgb(110 70 30 / 0.4) 0 1.5%, transparent 2.5%),
+      radial-gradient(ellipse at 35% 30%, #f0cf98, #d29d58 55%, #a5733a 100%);
+    box-shadow:
+      inset calc(var(--u) * -0.03) calc(var(--u) * -0.04) calc(var(--u) * 0.08) rgb(80 45 10 / 0.45),
+      0 calc(var(--u) * 0.05) calc(var(--u) * 0.1) rgb(0 0 0 / 0.5);
+    transform: rotate(-8deg);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .greet:hover .potato {
+    transform: rotate(4deg) scale(1.04);
+  }
+
+  .potato span {
+    font-family: 'Permanent Marker', 'Comic Sans MS', cursive;
+    font-size: calc(var(--u) * 0.13);
+    color: #2a1a0a;
+    transform: rotate(-4deg);
+  }
+
+  .noad .t-big {
+    font-size: calc(var(--u) * 0.4);
+  }
+
+  .noad .t-text {
+    font-weight: 600;
+  }
+</style>
