@@ -285,7 +285,7 @@ export const languages = [
 
 export const contact = {
   heading: 'let’s talk.',
-  text: 'Ich suche spannende Herausforderungen in Product, BizOps oder als Founder Associate. Oder du hast eine merkwürdige Idee, die getestet werden will – auch gut.',
+  text: 'Ich suche spannende Aufgaben in Product, BizOps oder als Founder Associate – am liebsten dort, wo aus Ideen echte Produkte werden.',
 };
 
 /**
